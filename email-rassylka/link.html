@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Переход по ссылке из письма</title>
+<style>
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f1efe9;font-family:Arial,Helvetica,sans-serif;color:#2f3b2f;padding:16px;box-sizing:border-box}
+  .card{background:#fff;border-radius:12px;max-width:460px;width:100%;padding:36px 28px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+  .ok{font-size:40px;margin-bottom:8px}
+  h1{font-family:Georgia,serif;font-weight:normal;font-size:24px;margin:0 0 12px}
+  p{color:#5c6659;line-height:22px;margin:0 0 22px}
+  b{color:#c2562b}
+  a{display:inline-block;background:#2f3b2f;color:#fff;text-decoration:none;font-weight:bold;padding:12px 26px;border-radius:8px}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="ok">✅</div>
+  <h1>Ссылка работает</h1>
+  <p>Вы нажали <b id="t">ссылку</b> в демо-письме.<br>В вашем письме здесь откроется нужная страница сайта: товар, каталог или акция.</p>
+  <a href="./">← Вернуться к письму</a>
+</div>
+<script>
+  var h = decodeURIComponent(location.hash.slice(1));
+  if (h) document.getElementById('t').textContent = '«' + h + '»';
+</script>
+</body>
+</html>
