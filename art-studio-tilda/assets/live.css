@@ -187,7 +187,7 @@ body.lock{overflow:hidden}
   .to-top{bottom:76px;right:12px}
 }
 
-/* --- Демо-панель: показать заказчику Zero Block и замену фото --- */
+/* --- Панель: показать заказчику Zero Block и замену фото --- */
 .demo-panel{position:fixed;left:16px;bottom:16px;z-index:60;font-size:13px;font-family:Arial,Helvetica,sans-serif}
 .dp-toggle{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #111;padding:9px 12px;cursor:pointer;font-weight:700;font-family:inherit;font-size:12px;box-shadow:0 8px 24px rgba(0,0,0,.12)}
 .dp-toggle b{width:8px;height:8px;background:var(--red);transform:rotate(45deg)}

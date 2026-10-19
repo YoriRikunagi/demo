@@ -319,16 +319,16 @@
     openLb(cards, card ? cards.indexOf(card) : 0);
   });
 
-  /* ---------- Демо-панель для заказчика ---------- */
+  /* ---------- Панель «как устроена страница» ---------- */
   var grid = el('div', 'zb-grid', '<div class="wrap">' + new Array(13).join('<i></i>') + '</div>');
   document.body.appendChild(grid);
   var panel = el('div', 'demo-panel',
-    '<div class="dp-body"><h4>Демо вёрстки по макету</h4><p>Переключатели показывают, как устроена страница: что собрано в Zero Block, где стандартные блоки и как клиент сам поменяет фото.</p>' +
+    '<div class="dp-body"><h4>Как устроена страница</h4><p>Переключатели показывают, как устроена страница: что собрано в Zero Block, где стандартные блоки и как клиент сам поменяет фото.</p>' +
     '<div class="dp-row" data-cls="show-grid"><div><span>Сетка и типы блоков</span><small>Zero Block / стандартные блоки Тильды</small></div><i class="sw"></i></div>' +
     '<div class="dp-row" data-cls="show-stubs"><div><span>Как сейчас: заглушки</span><small>сайт без фото клиента, вёрстка держится</small></div><i class="sw"></i></div>' +
     '<div class="dp-row" data-cls="edit-photos"><div><span>Заменить фото кликом</span><small>кликните по любому фото и выберите своё</small></div><i class="sw"></i></div>' +
     '<div class="dp-bp">Брейкпоинт: <i data-bp="1200">1200</i><i data-bp="960">960</i><i data-bp="640">640</i><i data-bp="480">480</i><i data-bp="320">320</i></div></div>' +
-    '<button class="dp-toggle" type="button"><b></b><span>Демо · Tilda Zero Block</span></button>');
+    '<button class="dp-toggle" type="button"><b></b><span>Tilda Zero Block</span></button>');
   document.body.appendChild(panel);
   $('.dp-toggle', panel).addEventListener('click', function () { panel.classList.toggle('open'); });
   $$('.dp-row', panel).forEach(function (r) {
@@ -345,6 +345,6 @@
   };
   addEventListener('resize', bpUpd); bpUpd();
 
-  // ссылки-заглушки внутри демо не прыгают наверх
-  $$('a[href="#"]').forEach(function (a) { if (!a.hasAttribute('data-popup')) a.addEventListener('click', function (e) { e.preventDefault(); toast('В демо этот раздел не подключён'); }); });
+  // ссылки-заглушки не прыгают наверх
+  $$('a[href="#"]').forEach(function (a) { if (!a.hasAttribute('data-popup')) a.addEventListener('click', function (e) { e.preventDefault(); toast('Раздел подключается на рабочем сайте'); }); });
 })();
