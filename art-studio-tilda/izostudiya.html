@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Изостудия «Микеланджело» в Уфе для детей: рисунок, живопись, акварель, ИЗО и творческие занятия по абонементу.">
+<title>Изостудия для детей в Уфе — «Микеланджело»</title>
+<style>
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#ededed;color:#111;font-family:Arial,Helvetica,sans-serif;line-height:1.45}
+  :root{
+    --bg:#ededed;--white:#fff;--black:#101010;--muted:#6b6b6b;--line:#d8d8d8;
+    --shadow:0 12px 30px rgba(0,0,0,.06);
+  }
+  img{display:block;max-width:100%}
+  a{text-decoration:none;color:inherit}
+  .wrap{width:min(1180px,calc(100% - 40px));margin:auto}
+  .section{padding:54px 0;position:relative;overflow:hidden}
+  .section.tight{padding:38px 0}
+  .section.small-top{padding-top:40px;padding-bottom:40px}
+  .section.white{background:#fff}
+  .section.black{background:#111;color:#fff}
+  .section-label{font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:#7b7b7b;margin-bottom:18px;font-weight:700}
+  .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.16em;font-weight:700;color:#666;margin-bottom:16px}
+  .black .eyebrow{color:#aaa}
+  h1,h2,h3,p{margin:0 0 16px}
+  h1{font-size:clamp(40px,5vw,74px);line-height:.95;letter-spacing:-.05em;font-weight:800;max-width:660px;margin-bottom:20px}
+  h2{font-size:clamp(24px,2.5vw,34px);line-height:1.08;letter-spacing:-.03em;font-weight:800;margin-bottom:14px}
+  h3{font-size:20px;line-height:1.14;font-weight:800;margin-bottom:8px}
+  .lead{font-size:19px;color:#333;max-width:760px}
+  .black .lead{color:#d2d2d2}
+  .muted{color:#777}
+  .btn{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:14px 24px;border:1px solid #111;background:#111;color:#fff;font-weight:700;transition:.2s;cursor:pointer}
+  .btn:hover{background:#fff;color:#111}
+  .btn.outline{background:transparent;color:#111}
+  .btn.outline:hover{background:#111;color:#fff}
+  .btn.light{background:#fff;color:#111;border-color:#fff}
+  .btn.light:hover{background:transparent;color:#fff}
+
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(237,237,237,.92);backdrop-filter:blur(10px);border-bottom:1px solid #d8d8d8}
+  .topbar .wrap{min-height:78px;display:flex;gap:20px;align-items:center;justify-content:space-between}
+  .logo{font-weight:800;font-size:24px;letter-spacing:-.05em;white-space:nowrap}
+  .logo-img{display:block;width:200px;max-width:100%;height:auto}
+  .footer-brand{display:flex;flex-direction:column;align-items:flex-start}
+  .footer-wordmark{display:flex;align-items:baseline;gap:2px;line-height:1;margin-bottom:10px}
+  .footer-wordmark .m{font-family:Georgia,'Times New Roman',serif;font-size:58px;line-height:.85;color:#c91f2c;font-weight:400}
+  .footer-wordmark .name{font-family:Georgia,'Times New Roman',serif;font-size:25px;color:#f1f1f1;letter-spacing:-.03em}
+  .footer-tagline{color:#aaa;font-size:15px;max-width:260px}
+  .footer-heading{font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:#747474;margin-bottom:12px;font-weight:700}
+  .footer-contacts{font-size:15px}
+  .footer-contacts strong{font-size:18px;color:#fff}
+  .footer-bottom{margin-top:30px;padding-top:18px;border-top:1px solid rgba(255,255,255,.14);display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;font-size:13px;color:#8f8f8f}
+  .footer-bottom-links{display:flex;gap:20px;flex-wrap:wrap}
+  .footer-bottom a{color:#d7d7d7;text-decoration:none}
+  .footer-bottom a:hover{text-decoration:underline;text-underline-offset:3px}
+  .footer-bottom{margin-top:28px;padding-top:18px;border-top:1px solid rgba(255,255,255,.14);display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;font-size:13px;color:#aaa}
+  .footer-bottom a{color:#fff;text-decoration:underline;text-underline-offset:3px}
+  .nav{display:flex;gap:22px;font-size:14px}
+  .nav a{padding:10px 0;border-bottom:1px solid transparent}
+  .nav a:hover{border-color:#111}
+  .phone{font-weight:700;white-space:nowrap}
+
+  .hero{padding:46px 0 70px}
+  .hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:36px;align-items:center}
+  .hero p{font-size:18px;max-width:580px;color:#2d2d2d;margin-bottom:28px}
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+  .hero-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:24px;max-width:650px}
+  .hero-fact{background:#fff;border:1px solid #d8d8d8;padding:13px 14px;min-height:92px}
+  .hero-fact strong{display:block;font-size:14px;line-height:1.25;margin-bottom:5px}
+  .hero-fact span{display:block;font-size:12px;line-height:1.35;color:#666}
+  .hero-choice-card{
+    width:100%;max-width:650px;background:#fff;border:1px solid #d8d8d8;
+    padding:13px 16px;margin-top:10px
+  }
+  .hero-choice-card .label{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:#777;margin-bottom:8px;font-weight:700}
+  .hero-choice-card p{font-size:14px;line-height:1.45;margin:0;color:#222}
+  .hero-visual{min-height:500px;position:relative}
+  .diamond{position:absolute;transform:rotate(45deg);overflow:hidden;background:#d4d4d4}
+  .diamond img{width:150%;height:150%;object-fit:cover;transform:rotate(-45deg) translate(-16%,-16%);transform-origin:center}
+  .hero-big{width:310px;height:310px;right:70px;top:10px;box-shadow:var(--shadow)}
+  .hero-small{width:200px;height:200px;left:40px;bottom:35px;box-shadow:var(--shadow)}
+  .hero-ghost{width:150px;height:150px;right:0;bottom:25px;background:#111}
+  .hero-outline{width:180px;height:180px;right:8px;top:68px;border:1px solid #d1d1d1;background:transparent}
+
+  .about-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:32px;align-items:stretch}
+  .about-copy{background:#fff;padding:34px;box-shadow:var(--shadow)}
+  .about-copy .accent{display:inline-block;padding:10px 14px;background:#111;color:#fff;margin-bottom:18px;font-size:14px;text-transform:uppercase;letter-spacing:.12em}
+  .about-side{background:#d9d9d9;min-height:360px;border:1px solid #cdcdcd;display:flex;align-items:center;justify-content:center;position:relative}
+  .placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#777;text-align:center;padding:24px}
+  .placeholder svg{width:54px;height:54px;opacity:.55}
+
+  /* Directions */
+  .direction-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;margin-top:28px}
+  .direction-card{position:relative}
+  .direction-visual{position:relative;height:330px;margin-bottom:18px}
+  .direction-rhombus{
+    position:absolute;
+    left:50%;
+    top:0;
+    width:230px;
+    height:310px;
+    margin-left:-115px;
+    overflow:hidden;
+    clip-path:polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    background:#111;
+    box-shadow:var(--shadow)
+  }
+  .direction-rhombus img{width:100%;height:100%;object-fit:cover}
+  .direction-rhombus::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg, rgba(0,0,0,.04) 0%, rgba(255,0,0,.18) 55%, rgba(255,0,0,.45) 100%);
+    mix-blend-mode:normal;
+  }
+  .direction-rhombus::before{
+    content:"";
+    position:absolute;
+    right:-2%;
+    top:0;
+    width:44%;
+    height:100%;
+    background:rgba(0,0,0,.9);
+    clip-path:polygon(0 0, 100% 50%, 0 100%, 22% 50%);
+  }
+.direction-copy{background:#fff;border:1px solid #ddd;padding:18px 20px 16px;text-align:center;min-height:182px}
+  .direction-copy span{font-size:12px;text-transform:uppercase;letter-spacing:.13em;color:#777;display:block;margin-bottom:8px}
+  .direction-copy p{font-size:15px;color:#666;margin-top:8px}
+
+  .slider{position:relative;margin-top:24px}
+  .slider-controls{display:flex;justify-content:center;gap:8px;margin-bottom:12px}
+  .slider-btn{width:44px;height:44px;border:1px solid #111;background:#fff;color:#111;cursor:pointer;font-size:18px;font-weight:700}
+  .black .slider-btn{background:transparent;color:#fff;border-color:#fff}
+  .slider-window{overflow:auto;scroll-behavior:smooth;scroll-snap-type:x proximity;scrollbar-width:none}
+  .slider-window::-webkit-scrollbar{display:none}
+  .slider-track{display:flex;gap:20px}
+  .slide{flex:0 0 calc((100% - 60px)/4);min-width:220px;scroll-snap-align:start}
+  .slide.three{flex:0 0 calc((100% - 40px)/3);min-width:300px}
+
+  /* Masters */
+  .masters-slider .slide{flex:0 0 calc((100% - 60px)/4);min-width:240px}
+  .master-card{background:#fff;color:#111;border:1px solid #ddd;min-height:320px;padding:16px;display:flex;flex-direction:column}
+  .master-card .thumb{height:170px;background:#dcdcdc;margin-bottom:14px;overflow:hidden}
+  .master-card .thumb img{width:100%;height:100%;object-fit:cover}
+  .master-card h3{font-size:22px;line-height:1.14}
+  .master-card p{font-size:14px;color:#666;margin-top:auto;margin-bottom:0}
+  .schedule-box{display:grid;grid-template-columns:.8fr 1.2fr;gap:24px;margin-top:24px}
+  .schedule-note{background:#111;color:#fff;padding:28px;box-shadow:var(--shadow)}
+  .schedule-table{background:#fff;border:1px solid #ddd;overflow:hidden}
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:16px 15px;border-bottom:1px solid #ececec;text-align:left;font-size:15px}
+  th{font-size:12px;text-transform:uppercase;letter-spacing:.14em;background:#f6f6f6}
+  tr:last-child td{border-bottom:none}
+
+  .work-card{background:#fff;border:1px solid #ddd;padding:14px}
+  .work-ph{background:#d9d9d9;aspect-ratio:1.1/1;border:1px solid #cfcfcf;display:flex;align-items:center;justify-content:center}
+  .work-ph svg{width:46px;height:46px;opacity:.45}
+  .works-actions{margin-top:22px;display:flex;justify-content:center}
+
+  .teacher-card{background:#fff;color:#111;border:1px solid #ddd;overflow:hidden}
+  .teacher-photo{background:#d7d7d7;height:230px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #ddd}
+  .teacher-photo svg{width:64px;height:64px;opacity:.5}
+  .teacher-card .body{padding:16px}
+  .teacher-card .role{font-size:14px;color:#666}
+  .teachers-section .slider{margin-top:12px}
+
+  .why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:28px}
+  .why-item{background:#fff;border:1px solid #ddd;padding:24px 20px;min-height:210px}
+  .why-icon{width:52px;height:52px;display:grid;place-items:center;background:#111;color:#fff;margin-bottom:18px}
+  .why-icon svg{width:24px;height:24px}
+  .why-item p{font-size:15px;color:#666}
+
+  .locations-grid{display:grid;grid-template-columns:1fr;gap:22px;margin-top:28px}
+  .location-card{background:#fff;border:1px solid #ddd;padding:18px}
+  .location-top{display:grid;grid-template-columns:.72fr 1.28fr;gap:18px;margin-bottom:14px}
+  .location-photo{min-height:280px;background:#d9d9d9;overflow:hidden}
+  .location-photo img{width:100%;height:100%;object-fit:cover}
+  .map-embed{min-height:280px;border:1px solid #d2d2d2;background:#efefef;overflow:hidden}
+  .map-embed iframe{display:block;width:100%;height:100%;min-height:280px;border:0}
+
+  .review-card{background:#fff;color:#111;border:1px solid #ddd;padding:18px;min-height:175px}
+  .review-card .stars{letter-spacing:.18em;margin-bottom:10px}
+  .review-card .author{font-weight:700;margin-top:14px}
+  .maps-links{margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .map-tile{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #ddd;padding:10px 14px;min-height:56px;width:auto;min-width:230px;max-width:290px}
+  .map-tile img{width:28px;height:28px;object-fit:contain;flex:0 0 28px}
+  .map-tile strong{display:block;font-size:14px;line-height:1.2}
+  .map-tile span{font-size:12px;color:#666;line-height:1.25}
+  .map-tile .map-stars{font-size:12px;letter-spacing:.08em;color:#111;line-height:1;margin-top:4px}
+
+  .cert-grid{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center}
+  .cert-box{background:#fff;border:1px solid #ddd;min-height:360px;position:relative;padding:30px;display:flex;flex-direction:column;justify-content:center}
+  .cert-box::before,.cert-box::after{content:"";position:absolute;width:88px;height:88px;transform:rotate(45deg)}
+  .cert-box::before{right:34px;top:34px;background:#111}
+  .cert-box::after{left:34px;bottom:34px;background:#d4d4d4}
+  .cert-box h3{font-size:40px;line-height:1.03;max-width:360px;position:relative;z-index:2}
+  .cert-list{background:#fff;border:1px solid #ddd;padding:26px}
+  .cert-list ul{margin:14px 0 0 18px;padding:0}
+  .cert-list li{margin-bottom:10px}
+
+  .events-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:28px;align-items:stretch}
+  .events-copy{background:#111;color:#fff;padding:34px;display:flex;flex-direction:column;justify-content:center}
+  .events-copy .lead{color:#d3d3d3;font-size:18px}
+  .events-list{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0 24px}
+  .events-item{border:1px solid rgba(255,255,255,.24);padding:14px 16px;font-size:14px}
+  .events-visual{background:#d9d9d9;border:1px solid #ccc;display:flex;align-items:center;justify-content:center;min-height:360px}
+  .events-visual svg{width:64px;height:64px;opacity:.45}
+  .btn.disabled-link{pointer-events:none}
+
+  .faq-wrap{max-width:860px;margin:0 auto}
+  .faq-box{background:#fff;border:1px solid #ddd;padding:8px 16px}
+  details{border-bottom:1px solid #e4e4e4;padding:16px 0}
+  details:last-child{border-bottom:none}
+  summary{list-style:none;cursor:pointer;font-size:16px;font-weight:700;line-height:1.35}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";float:right;font-size:28px;line-height:1;margin-top:-2px}
+  details[open] summary::after{content:"–"}
+  details p{margin:14px 0 0;color:#666;font-size:15px}
+
+  .seo-section{padding:58px 0;background:#fff}
+  .seo-panel{max-width:1080px;margin:0 auto}
+  .seo-head{max-width:830px;margin-bottom:28px;padding-left:22px;border-left:5px solid #111}
+  .seo-head h2{margin-bottom:12px}
+  .seo-head>p{margin:0;color:#666;font-size:17px;line-height:1.55}
+  .seo-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .seo-card{position:relative;background:#f4f4f4;border:1px solid #d8d8d8;padding:26px 28px;min-height:100%}
+  .seo-card h3{font-size:24px;margin:0 0 14px;max-width:88%}
+  .seo-card p{font-size:15px;line-height:1.65;color:#555;margin:0 0 15px}
+  .seo-card p:last-child{margin-bottom:0}
+  .seo-card-num{position:absolute;right:20px;top:18px;font-size:12px;letter-spacing:.16em;color:#999;font-weight:700}
+  .seo-card-dark{background:#111;border-color:#111;color:#fff}
+  .seo-card-dark h3{color:#fff}
+  .seo-card-dark p{color:#d1d1d1}
+  .seo-card-dark .seo-card-num{color:#777}
+  .seo-card-accent{background:#fff;border:2px solid #111}
+  .seo-list{list-style:none;padding:0;margin:16px 0 18px;display:grid;grid-template-columns:1fr 1fr;gap:9px 18px}
+  .seo-list li{position:relative;padding-left:17px;font-size:14.5px;color:#3f3f3f}
+  .seo-list li:before{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;background:#111;transform:rotate(45deg)}
+  .seo-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+  .seo-tags span{border:1px solid rgba(255,255,255,.25);padding:7px 10px;font-size:12px;letter-spacing:.04em;color:#f1f1f1}
+
+  .form-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:24px;align-items:stretch}
+  .form-side{background:#111;color:#fff;padding:30px;display:flex;flex-direction:column;justify-content:space-between}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .chip{padding:10px 12px;border:1px solid rgba(255,255,255,.26);font-size:14px}
+  .form-card{background:#fff;border:1px solid #ddd;padding:24px}
+  .form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  input,select,textarea{width:100%;padding:16px;border:1px solid #ccc;background:#fafafa;font:inherit}
+  textarea{min-height:130px;resize:vertical;grid-column:1/-1}
+  .full{grid-column:1/-1}
+  .form-note{font-size:13px;color:#777;margin-top:12px}
+
+  .footer{padding:48px 0;background:#111;color:#fff}
+  .footer-grid{display:grid;grid-template-columns:1.05fr 1.6fr .75fr;gap:56px;align-items:start}
+  .footer-nav{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 18px;font-size:14px}
+  .foot-note{margin-top:26px;color:#aaa;font-size:13px}
+
+  @media(max-width:980px){
+    .nav{display:none}
+    .hero-grid,.about-grid,.schedule-box,.cert-grid,.events-grid,.form-grid,.footer-grid,.seo-grid{grid-template-columns:1fr}
+    .footer-grid{gap:34px}
+    .direction-grid,.why-grid,.locations-grid,.maps-links{grid-template-columns:1fr 1fr}
+    .slide,.masters-slider .slide,.slide.three{flex-basis:calc((100% - 20px)/2)}
+    .hero-visual{min-height:420px}
+    .location-top{grid-template-columns:1fr}
+  }
+  @media(max-width:640px){
+    .wrap{width:min(100% - 28px,1180px)}
+    .section{padding:56px 0}
+    .direction-grid,.why-grid,.locations-grid,.maps-links,.hero-facts{grid-template-columns:1fr}
+    .direction-grid{row-gap:64px}
+    .slide,.masters-slider .slide,.slide.three{flex-basis:85%}
+    .form{grid-template-columns:1fr}
+    .events-list{grid-template-columns:1fr}
+    .seo-list{grid-template-columns:1fr}
+    .seo-card{padding:22px}
+    .seo-head{padding-left:16px}
+    textarea,.full{grid-column:1}
+    .phone{display:none}
+    .hero-visual{min-height:330px}
+    .hero-big{width:220px;height:220px;right:35px}
+    .hero-small{width:145px;height:145px;left:10px;bottom:10px}
+    .hero-ghost{width:96px;height:96px}
+    .hero-outline{width:110px;height:110px;right:8px;top:40px}
+    .hero-choice-card{width:100%;max-width:none;padding:13px 14px}
+
+    /* На мобильном визуально связываем каждый ромб именно с его направлением */
+    .direction-visual{height:278px;margin-bottom:8px}
+    .direction-rhombus{width:200px;height:270px;margin-left:-100px}
+    .direction-copy{
+      min-height:0;
+      padding:16px 18px;
+      display:flex;
+      flex-direction:column
+    }
+    .direction-copy h3{
+      order:1;
+      margin:0 0 8px;
+      font-size:22px
+    }
+    .direction-copy span{
+      order:2;
+      margin:0 0 8px
+    }
+    .direction-copy p{
+      order:3;
+      margin:0
+    }
+  }
+
+  /* ===== Internal page: Studio drawing ===== */
+  .breadcrumbs{font-size:13px;color:#777;margin-bottom:18px}
+  .breadcrumbs a{text-decoration:underline;text-underline-offset:3px}
+  .inner-hero{padding:28px 0 40px}
+  .inner-hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:28px;align-items:center}
+  .inner-hero h1{font-size:clamp(30px,4.1vw,50px);max-width:520px;line-height:1.02;margin-bottom:14px}
+  .inner-hero .lead{font-size:17px;max-width:560px;margin-bottom:18px}
+  .hero-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 16px;max-width:680px}
+  .hero-meta-item{background:#fff;border:1px solid #d8d8d8;padding:12px 14px;min-height:84px}
+  .hero-meta-item strong{display:block;font-size:14px;line-height:1.25;margin-bottom:6px}
+  .hero-meta-item span{display:block;font-size:12.5px;line-height:1.4;color:#666}
+  .inner-hero-media{min-height:390px;position:relative}
+  .inner-rhombus-main{
+    position:absolute;right:52px;top:10px;width:250px;height:330px;
+    clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);overflow:hidden;background:#111;box-shadow:var(--shadow)
+  }
+  .inner-rhombus-main img{width:100%;height:100%;object-fit:cover}
+  .inner-rhombus-small{
+    position:absolute;left:20px;bottom:24px;width:135px;height:175px;
+    clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);overflow:hidden;background:#d8d8d8;border:1px solid #ccc
+  }
+  .inner-rhombus-small img{width:100%;height:100%;object-fit:cover}
+  .inner-rhombus-outline{
+    position:absolute;right:0;top:74px;width:145px;height:190px;
+    clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);border:1px solid #c7c7c7
+  }
+  .inner-media-caption{
+    position:absolute;right:10px;bottom:4px;width:235px;background:#fff;border:1px solid #d8d8d8;padding:12px 14px;z-index:3
+  }
+  .inner-media-caption strong{display:block;font-size:13px;margin-bottom:5px}
+  .inner-media-caption span{font-size:12.5px;color:#666;line-height:1.45}
+
+  .info-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:20px;align-items:start;margin-top:20px}
+  .info-intro{background:#111;color:#fff;padding:24px}
+  .info-intro .lead{color:#d5d5d5;font-size:18px}
+  .info-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .info-card{background:#fff;border:1px solid #ddd;padding:16px 18px;min-height:150px}
+  .info-card .num{font-size:11px;letter-spacing:.16em;color:#999;font-weight:700;margin-bottom:12px}
+  .info-card h3{font-size:21px}
+  .info-card p{font-size:14.5px;color:#666;margin-bottom:0}
+  .about-visual{background:#fff;border:1px solid #ddd;padding:18px}
+  .about-visual .slider-controls{margin-bottom:8px}
+  .about-rhomb-track{display:flex;gap:18px;align-items:center;justify-content:flex-start;padding:10px 4px 2px}
+  .about-rhomb-slide{flex:0 0 235px}
+  .about-rhombus{width:235px;height:300px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#d8d8d8;border:1px solid #ccc;display:flex;align-items:center;justify-content:center}
+  .about-rhombus svg{width:58px;height:58px;opacity:.42}
+  .program-icon{width:46px;height:46px;display:grid;place-items:center;background:#fff;color:#111;margin-bottom:14px}
+  .program-icon svg{width:22px;height:22px}
+  .combo-icon{width:48px;height:48px;display:grid;place-items:center;border:1px solid rgba(0,0,0,.12);margin-bottom:14px}
+  .combo-card.dark .combo-icon{border-color:rgba(255,255,255,.18);color:#fff}
+  .combo-icon svg{width:22px;height:22px}
+  .result-num{position:absolute;right:14px;top:12px;font-size:12px;letter-spacing:.14em;color:#8d8d8d;font-weight:700}
+.teachers-section .wrap,.reviews-section .wrap{width:min(1040px,calc(100% - 40px));margin:auto}
+
+  .program-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
+  .program-card{border:1px solid rgba(255,255,255,.2);padding:18px 18px 20px;min-height:0}
+  .program-card h3{font-size:19px}
+  .program-card p,.program-card li{font-size:14.5px;color:#d0d0d0}
+  .program-card ul{margin:16px 0 0 18px;padding:0}
+  .program-card li{margin-bottom:9px}
+  .lesson-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+  .lesson-step{background:#fff;color:#111;padding:14px;min-height:88px}
+  .lesson-step strong{display:block;font-size:13px;margin-bottom:6px}
+  .lesson-step span{font-size:12.5px;color:#666}
+
+  .result-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}
+  .result-item{background:#111;color:#fff;padding:16px;min-height:96px;position:relative}
+  .result-item strong{display:block;font-size:14px;line-height:1.3;margin-bottom:6px;padding-right:28px}
+  .result-item span{font-size:12.5px;color:#bdbdbd}
+  .student-work{background:#fff;border:1px solid #ddd;padding:10px}
+  .student-work .work-ph{aspect-ratio:1.2/1}
+  .student-work .caption{font-size:12px;color:#666;padding:8px 4px 2px}
+
+  .included-box{background:#111;color:#fff;padding:22px}
+  .included-box ul{margin:16px 0 0 18px;padding:0}
+  .included-box li{margin-bottom:11px;color:#d6d6d6;font-size:14.5px}
+  .schedule-inner{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-top:18px}
+
+  .combo-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .combo-card{min-height:320px;padding:24px;border:1px solid #ddd;background:#fff;position:relative;overflow:hidden}
+  .combo-card.dark{background:#111;color:#fff;border-color:#111}
+  .combo-card .eyebrow{margin-bottom:12px}
+  .combo-card p{max-width:520px}
+  .combo-list{margin:18px 0 24px;padding:0;list-style:none}
+  .combo-list li{margin-bottom:10px;padding-left:18px;position:relative}
+  .combo-list li:before{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;background:currentColor;transform:rotate(45deg);opacity:.7}
+  .combo-card .shape{position:absolute;width:120px;height:120px;right:30px;bottom:30px;transform:rotate(45deg);background:#d8d8d8}
+  .combo-card.dark .shape{background:#fff;opacity:.12}
+
+  .location-form-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:18px;align-items:stretch}
+  .location-panel{background:#fff;border:1px solid #ddd;padding:14px}
+  .location-media{display:grid;grid-template-columns:.78fr 1.22fr;gap:12px}
+  .location-media img{width:100%;height:100%;min-height:240px;object-fit:cover}
+  .location-copy{padding-top:16px}
+  .location-copy h3{margin-bottom:8px}
+  .location-copy p{margin-bottom:8px}
+  .compact-form-side{background:#111;color:#fff;padding:22px}
+  .compact-form-side .lead{color:#d0d0d0;font-size:17px}
+  .compact-form{display:grid;gap:10px;margin-top:16px}
+  .compact-form input,.compact-form select,.compact-form textarea{background:#fff}
+  .compact-form textarea{min-height:105px}
+
+  .internal-seo{padding:42px 0;background:#fff}
+  .internal-seo-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
+  .internal-seo-card{background:#f3f3f3;border:1px solid #d8d8d8;padding:18px}
+  .internal-seo-card.dark{background:#111;color:#fff;border-color:#111}
+  .internal-seo-card p{font-size:15px;color:#5f5f5f;line-height:1.65;margin-bottom:0}
+  .internal-seo-card.dark p{color:#d0d0d0}
+  .related-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .related-links a{border:1px solid #111;padding:9px 12px;font-size:13px;background:#fff}
+  .faq-title{margin-top:10px;text-align:center}
+
+  @media(max-width:980px){
+    .inner-hero-grid,.info-grid,.program-grid,.schedule-inner,.combo-grid,.location-form-grid,.internal-seo-grid{grid-template-columns:1fr}
+    .inner-hero-media{min-height:440px}
+    .hero-meta,.result-strip,.lesson-steps{grid-template-columns:1fr 1fr}
+    .location-media{grid-template-columns:1fr}
+  }
+  @media(max-width:640px){
+    .inner-hero{padding:26px 0 36px}
+    .inner-hero-grid{gap:18px}
+    .hero-meta,.info-cards,.result-strip,.lesson-steps{grid-template-columns:1fr}
+    .inner-hero-media{min-height:360px}
+    .inner-rhombus-main{width:205px;height:270px;right:24px}
+    .inner-rhombus-small{width:115px;height:150px;left:0;bottom:12px}
+    .inner-rhombus-outline{width:115px;height:150px;right:0;top:55px}
+    .inner-media-caption{position:relative;right:auto;bottom:auto;width:100%;margin-top:290px}
+    .info-intro,.combo-card,.compact-form-side{padding:20px}
+    .program-card{min-height:0}
+    .location-media img{min-height:180px}
+  }
+
+
+  /* ===== Compact pass ===== */
+  h2{font-size:clamp(22px,2.1vw,30px);line-height:1.1;margin-bottom:11px}
+  h3{font-size:18px;line-height:1.16}
+  .lead{font-size:16px;line-height:1.48}
+  .section{padding:40px 0}
+  .section-label{margin-bottom:11px}
+  .eyebrow{margin-bottom:10px}
+  .slider-btn{width:38px;height:38px}
+  .slider-controls{justify-content:flex-end;gap:7px;margin-bottom:8px}
+
+  /* Hero — компактнее и ромбы снова собраны в одну композицию */
+  .inner-hero{padding:24px 0 30px}
+  .inner-hero h1{font-size:clamp(29px,3.7vw,46px);line-height:1.01;max-width:500px;margin-bottom:11px}
+  .inner-hero .lead{font-size:16px;line-height:1.45;margin-bottom:14px}
+  .inner-hero-grid{gap:18px}
+  .hero-meta{margin:14px 0 13px;gap:8px}
+  .hero-meta-item{min-height:72px;padding:10px 12px}
+  .hero-meta-item strong{font-size:13px;margin-bottom:4px}
+  .hero-meta-item span{font-size:11.5px;line-height:1.32}
+  .inner-hero-media{min-height:292px;max-width:500px;margin-left:auto}
+  .inner-rhombus-main{width:218px;height:282px;right:55px;top:0}
+  .inner-rhombus-small{width:108px;height:140px;left:138px;bottom:0}
+  .inner-rhombus-outline{width:118px;height:154px;right:4px;top:47px}
+  .inner-media-caption{display:none}
+
+  /* О направлении — две равные зоны, слайдер не раздвигает grid */
+  #about{padding:36px 0}
+  .info-grid{grid-template-columns:1fr 1fr;gap:16px;margin-top:15px;align-items:start}
+  .about-visual{min-width:0;padding:13px}
+  .about-visual .slider{margin-top:4px}
+  .about-visual .slider-controls{justify-content:flex-end;margin-bottom:3px}
+  .about-visual .slider-window{min-width:0;overflow:auto}
+  .about-rhomb-track{width:max-content;gap:16px;padding:5px 2px 3px}
+  .about-rhomb-slide{flex:0 0 190px}
+  .about-rhombus{width:190px;height:238px}
+  .about-rhombus svg{width:44px;height:44px}
+  .info-intro{padding:17px 18px}
+  .info-intro .lead{font-size:15px;line-height:1.46;margin-bottom:9px}
+  .info-intro p{font-size:13px;line-height:1.5;margin-bottom:0!important}
+  .info-cards{gap:9px}
+  .info-card{padding:11px 12px;min-height:102px}
+  .info-card .num{margin-bottom:6px}
+  .info-card h3{font-size:16px;margin-bottom:5px}
+  .info-card p{font-size:12.5px;line-height:1.38}
+
+  /* Блок 3 — существенно меньше */
+  #program{padding:33px 0}
+  #program .lead{font-size:15px;max-width:850px;margin-bottom:0}
+  .program-grid{gap:10px;margin-top:14px}
+  .program-card{padding:13px 14px 14px}
+  .program-icon{width:36px;height:36px;margin-bottom:9px}
+  .program-icon svg{width:18px;height:18px}
+  .program-card .eyebrow{font-size:10px;margin-bottom:6px}
+  .program-card h3{font-size:17px;margin-bottom:5px}
+  .program-card ul{margin:8px 0 0 16px}
+  .program-card li{font-size:12.5px;line-height:1.32;margin-bottom:4px}
+  .program-card p{font-size:12.5px;line-height:1.38;margin-top:8px!important}
+  .lesson-steps{gap:7px;margin-top:9px}
+  .lesson-step{padding:9px 10px;min-height:64px}
+  .lesson-step strong{font-size:11.5px;margin-bottom:3px}
+  .lesson-step span{font-size:10.5px;line-height:1.28}
+
+  /* Работы — компактнее, цифры оставляем как визуальные якоря */
+  #works{padding:34px 0}
+  #works .lead{font-size:15px;margin-bottom:11px}
+  .result-strip{gap:8px;margin:12px 0}
+  .result-item{padding:11px 12px;min-height:76px}
+  .result-item strong{font-size:12.5px;padding-right:24px;margin-bottom:4px}
+  .result-item span{font-size:10.5px;line-height:1.25}
+  .result-num{right:10px;top:9px;font-size:10px}
+  #works .slider{margin-top:10px}
+  #works .slider-controls{justify-content:flex-end;margin-bottom:7px}
+  .student-work{padding:8px}
+  .student-work .work-ph{aspect-ratio:1.55/1}
+
+  /* Расписание */
+  #schedule{padding:36px 0}
+  .schedule-inner{gap:14px;margin-top:14px}
+  th,td{padding:11px 12px;font-size:13px}
+  th{font-size:10px}
+  .included-box{padding:17px 18px}
+  .included-box li{font-size:12.5px;margin-bottom:6px}
+  .included-box ul{margin-top:10px}
+  .included-box .btn{min-height:44px;padding:10px 18px}
+
+  /* Преподаватели — небольшой блок */
+  .teachers-section{padding:32px 0!important}
+  .teachers-section .wrap{width:min(980px,calc(100% - 40px))}
+  .teachers-section .lead{font-size:14px!important;margin-bottom:8px!important}
+  .teachers-section .slider{margin-top:5px}
+  .teachers-section .slider-controls{margin-bottom:7px}
+  .teachers-section .slide{flex:0 0 calc((100% - 30px)/4);min-width:190px}
+  .teacher-photo{height:145px}
+  .teacher-card .body{padding:10px}
+  .teacher-card h3{font-size:16px;margin-bottom:4px}
+  .teacher-card .role{font-size:12px}
+
+  /* Отзывы — одинаковая высота карточек и общий блок примерно в треть экрана */
+  .reviews-section{padding:30px 0!important}
+  .reviews-section .wrap{width:min(1000px,calc(100% - 40px))}
+  .reviews-section h2{margin-bottom:7px}
+  .reviews-section .lead{font-size:13.5px!important;margin-bottom:7px!important;max-width:760px}
+  .reviews-section .slider{margin-top:6px}
+  .reviews-section .slider-controls{margin-bottom:7px}
+  .reviews-section .slider-track{align-items:stretch;gap:12px}
+  .reviews-section .slide{flex:0 0 calc((100% - 36px)/4);min-width:205px;display:flex}
+  .review-card{width:100%;height:154px;min-height:154px;padding:12px 13px;display:flex;flex-direction:column}
+  .review-card .stars{font-size:12px;margin-bottom:6px}
+  .review-card p{font-size:12.5px;line-height:1.36;margin-bottom:6px}
+  .review-card .author{font-size:13px;margin-top:auto}
+  .reviews-section .maps-links{margin-top:10px;gap:8px}
+  .reviews-section .map-tile{min-width:200px;min-height:46px;padding:7px 10px}
+  .reviews-section .map-tile img{width:24px;height:24px;flex-basis:24px}
+  .reviews-section .map-tile strong{font-size:12px}
+  .reviews-section .map-tile span,.reviews-section .map-stars{font-size:10px}
+
+  /* Дополнительные форматы */
+  .combo-grid{gap:14px}
+  .combo-card{min-height:260px;padding:20px}
+  .combo-icon{width:40px;height:40px;margin-bottom:10px}
+  .combo-card .lead{font-size:14px!important}
+  .combo-list{margin:12px 0 16px}
+  .combo-list li{font-size:13px;margin-bottom:6px}
+  .combo-card .shape{width:86px;height:86px;right:22px;bottom:22px}
+  .combo-card .btn{min-height:44px;padding:10px 18px}
+
+  /* Блок 9 — адрес и форма компактно */
+  #form{padding:32px 0}
+  .location-form-grid{gap:14px}
+  .location-panel{padding:10px}
+  .location-media{gap:9px}
+  .location-media img{min-height:175px;height:175px}
+  .location-form-grid .map-embed,
+  .location-form-grid .map-embed iframe{min-height:175px;height:175px}
+  .location-copy{padding-top:8px}
+  .location-copy h3{font-size:16px;margin-bottom:4px}
+  .location-copy p{font-size:12.5px;margin-bottom:4px}
+  .location-copy a{font-size:12px}
+  .compact-form-side{padding:17px 18px}
+  .compact-form-side h2{font-size:23px;margin-bottom:7px}
+  .compact-form-side .lead{font-size:13.5px;line-height:1.4;margin-bottom:0}
+  .compact-form{gap:8px;margin-top:12px}
+  .compact-form input,.compact-form select{padding:10px 11px;min-height:42px;font-size:13px}
+  .compact-form .btn{min-height:44px;padding:10px 18px}
+
+  /* Блок 10 + FAQ */
+  .internal-seo{padding:30px 0}
+  .internal-seo-grid{gap:11px;margin-bottom:16px}
+  .internal-seo-card{padding:14px 16px}
+  .internal-seo-card h2{font-size:20px;line-height:1.16;margin-bottom:7px}
+  .internal-seo-card p{font-size:12.5px;line-height:1.48}
+  .internal-seo-card .eyebrow{font-size:10px;margin-bottom:6px}
+  .related-links{gap:6px;margin-top:10px}
+  .related-links a{padding:6px 8px;font-size:11px}
+  .faq-wrap{max-width:760px}
+  .faq-title{font-size:22px!important;margin:0 0 10px}
+  .faq-box{padding:4px 13px}
+  details{padding:9px 0}
+  summary{font-size:14px;line-height:1.3}
+  summary::after{font-size:20px}
+  details p{font-size:12.5px;line-height:1.45;margin-top:7px}
+
+  @media(max-width:980px){
+    .info-grid{grid-template-columns:1fr}
+    .about-visual{max-width:100%}
+    .program-grid{grid-template-columns:1fr 1fr 1fr}
+    .reviews-section .slide,.teachers-section .slide{flex-basis:calc((100% - 12px)/2)}
+  }
+  @media(max-width:640px){
+    h2{font-size:24px}
+    .section{padding:32px 0}
+    .inner-hero-media{min-height:250px}
+    .inner-rhombus-main{width:185px;height:238px;right:28px}
+    .inner-rhombus-small{width:92px;height:120px;left:88px;bottom:0}
+    .inner-rhombus-outline{width:98px;height:128px;right:0;top:42px}
+    .hero-meta{grid-template-columns:1fr}
+    .hero-meta-item{min-height:0}
+    .about-rhomb-slide{flex-basis:165px}
+    .about-rhombus{width:165px;height:210px}
+    .program-grid,.lesson-steps{grid-template-columns:1fr}
+    .program-card{padding:13px}
+    .result-strip{grid-template-columns:1fr 1fr}
+    .reviews-section .slide,.teachers-section .slide{flex-basis:82%}
+    .review-card{height:auto;min-height:145px}
+    .location-form-grid{grid-template-columns:1fr}
+    .location-media{grid-template-columns:1fr 1fr}
+    .internal-seo-grid{grid-template-columns:1fr}
+  }
+
+
+  /* ===== Hero composition fix ===== */
+  .inner-hero-media{min-height:320px;position:relative;overflow:visible}
+  .inner-rhombus-main{
+    width:250px;height:320px;right:36px;top:0;z-index:2;
+  }
+  .inner-rhombus-small{
+    display:block!important;
+    width:135px;height:175px;
+    left:34px;top:132px;bottom:auto;z-index:3;
+  }
+  .inner-rhombus-outline{
+    width:135px;height:175px;
+    right:0;top:54px;z-index:1;
+  }
+
+
+  /* ===== About photo slider ===== */
+  .about-visual{min-width:0;padding:13px;background:#fff;border:1px solid #ddd}
+  .about-photo-slider{margin-top:2px}
+  .about-photo-slider .slider-controls{justify-content:flex-end;margin-bottom:7px}
+  .about-photo-slider .slider-window{overflow:auto;min-width:0}
+  .about-photo-slider .slider-track{gap:10px}
+  .about-photo-slide{flex:0 0 calc((100% - 10px)/2);min-width:210px}
+  .about-photo-ph{
+    height:220px;background:#d8d8d8;border:1px solid #ccc;
+    display:flex;align-items:center;justify-content:center
+  }
+  .about-photo-ph svg{width:48px;height:48px;opacity:.42}
+
+
+  /* ===== Program ultra-compact ===== */
+  #program{padding:26px 0}
+  #program .program-grid{margin-top:11px;gap:9px}
+  #program .program-card{padding:11px 12px 12px}
+  #program .program-icon{width:32px;height:32px;margin-bottom:7px}
+  #program .program-icon svg{width:16px;height:16px}
+  #program .program-card h3{font-size:16px}
+  #program .program-card li{font-size:12px;line-height:1.28;margin-bottom:3px}
+  #program .program-card p{font-size:12px;line-height:1.34}
+
+
+  /* ===== Reviews no dead space ===== */
+  .reviews-section{padding:24px 0!important}
+  .reviews-section .slider-track{align-items:flex-start}
+  .reviews-section .slide{
+    flex:0 0 calc((100% - 36px)/4);
+    min-width:210px;
+    display:block
+  }
+  .review-card{
+    width:100%;
+    height:auto!important;
+    min-height:0!important;
+    padding:10px 12px;
+  }
+  .review-card p{font-size:12px;line-height:1.32;margin-bottom:7px}
+  .review-card .author{margin-top:6px;font-size:12.5px}
+  .reviews-section .maps-links{
+    margin-top:8px;
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+  }
+  .reviews-section .map-tile{
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    min-height:0!important;
+    padding:6px 9px;
+    gap:7px;
+  }
+  .reviews-section .map-tile img{
+    width:22px;height:22px;flex:0 0 22px;
+  }
+  .reviews-section .map-tile strong{font-size:11px}
+  .reviews-section .map-tile span{font-size:9.5px}
+  .reviews-section .map-stars{font-size:9px!important;margin-top:2px!important}
+
+
+  /* ===== Address + form smaller ===== */
+  #form{padding:24px 0}
+  #form .section-label{margin-bottom:8px}
+  .location-form-grid{gap:10px}
+  .location-panel{padding:8px}
+  .location-media{gap:7px}
+  .location-media img{min-height:140px;height:140px}
+  .location-form-grid .map-embed,
+  .location-form-grid .map-embed iframe{min-height:140px;height:140px}
+  .location-copy{padding-top:6px}
+  .location-copy h3{font-size:15px;margin-bottom:3px}
+  .location-copy p{font-size:11.5px;line-height:1.35;margin-bottom:3px}
+  .location-copy a{font-size:11px}
+  .compact-form-side{padding:13px 14px}
+  .compact-form-side .eyebrow{margin-bottom:5px;font-size:9px}
+  .compact-form-side h2{font-size:20px;margin-bottom:5px}
+  .compact-form-side .lead{font-size:12px;line-height:1.35}
+  .compact-form{gap:6px;margin-top:9px}
+  .compact-form input,.compact-form select{
+    padding:8px 9px;min-height:36px;font-size:12px
+  }
+  .compact-form .btn{min-height:38px;padding:8px 14px;font-size:12px}
+
+
+  @media(max-width:640px){
+    .inner-hero-media{min-height:270px}
+    .inner-rhombus-main{width:195px;height:250px;right:20px;top:0}
+    .inner-rhombus-small{width:100px;height:130px;left:25px;top:128px}
+    .inner-rhombus-outline{width:105px;height:136px;right:0;top:42px}
+    .about-photo-slide{flex-basis:82%;min-width:230px}
+    .about-photo-ph{height:190px}
+    .program-grid{grid-template-columns:1fr}
+    .reviews-section .slide{flex-basis:82%}
+    .location-media img,
+    .location-form-grid .map-embed,
+    .location-form-grid .map-embed iframe{height:125px;min-height:125px}
+  }
+
+
+  /* ===== v3: fill space, equal reviews, larger location ===== */
+
+  /* Хиро: фотографии крупнее и плотнее занимают правую половину */
+  .inner-hero-media{
+    min-height:350px;
+    width:100%;
+    max-width:570px;
+    margin-left:auto;
+  }
+  .inner-rhombus-main{
+    width:285px;
+    height:365px;
+    right:72px;
+    top:-8px;
+  }
+  .inner-rhombus-small{
+    width:150px;
+    height:195px;
+    left:38px;
+    top:145px;
+  }
+  .inner-rhombus-outline{
+    width:155px;
+    height:202px;
+    right:0;
+    top:54px;
+  }
+
+  /* Блок 2: изображения крупнее, чтобы не оставалось пустой половины секции */
+  #about{padding:32px 0}
+  #about .info-grid{align-items:stretch}
+  #about .about-visual{
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+  }
+  #about .about-photo-slider{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+  }
+  #about .about-photo-slider .slider-window{
+    flex:1;
+  }
+  #about .about-photo-slider .slider-track{
+    height:100%;
+  }
+  #about .about-photo-slide{
+    flex:0 0 calc((100% - 10px)/2);
+    min-width:220px;
+    height:100%;
+  }
+  #about .about-photo-ph{
+    height:100%;
+    min-height:310px;
+  }
+  #about .info-intro{padding:15px 17px}
+  #about .info-card{
+    min-height:88px;
+    padding:9px 11px;
+  }
+  #about .info-card p{font-size:12px;line-height:1.32}
+  #about .info-card h3{font-size:15px}
+
+  /* Отзывы: все карточки строго одной ширины и одной компактной высоты */
+  .reviews-section{
+    padding:20px 0!important;
+  }
+  .reviews-section .slider{
+    margin-top:4px;
+  }
+  .reviews-section .slider-track{
+    gap:10px;
+    align-items:flex-start;
+  }
+  .reviews-section .slide{
+    flex:0 0 225px!important;
+    width:225px!important;
+    min-width:225px!important;
+    max-width:225px!important;
+  }
+  .reviews-section .review-card{
+    width:225px!important;
+    height:112px!important;
+    min-height:112px!important;
+    max-height:112px!important;
+    padding:9px 10px!important;
+    overflow:hidden;
+  }
+  .reviews-section .review-card .stars{
+    font-size:10px;
+    margin-bottom:4px;
+    line-height:1;
+  }
+  .reviews-section .review-card p{
+    font-size:11.5px;
+    line-height:1.26;
+    margin:0 0 4px;
+  }
+  .reviews-section .review-card .author{
+    font-size:11.5px;
+    margin-top:auto;
+  }
+  .reviews-section .slider-controls{
+    margin-bottom:6px;
+  }
+  .reviews-section .maps-links{
+    margin-top:7px;
+  }
+
+  /* Блок 9: визуальная часть снова крупнее, но форма остаётся компактной */
+  #form{
+    padding:30px 0;
+  }
+  #form .location-form-grid{
+    grid-template-columns:1.3fr .7fr;
+    gap:14px;
+  }
+  #form .location-panel{
+    padding:11px;
+  }
+  #form .location-media{
+    grid-template-columns:.85fr 1.15fr;
+    gap:10px;
+  }
+  #form .location-media img{
+    min-height:225px;
+    height:225px;
+  }
+  #form .map-embed,
+  #form .map-embed iframe{
+    min-height:225px;
+    height:225px;
+  }
+  #form .compact-form-side{
+    padding:16px 17px;
+  }
+
+  @media(max-width:980px){
+    .reviews-section .slide{
+      flex-basis:210px!important;
+      width:210px!important;
+      min-width:210px!important;
+      max-width:210px!important;
+    }
+    .reviews-section .review-card{
+      width:210px!important;
+    }
+    #form .location-form-grid{
+      grid-template-columns:1fr;
+    }
+  }
+
+  @media(max-width:640px){
+    .inner-hero-media{min-height:300px}
+    .inner-rhombus-main{width:220px;height:282px;right:24px;top:0}
+    .inner-rhombus-small{width:112px;height:145px;left:15px;top:150px}
+    .inner-rhombus-outline{width:112px;height:145px;right:0;top:48px}
+
+    #about .about-photo-slide{
+      flex-basis:88%;
+      min-width:250px;
+    }
+    #about .about-photo-ph{
+      min-height:235px;
+    }
+
+    .reviews-section .slide{
+      flex-basis:205px!important;
+      width:205px!important;
+      min-width:205px!important;
+      max-width:205px!important;
+    }
+    .reviews-section .review-card{
+      width:205px!important;
+    }
+
+    #form .location-media{
+      grid-template-columns:1fr;
+    }
+    #form .location-media img,
+    #form .map-embed,
+    #form .map-embed iframe{
+      height:205px;
+      min-height:205px;
+    }
+  }
+
+
+  /* ===== v4: hero rhombi + ultra-compact map review pills ===== */
+
+  /* Не увеличиваем сам hero, а заполняем его правую часть крупнее */
+  .inner-hero-media{
+    min-height:390px;
+    max-width:610px;
+    margin-left:auto;
+  }
+
+  .inner-rhombus-main{
+    width:315px;
+    height:395px;
+    right:48px;
+    top:-6px;
+    z-index:3;
+  }
+
+  .inner-rhombus-small{
+    width:178px;
+    height:225px;
+    left:58px;
+    top:158px;
+    z-index:4;
+  }
+
+  /* Декор-рамка, близко к фото, но не вплотную */
+  .inner-rhombus-outline{
+    width:168px;
+    height:214px;
+    right:0;
+    top:64px;
+    z-index:1;
+  }
+
+  .inner-rhombus-decor{
+    position:absolute;
+    width:120px;
+    height:154px;
+    right:6px;
+    bottom:12px;
+    clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);
+    background:#bfbfbf;
+    z-index:2;
+  }
+  .inner-rhombus-decor::after{
+    content:"";
+    position:absolute;
+    inset:2px;
+    clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);
+    background:#ededed;
+  }
+
+  /* Яндекс / 2ГИС — реально низкие плашки, одна строка */
+  .reviews-section .maps-links{
+    margin-top:6px;
+    gap:6px;
+  }
+  .reviews-section .map-tile{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    min-height:0!important;
+    height:32px!important;
+    padding:4px 7px!important;
+    line-height:1!important;
+  }
+  .reviews-section .map-tile img{
+    width:18px!important;
+    height:18px!important;
+    flex:0 0 18px!important;
+  }
+  .reviews-section .map-tile strong{
+    display:inline!important;
+    font-size:10.5px!important;
+    line-height:1!important;
+    white-space:nowrap;
+  }
+  .reviews-section .map-tile .map-stars{
+    display:inline!important;
+    font-size:8.5px!important;
+    line-height:1!important;
+    margin:0!important;
+    letter-spacing:.04em!important;
+    white-space:nowrap;
+  }
+
+  @media(max-width:640px){
+    .inner-hero-media{min-height:330px}
+    .inner-rhombus-main{
+      width:240px;
+      height:305px;
+      right:18px;
+      top:0;
+    }
+    .inner-rhombus-small{
+      width:128px;
+      height:164px;
+      left:8px;
+      top:162px;
+    }
+    .inner-rhombus-outline{
+      width:128px;
+      height:164px;
+      right:0;
+      top:50px;
+    }
+    .inner-rhombus-decor{
+      width:90px;
+      height:116px;
+      right:0;
+      bottom:2px;
+    }
+  }
+
+
+  /* ===== v5: hero decoration redesigned ===== */
+
+  /* Убираем старые пустые ромбы */
+  .inner-rhombus-outline,
+  .inner-rhombus-decor{
+    display:none!important;
+  }
+
+  /* Композиция занимает правую часть плотнее */
+  .inner-hero-media{
+    min-height:410px;
+    max-width:620px;
+    margin-left:auto;
+    position:relative;
+  }
+
+  /* Спокойная серая подложка вместо пустой рамки */
+  .inner-rhombus-backdrop{
+    position:absolute;
+    width:275px;
+    height:350px;
+    right:4px;
+    top:30px;
+    clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);
+    background:#d4d4d4;
+    z-index:1;
+  }
+
+  /* Красный акцент на подложке — без лишнего текста */
+  .inner-rhombus-backdrop::after{
+    content:"";
+    position:absolute;
+    width:46%;
+    height:100%;
+    right:0;
+    top:0;
+    background:rgba(201,31,44,.16);
+    clip-path:polygon(0 0,100% 50%,0 100%,18% 50%);
+  }
+
+  .inner-rhombus-main{
+    width:325px;
+    height:410px;
+    right:70px;
+    top:0;
+    z-index:3;
+  }
+
+  .inner-rhombus-small{
+    width:185px;
+    height:235px;
+    left:42px;
+    top:155px;
+    z-index:4;
+  }
+
+  /* Маленький черный акцент — повторяет язык главной страницы */
+  .inner-rhombus-black{
+    position:absolute;
+    width:82px;
+    height:104px;
+    right:8px;
+    bottom:6px;
+    clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);
+    background:#111;
+    z-index:5;
+  }
+
+  /* Тонкая красная черта связывает композицию с фирменным цветом */
+  .inner-hero-media::after{
+    content:"";
+    position:absolute;
+    width:92px;
+    height:3px;
+    right:16px;
+    top:18px;
+    background:#c91f2c;
+    z-index:6;
+  }
+
+  @media(max-width:640px){
+    .inner-hero-media{
+      min-height:345px;
+    }
+    .inner-rhombus-backdrop{
+      width:205px;
+      height:260px;
+      right:0;
+      top:34px;
+    }
+    .inner-rhombus-main{
+      width:245px;
+      height:310px;
+      right:24px;
+      top:0;
+    }
+    .inner-rhombus-small{
+      width:132px;
+      height:170px;
+      left:6px;
+      top:168px;
+    }
+    .inner-rhombus-black{
+      width:58px;
+      height:74px;
+      right:0;
+      bottom:2px;
+    }
+    .inner-hero-media::after{
+      width:64px;
+      right:2px;
+      top:16px;
+    }
+  }
+
+
+  .real-schedule{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0 12px}
+  .real-schedule span{border:1px solid rgba(255,255,255,.22);padding:7px 8px;font-size:12px}
+  @media(max-width:640px){
+    .real-schedule{grid-template-columns:1fr 1fr}
+  }
+
+
+  #schedule .schedule-inner{align-items:start}
+  #schedule .included-box{height:auto;min-height:0;align-self:start}
+  #schedule .schedule-table{align-self:start}
+  #schedule .schedule-table table{margin:0}
+
+</style>
+<link rel="stylesheet" href="assets/live.css">
+<style>
+  /* Привязка общего слоя к разметке этой страницы */
+  #works .work-card .ph{aspect-ratio:1.55/1}
+  .ph>img{position:absolute;inset:0}
+  /* шапка: меню + телефон + кнопка в одну строку */
+  .topbar .wrap{gap:16px}
+  .nav{gap:16px}
+  .nav a{white-space:nowrap}
+  .head-right{gap:14px}
+  @media(max-width:1240px) and (min-width:981px){.topbar .phone{display:none}}
+  .teacher-photo.ph,.about-photo-ph.ph{display:block}
+  .location-media .ph{min-height:225px}
+  .compact-form-side .form-ok{padding:18px 6px}
+  .compact-form-side .form-ok .ok-ico{background:#fff;color:#111}
+  .compact-form-side .form-ok h3{font-size:24px;color:#fff}
+  .compact-form-side .form-ok p{color:#bdbdbd}
+  .compact-form-side .ok-again{color:#fff;border-color:#fff}
+  .compact-form-side .ok-again:hover{background:#fff;color:#111}
+  .compact-form .btn.is-loading:after{border-color:#111;border-right-color:transparent}
+  .compact-form .field .err-msg{position:static;display:none;margin-top:3px}
+  .compact-form .field.err .err-msg{display:block}
+  .real-schedule .schedule-time{display:block}
+  .reviews-section .map-tile{color:#111}
+  section[id]{scroll-margin-top:78px}
+  @media(max-width:980px){section[id]{scroll-margin-top:66px}}
+  .real-schedule .schedule-time .slot-tag{border:0;padding:0}
+  @media(max-width:640px){
+    #form .location-media .ph{min-height:205px}
+  }
+</style>
+</head>
+<body id="top">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="logo" href="index.html"><img class="logo-img" src="img/logo.png" alt="Микеланджело"></a>
+    <nav class="nav">
+      <a href="#about">Об изостудии</a>
+      <a href="#program">Как проходят занятия</a>
+      <a href="#schedule">Расписание и цены</a>
+      <a href="#works">Работы учеников</a>
+      <a href="#teachers">Преподаватели</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="head-right">
+      <a class="phone" href="tel:+79170437814">+7 917 043-78-14</a>
+      <button class="head-cta" type="button" data-popup="lead" data-direction="Студия рисования" data-title="Запишите ребёнка на занятие">Записаться</button>
+      <button class="burger" type="button" aria-label="Меню"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="inner-hero" data-zb="Первый экран изостудии">
+  <div class="wrap inner-hero-grid">
+    <div>
+      <div class="breadcrumbs"><a href="index.html">Главная</a> / Изостудия</div>
+      <div class="eyebrow">Художественная изостудия в Уфе</div>
+      <h1>Изостудия для детей в Уфе</h1>
+      <p class="lead">Рисунок, живопись, акварель и ИЗО для детей — от первых творческих занятий до регулярного художественного обучения.</p>
+
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <strong>Для детей с разной подготовкой</strong>
+          <span>Можно начать без опыта и постепенно переходить к более сложным художественным задачам.</span>
+        </div>
+        <div class="hero-meta-item">
+          <strong>Занятия по абонементу</strong>
+          <span>Регулярная практика по рисунку, живописи, цвету и композиции.</span>
+        </div>
+        <div class="hero-meta-item">
+          <strong>В центре Уфы</strong>
+          <span>ул. Чернышевского, 88/1, Арт-КВАДРАТ.</span>
+        </div>
+      </div>
+
+      <a class="btn" href="#form" data-popup="lead" data-direction="Студия рисования" data-title="Запишите ребёнка в изостудию">Записать ребёнка</a>
+    </div>
+
+    <div class="inner-hero-media inner-visual">
+      <div class="inner-rhombus-backdrop"></div>
+      <div class="inner-rhombus-main">
+        <img src="img/hero-4.jpg" alt="Вход в творческое пространство «Микеланджело» на Чернышевского, 88/1">
+      </div>
+      <div class="inner-rhombus-small">
+        <img src="img/hero-2.jpg" alt="Фасад студии «Микеланджело»">
+      </div>
+      <div class="inner-rhombus-black"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section white" id="about" data-std="О студии: слайдер и карточки">
+  <div class="wrap">
+    <h2>Художественная изостудия для детей</h2>
+    <div class="info-grid">
+      <div class="about-visual">
+        <div class="eyebrow">Пространство и занятия</div>
+        <div class="slider about-photo-slider" data-slider>
+          <div class="slider-controls">
+            <button class="slider-btn" type="button" data-prev aria-label="Назад">&larr;</button>
+            <button class="slider-btn" type="button" data-next aria-label="Вперёд">&rarr;</button>
+          </div>
+          <div class="slider-window">
+            <div class="slider-track">
+              <div class="about-photo-slide">
+                <div class="about-photo-ph ph" data-slot="Фото занятия" data-size="800×1000">
+                  <img src="img/kids-1.jpg" alt="Мальчик рисует пастелью на занятии в изостудии" loading="lazy">
+                </div>
+              </div>
+              <div class="about-photo-slide">
+                <div class="about-photo-ph ph" data-slot="Фото занятия" data-size="800×1000">
+                  <img src="img/kids-2.jpg" alt="Ребёнок собирает аппликацию из цветной бумаги" loading="lazy">
+                </div>
+              </div>
+              <div class="about-photo-slide">
+                <div class="about-photo-ph ph" data-slot="Фото мастерской" data-size="800×1000">
+                  <img src="img/about.jpg" alt="Мастерская изостудии с мольбертом и работами на стенах" loading="lazy">
+                </div>
+              </div>
+              <div class="about-photo-slide">
+                <div class="about-photo-ph ph" data-slot="Фото выставки" data-size="800×1000">
+                  <img src="img/gallery.jpg" alt="Выставочный зал с работами учеников" loading="lazy">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="info-intro">
+          <div class="eyebrow" style="color:#aaa">Детская изостудия</div>
+          <p class="lead">Детская изостудия «Микеланджело» помогает ребёнку знакомиться с рисунком, живописью и ИЗО через практику, понятные задания и поддержку педагога.</p>
+          <p style="color:#bdbdbd;margin-top:14px">Начать можно без специальной подготовки. Занятия выстроены так, чтобы ребёнок постепенно осваивал материалы, учился видеть форму и цвет и увереннее работал самостоятельно.</p>
+        </div>
+
+        <div class="info-cards" style="margin-top:12px">
+          <article class="info-card">
+            <div class="num">01</div>
+            <h3>Кому подойдёт</h3>
+            <p>Детям, которые любят рисовать, хотят попробовать разные техники или заниматься изобразительным искусством регулярно.</p>
+          </article>
+          <article class="info-card">
+            <div class="num">02</div>
+            <h3>Чему учимся</h3>
+            <p>Рисунку, живописи, цвету, композиции, форме, свету и аккуратной работе с художественными материалами.</p>
+          </article>
+          <article class="info-card">
+            <div class="num">03</div>
+            <h3>Что получаем</h3>
+            <p>Понимание художественных основ, больше уверенности в работе и собственные законченные рисунки и картины.</p>
+          </article>
+          <article class="info-card">
+            <div class="num">04</div>
+            <h3>Как начать</h3>
+            <p>Можно начать с пробного занятия, а затем выбрать регулярное посещение изостудии по абонементу.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section black" id="program" data-std="Карточки программы">
+  <div class="wrap">
+    <h2>Как проходят занятия в изостудии</h2>
+    <p class="lead">На занятиях дети знакомятся с художественными материалами, выполняют понятные учебные задания и постепенно переходят к более самостоятельным работам.</p>
+
+    <div class="program-grid">
+      <article class="program-card">
+        <div class="program-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="16" rx="2"></rect><path d="M8 8h8"></path><path d="M8 12h8"></path><path d="M8 16h5"></path></svg></div><div class="eyebrow" style="color:#888">Формат</div>
+        <h3>Как можно заниматься</h3>
+        <ul>
+          <li>регулярно по абонементу;</li>
+          <li>в небольшой группе;</li>
+          <li>на тематических занятиях;</li>
+          <li>по индивидуальной программе при необходимости.</li>
+        </ul>
+      </article>
+
+      <article class="program-card">
+        <div class="program-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 6.5A2.5 2.5 0 0 1 7 4h4v15H7a2.5 2.5 0 0 0-2.5 2V6.5Z"></path><path d="M19.5 6.5A2.5 2.5 0 0 0 17 4h-4v15h4a2.5 2.5 0 0 1 2.5 2V6.5Z"></path></svg></div><div class="eyebrow" style="color:#888">Программа</div>
+        <h3>Что разбираем</h3>
+        <ul>
+          <li>основы рисунка и построения формы;</li>
+          <li>цвет, живопись и акварель;</li>
+          <li>композицию и работу с сюжетом;</li>
+          <li>наблюдательность, аккуратность и самостоятельность.</li>
+        </ul>
+      </article>
+
+      <article class="program-card">
+        <div class="program-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5c-4.7 0-8.5 3.3-8.5 7.5 0 4 3.4 7.2 7.7 7.2h1.1c1.2 0 2-.8 2-1.9 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.1 0-1 .8-1.8 1.9-1.8h.8c2.5 0 4.5-1.8 4.5-4.2 0-2.6-3.7-4.5-8.5-4.5Z"></path><circle cx="7.6" cy="10.5" r=".9"></circle><circle cx="10.7" cy="8.1" r=".9"></circle><circle cx="14.2" cy="8.3" r=".9"></circle><circle cx="16.5" cy="11.2" r=".9"></circle></svg></div><div class="eyebrow" style="color:#888">Материалы</div>
+        <h3>С чем работаем</h3>
+        <ul>
+          <li>акварель и гуашь;</li>
+          <li>акрил;</li>
+          <li>карандаш и графические материалы;</li>
+          <li>бумага, холст и другие основы по программе.</li>
+        </ul>
+        <p style="margin-top:16px">Набор материалов зависит от программы занятия. Перед записью администратор подскажет, что уже есть в студии и что понадобится ребёнку.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section works-section" id="works" data-std="Галерея работ">
+  <div class="wrap">
+    <h2>Работы учеников изостудии</h2>
+    <p class="lead">Работы учеников показывают, как дети осваивают рисунок и живопись, пробуют новые материалы и постепенно переходят к более сложным сюжетам.</p>
+
+    <div class="result-strip">
+      <div class="result-item"><div class="result-num">01</div><strong>Видеть форму и пропорции</strong><span>Точнее строить предметы и фигуры.</span></div>
+      <div class="result-item"><div class="result-num">02</div><strong>Работать с цветом</strong><span>Подбирать сочетания и передавать настроение.</span></div>
+      <div class="result-item"><div class="result-num">03</div><strong>Строить композицию</strong><span>Осознанно располагать объекты в формате.</span></div>
+      <div class="result-item"><div class="result-num">04</div><strong>Работать самостоятельнее</strong><span>От идеи и наброска до готовой картины.</span></div>
+    </div>
+
+    <div class="slider" data-slider>
+      <div class="slider-controls">
+        <button class="slider-btn" type="button" data-prev aria-label="Назад">&larr;</button>
+        <button class="slider-btn" type="button" data-next aria-label="Вперёд">&rarr;</button>
+      </div>
+      <div class="slider-window">
+        <div class="slider-track">
+          <div class="slide three"><div class="student-work work-card"><div class="work-ph ph ph-zoom" data-slot="Работа ученика" data-size="1200×800"><img src="img/work-2.jpg" alt="Летний пейзаж, живопись ученика изостудии" loading="lazy"></div><div class="work-cap"><b>Летний луг</b><span>Маша, 9 лет</span></div></div></div>
+          <div class="slide three"><div class="student-work work-card"><div class="work-ph ph ph-zoom" data-slot="Работа ученика" data-size="1200×800"><img src="img/work-3.jpg" alt="Лиса акварелью, работа ученицы" loading="lazy"></div><div class="work-cap"><b>Рыжая лиса</b><span>Соня, 8 лет</span></div></div></div>
+          <div class="slide three"><div class="student-work work-card"><div class="work-ph ph ph-zoom" data-slot="Работа ученика" data-size="1200×800"><img src="img/work-1.jpg" alt="Тюльпаны акварелью, работа ученицы" loading="lazy"></div><div class="work-cap"><b>Тюльпаны</b><span>Алиса, 12 лет</span></div></div></div>
+          <div class="slide three"><div class="student-work work-card"><div class="work-ph ph ph-zoom" data-slot="Работа ученика" data-size="1200×800"><img src="img/work-4.jpg" alt="Пейзаж у реки маслом, работа ученика" loading="lazy"></div><div class="work-cap"><b>Берег реки</b><span>Артём, 14 лет</span></div></div></div>
+          <div class="slide three"><div class="student-work work-card"><div class="work-ph ph ph-zoom" data-slot="Работа ученика" data-size="1200×800"><img src="img/work-9.jpg" alt="Апельсины акварелью, работа ученицы" loading="lazy"></div><div class="work-cap"><b>Апельсины</b><span>Вика, 11 лет</span></div></div></div>
+          <div class="slide three"><div class="student-work work-card"><div class="work-ph ph ph-zoom" data-slot="Работа ученика" data-size="1200×800"><img src="img/work-5.jpg" alt="Абстракция акрилом, работа ученика" loading="lazy"></div><div class="work-cap"><b>Огонь и вода</b><span>Тимур, 13 лет</span></div></div></div>
+          <div class="slide three"><div class="student-work work-card"><div class="work-ph ph ph-zoom" data-slot="Работа ученика" data-size="1200×800"><img src="img/work-6.jpg" alt="Серия детских рисунков с радугой и солнцем" loading="lazy"></div><div class="work-cap"><b>Радуги</b><span>младшая группа, 6–7 лет</span></div></div></div>
+          <div class="slide three"><div class="student-work work-card"><div class="work-ph ph ph-zoom" data-slot="Работа ученика" data-size="1200×800"><img src="img/work-8.jpg" alt="Рисунок яркими красками на бумаге" loading="lazy"></div><div class="work-cap"><b>Салют</b><span>Даня, 7 лет</span></div></div></div>
+          <div class="slide three"><div class="student-work work-card"><div class="work-ph ph ph-zoom" data-slot="Работа ученика" data-size="1200×800"><img src="img/work-7.jpg" alt="Выставка детских рисунков на стене студии" loading="lazy"></div><div class="work-cap"><b>Выставка группы</b><span>дети 5–8 лет</span></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section white" id="schedule" data-std="Таблица цен и расписание">
+  <div class="wrap">
+    <h2>Расписание и стоимость занятий в изостудии</h2>
+
+    <div class="schedule-inner">
+      <div class="schedule-table">
+        <table>
+          <thead>
+            <tr><th>Количество занятий</th><th>Стоимость</th><th>Срок действия</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Разовое занятие</td><td>2 300 ₽</td><td>—</td></tr>
+            <tr><td>2 занятия</td><td>3 500 ₽</td><td>4 недели</td></tr>
+            <tr><td>4 занятия</td><td>5 500 ₽</td><td>4 недели</td></tr>
+            <tr><td>8 занятий</td><td>9 900 ₽</td><td>4 недели</td></tr>
+            <tr><td>12 занятий</td><td>15 400 ₽</td><td>3 месяца</td></tr>
+            <tr><td>Индивидуальное занятие</td><td>4 000 ₽</td><td>—</td></tr>
+            <tr><td>Творческое свидание</td><td>7 000 ₽</td><td>—</td></tr>
+            <tr><td>Сертификат на 1 занятие</td><td>3 000 ₽</td><td>—</td></tr>
+            <tr><td>Сертификат на 2 занятия</td><td>6 000 ₽</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="included-box">
+        <div class="eyebrow" style="color:#aaa">График занятий · ПН–ВС</div>
+        <div class="real-schedule">
+          <span class="schedule-time">11:00–12:40</span>
+          <span class="schedule-time">13:20–15:00</span>
+          <span class="schedule-time">16:00–17:40</span>
+          <span class="schedule-time">18:20–20:00</span>
+        </div>
+        <p style="font-size:12px;color:#bdbdbd;margin:0 0 12px">Длительность одного занятия — 1 час 40 минут.</p>
+
+        <div class="eyebrow" style="color:#aaa;margin-top:4px">Что входит</div>
+        <ul>
+          <li>рабочее место в студии;</li>
+          <li>сопровождение преподавателя;</li>
+          <li>часть материалов для занятий;</li>
+          <li>подбор техники и уровня сложности.</li>
+        </ul>
+
+        <div style="margin-top:14px"><a class="btn light" href="#form" data-popup="lead" data-direction="Студия рисования" data-title="Запишите ребёнка на занятие">Записаться</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section white small-top teachers-section" id="teachers" data-std="Слайдер педагогов">
+  <div class="wrap">
+    <h2>Педагоги детской изостудии</h2>
+    <p class="lead" style="font-size:16px;margin-bottom:14px;color:#555">Педагоги помогают детям осваивать рисунок и живопись, поддерживают интерес к творчеству и объясняют материал понятным языком.</p>
+
+    <div class="slider" data-slider>
+      <div class="slider-controls">
+        <button class="slider-btn" type="button" data-prev aria-label="Назад">&larr;</button>
+        <button class="slider-btn" type="button" data-next aria-label="Вперёд">&rarr;</button>
+      </div>
+      <div class="slider-window">
+        <div class="slider-track">
+          <div class="slide"><div class="teacher-card"><div class="teacher-photo ph" data-slot="Фото педагога" data-size="600×600"><img src="img/t-1.jpg" alt="Палитра и кисть — живопись и композиция" loading="lazy"></div><div class="body"><h3>Анна Петрова</h3><div class="role">Живопись и композиция</div></div></div></div>
+          <div class="slide"><div class="teacher-card"><div class="teacher-photo ph" data-slot="Фото педагога" data-size="600×600"><img src="img/t-2.jpg" alt="Акварельный набросок в скетчбуке" loading="lazy"></div><div class="body"><h3>Мария Иванова</h3><div class="role">Акварель и рисунок</div></div></div></div>
+          <div class="slide"><div class="teacher-card"><div class="teacher-photo ph" data-slot="Фото педагога" data-size="600×600"><img src="img/t-3.jpg" alt="Руки в глине — лепка" loading="lazy"></div><div class="body"><h3>Елена Смирнова</h3><div class="role">Керамика и лепка</div></div></div></div>
+          <div class="slide"><div class="teacher-card"><div class="teacher-photo ph" data-slot="Фото педагога" data-size="600×600"><img src="img/t-4.jpg" alt="Работа за гончарным кругом" loading="lazy"></div><div class="body"><h3>Ирина Кузнецова</h3><div class="role">Гончарный круг</div></div></div></div>
+          <div class="slide"><div class="teacher-card"><div class="teacher-photo ph" data-slot="Фото педагога" data-size="600×600"><img src="img/t-5.jpg" alt="Детское творческое занятие с бумагой и красками" loading="lazy"></div><div class="body"><h3>Ольга Соколова</h3><div class="role">Детские группы</div></div></div></div>
+          <div class="slide"><div class="teacher-card"><div class="teacher-photo ph" data-slot="Фото педагога" data-size="600×600"><img src="img/t-6.jpg" alt="Мастер-класс по живописи в группе" loading="lazy"></div><div class="body"><h3>Татьяна Орлова</h3><div class="role">Мастер-классы по сюжетам</div></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section black tight reviews-section" id="reviews" data-std="Отзывы">
+  <div class="wrap">
+    <h2>Отзывы об изостудии «Микеланджело»</h2>
+    <p class="lead" style="font-size:16px;color:#bdbdbd;margin-bottom:18px">Отзывы родителей и учеников об изостудии, атмосфере занятий и работе педагогов — также на Яндекс Картах и 2ГИС.</p>
+
+    <div class="slider" data-slider>
+      <div class="slider-controls">
+        <button class="slider-btn" type="button" data-prev aria-label="Назад">&larr;</button>
+        <button class="slider-btn" type="button" data-next aria-label="Вперёд">&rarr;</button>
+      </div>
+      <div class="slider-window">
+        <div class="slider-track">
+          <div class="slide"><div class="review-card"><div class="stars">★★★★★</div><p>Ребёнок ходит с удовольствием. Всё объясняют понятно, задания интересные.</p><div class="author">Марина</div></div></div>
+          <div class="slide"><div class="review-card"><div class="stars">★★★★★</div><p>Дети не просто рисуют по образцу, а учатся понимать форму, цвет и композицию.</p><div class="author">Оксана</div></div></div>
+          <div class="slide"><div class="review-card"><div class="stars">★★★★★</div><p>Дочка ждёт каждое занятие. Нравятся педагоги и творческая атмосфера.</p><div class="author">Ирина</div></div></div>
+          <div class="slide"><div class="review-card"><div class="stars">★★★★★</div><p>Начали с пробного занятия, потом выбрали абонемент. Ребёнку формат подошёл.</p><div class="author">Дарья</div></div></div>
+          <div class="slide"><div class="review-card"><div class="stars">★★★★★</div><p>Уютная изостудия и внимательные педагоги. Ребёнок стал увереннее рисовать.</p><div class="author">Елена</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="maps-links">
+      <a class="map-tile" href="https://yandex.ru/maps/org/mikelandzhelo/167462143743/?ll=55.946970%2C54.727940&z=14" target="_blank" rel="noopener">
+        <img src="https://yandex.ru/favicon.ico" alt="Яндекс Карты">
+        <strong>Яндекс</strong>
+        <span class="map-stars">★★★★★</span>
+      </a>
+      <a class="map-tile" href="https://2gis.ru/ufa/firm/70000001051045702" target="_blank" rel="noopener">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%2329b24a'/%3E%3Cpath d='M12 5a5 5 0 0 0-5 5c0 3.6 5 9 5 9s5-5.4 5-9a5 5 0 0 0-5-5zm0 6.8a1.8 1.8 0 1 1 0-3.6 1.8 1.8 0 0 1 0 3.6z' fill='%23fff'/%3E%3C/svg%3E" alt="2ГИС">
+        <strong>2ГИС</strong>
+        <span class="map-stars">★★★★★</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section white" id="extra" data-zb="Сертификат и праздники">
+  <div class="wrap">
+    <div class="combo-grid">
+      <article class="combo-card">
+        <div class="combo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22V8"></path><path d="M3 12h18"></path><rect x="3" y="8" width="18" height="14"></rect><path d="M7 8c-1.5 0-2.5-.9-2.5-2.2C4.5 4 6 3 7.7 3c1.7 0 3.2 1.1 4.3 3"></path><path d="M17 8c1.5 0 2.5-.9 2.5-2.2C19.5 4 18 3 16.3 3c-1.7 0-3.2 1.1-4.3 3"></path></svg></div><div class="eyebrow">Подарок-впечатление</div>
+        <h2>Подарочный сертификат</h2>
+        <p class="lead" style="font-size:17px">Сертификат на 1 занятие — 3 000 ₽, на 2 занятия — 6 000 ₽. Можно использовать на занятия в изостудии или подходящий творческий формат.</p>
+        <ul class="combo-list">
+          <li>для ребёнка или взрослого;</li>
+          <li>на конкретное занятие или сумму;</li>
+          <li>можно выбрать направление позже.</li>
+        </ul>
+        <a class="btn" href="#form" data-popup="lead" data-direction="Подарочный сертификат" data-title="Оформить подарочный сертификат">Оформить сертификат</a>
+        <div class="shape"></div>
+      </article>
+
+      <article class="combo-card dark">
+        <div class="combo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="3"></circle><circle cx="16" cy="8" r="3"></circle><path d="M3 20c1-3.5 3.5-5.5 5-5.5S12 16.5 13 20"></path><path d="M11 20c1-3.5 3.5-5.5 5-5.5s4 2 5 5.5"></path></svg></div><div class="eyebrow" style="color:#999">Для компании</div>
+        <h2>Дни рождения и корпоративы</h2>
+        <p class="lead" style="font-size:17px;color:#d0d0d0">Творческий праздник с рисованием, живописью или тематическим мастер-классом для детской или семейной компании.</p>
+        <ul class="combo-list">
+          <li>дни рождения;</li>
+          <li>корпоративные мероприятия;</li>
+          <li>встречи друзей и небольшие группы.</li>
+        </ul>
+        <button class="btn light" type="button" data-popup="lead" data-direction="Корпоратив / день рождения" data-title="Обсудим творческий праздник">Подробнее</button>
+        <div class="shape"></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="form" data-std="Адрес, карта и форма записи">
+  <div class="wrap">
+    <div class="location-form-grid">
+      <div class="location-panel">
+        <div class="location-media">
+          <div class="ph" data-slot="Фото фасада" data-size="900×600"><img src="img/hero-2.jpg" alt="Фасад студии «Микеланджело» на ул. Чернышевского, 88/1" loading="lazy"></div>
+          <div class="map-embed">
+            <iframe
+              src="https://yandex.ru/map-widget/v1/?ll=55.947013%2C54.728124&z=17&pt=55.947013%2C54.728124%2Cpm2rdm"
+              allowfullscreen="true"
+              loading="lazy"
+              title="Карта: Уфа, ул. Чернышевского, 88/1"></iframe>
+          </div>
+        </div>
+        <div class="location-copy">
+          <h3>Изостудия «Микеланджело»</h3>
+          <p>г. Уфа, ул. Чернышевского, 88/1, Арт-КВАДРАТ</p>
+          <p class="muted">Ежедневно, 11:00–20:00 · <a href="tel:+79170437814">+7 917 043-78-14</a></p>
+          <a href="https://yandex.ru/maps/172/ufa/house/YUwYfwNnSUQEQFtufXtzeX1hYA%3D%3D/" target="_blank" rel="noopener" style="text-decoration:underline;text-underline-offset:3px">Открыть адрес в Яндекс Картах</a>
+        </div>
+      </div>
+
+      <div class="compact-form-side">
+        <div>
+          <div class="eyebrow" style="color:#aaa">Запись</div>
+          <h2>Запишите ребёнка на занятие</h2>
+          <p class="lead">Оставьте заявку — подскажем, с какого занятия начать, и подберём удобное время.</p>
+        </div>
+        <form class="compact-form js-form">
+          <input type="text" name="name" placeholder="Ваше имя">
+          <input type="tel" name="phone" placeholder="Телефон">
+          <select name="direction">
+            <option value="">Выберите формат</option>
+            <option>Абонемент в изостудию</option>
+            <option>Пробное занятие</option>
+            <option>Тематический курс</option>
+            <option>Индивидуальное занятие</option>
+          </select>
+          <button class="btn light" type="submit">Отправить заявку</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="internal-seo" id="faq" data-std="SEO-текст и FAQ">
+  <div class="wrap">
+    <div class="internal-seo-grid">
+      <article class="internal-seo-card dark">
+        <div class="eyebrow" style="color:#888">Почему выбирают нас</div>
+        <h2>Изостудия, где ребёнок учится понимать рисунок</h2>
+        <p>На занятиях в художественной изостудии ребёнок учится видеть форму, подбирать цвет, строить композицию и последовательно доводить работу до результата. Такой подход развивает наблюдательность, аккуратность и уверенность в собственных решениях.</p>
+      </article>
+
+      <article class="internal-seo-card">
+        <div class="eyebrow">Изостудия в центре Уфы</div>
+        <h2>Творческое обучение без лишней спешки</h2>
+        <p>Наша изостудия — школа творческой практики, где дети занимаются рисунком, живописью, акварелью и ИЗО в понятной последовательности. Если вы ищете изостудию для детей в Уфе рядом с центром, занятия проходят на Чернышевского, 88/1, в Арт-КВАДРАТЕ.</p>
+        <div class="related-links">
+          <a href="index.html#directions">Гончарная мастерская</a>
+          <a href="index.html#directions">Центральная художественная школа</a>
+          <a href="index.html#masters">Мастер-классы</a>
+        </div>
+      </article>
+    </div>
+
+    <div class="faq-wrap">
+      <h2 class="faq-title">Частые вопросы об изостудии</h2>
+      <div class="faq-box">
+        <details open>
+          <summary>Можно ли записаться в изостудию без подготовки?</summary>
+          <p>Да. Детская изостудия подходит и начинающим: педагог подберёт посильную задачу и поможет познакомиться с основными материалами и техниками.</p>
+        </details>
+        <details>
+          <summary>Как проходят занятия в изостудии?</summary>
+          <p>Основной формат — регулярные занятия по абонементу в группе. Также возможны пробные, тематические и индивидуальные занятия.</p>
+        </details>
+        <details>
+          <summary>Нужно ли покупать материалы для занятий?</summary>
+          <p>Часть материалов есть в студии, а для отдельных программ может понадобиться свой набор. Перед первым занятием администратор заранее подскажет, что потребуется.</p>
+        </details>
+        <details>
+          <summary>Что ребёнок будет изучать в изостудии?</summary>
+          <p>Рисунок, живопись, акварель, цвет, композицию и работу с разными художественными материалами. Сложность заданий подбирается по уровню подготовки.</p>
+        </details>
+        <details>
+          <summary>Где находится изостудия в Уфе?</summary>
+          <p>Изостудия находится по адресу: г. Уфа, ул. Чернышевского, 88/1, Арт-КВАДРАТ.</p>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-wordmark" aria-label="Микеланджело">
+          <span class="m">М</span>
+          <span class="name">икеланджело</span>
+        </div>
+        <div class="footer-tagline">Творческое пространство в Уфе</div>
+      </div>
+
+      <div>
+        <div class="footer-heading">Разделы страницы</div>
+        <div class="footer-nav">
+          <a href="#about">Об изостудии</a>
+          <a href="#program">Как проходят занятия</a>
+          <a href="#schedule">Расписание и цены</a>
+          <a href="#works">Работы учеников</a>
+          <a href="#teachers">Преподаватели</a>
+          <a href="#reviews">Отзывы</a>
+          <a href="#faq">FAQ</a>
+          <a href="#form">Запись</a>
+        </div>
+      </div>
+
+      <div class="footer-contacts">
+        <div class="footer-heading">Контакты</div>
+        <strong><a href="tel:+79170437814">+7 917 043-78-14</a></strong>
+        <div style="color:#aaa;margin-top:14px;line-height:1.55">ежедневно<br>11:00–20:00</div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>© 2026 «Микеланджело». Все права защищены.</div>
+      <div class="footer-bottom-links">
+        <a href="https://michelangelo-proart.com/privacy" target="_blank" rel="noopener">Политика конфиденциальности</a>
+        <a href="#">Пользовательское соглашение</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"Можно ли записаться в изостудию без подготовки?",
+      "acceptedAnswer":{"@type":"Answer","text":"Да. Детская изостудия подходит и начинающим: педагог подберёт посильную задачу и поможет познакомиться с основными материалами и техниками."}
+    },
+    {
+      "@type":"Question",
+      "name":"Как проходят занятия в изостудии?",
+      "acceptedAnswer":{"@type":"Answer","text":"Основной формат — регулярные занятия по абонементу в группе. Также возможны пробные, тематические и индивидуальные занятия."}
+    },
+    {
+      "@type":"Question",
+      "name":"Нужно ли покупать материалы для занятий?",
+      "acceptedAnswer":{"@type":"Answer","text":"Часть материалов есть в студии, а для отдельных программ может понадобиться свой набор. Перед первым занятием администратор заранее подскажет, что потребуется."}
+    },
+    {
+      "@type":"Question",
+      "name":"Что ребёнок будет изучать в изостудии?",
+      "acceptedAnswer":{"@type":"Answer","text":"Рисунок, живопись, акварель, цвет, композицию и работу с разными художественными материалами. Сложность заданий подбирается по уровню подготовки."}
+    },
+    {
+      "@type":"Question",
+      "name":"Где находится изостудия в Уфе?",
+      "acceptedAnswer":{"@type":"Answer","text":"Изостудия находится по адресу: г. Уфа, ул. Чернышевского, 88/1, Арт-КВАДРАТ."}
+    }
+  ]
+}
+</script>
+
+<script src="assets/live.js"></script>
+</body>
+</html>
