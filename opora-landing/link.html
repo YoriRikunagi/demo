@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Переход в мессенджер</title>
+<style>
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f4f1ec;font-family:Manrope,system-ui,sans-serif;color:#16191f;padding:16px;box-sizing:border-box}
+.card{background:#fffdfa;border:1px solid #e2ddd4;border-radius:18px;max-width:440px;width:100%;padding:36px 28px;text-align:center}
+h1{font-size:22px;margin:0 0 12px}
+p{color:#4a505b;line-height:1.55;margin:0 0 24px}
+b{color:#e8590c}
+a{display:inline-block;background:#e8590c;color:#fff;text-decoration:none;font-weight:700;padding:13px 26px;border-radius:999px}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Здесь откроется чат</h1>
+<p>На рабочем сайте эта кнопка сразу открывает <b id="t">мессенджер</b> с компанией.</p>
+<a href="./">← Вернуться на сайт</a>
+</div>
+<script>var h=decodeURIComponent(location.hash.slice(1));if(h)document.getElementById('t').textContent=h;</script>
+</body>
+</html>

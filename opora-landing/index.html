@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Опора — монтаж инженерных систем в Екатеринбурге</title>
+<meta name="description" content="Электрика, отопление, водоснабжение, вентиляция и слаботочные системы под ключ. 12 лет, 180+ объектов в Свердловской области.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== Контакты и тексты для быстрой правки — см. блок CONFIG в конце файла ===== */
+:root{
+  --bg:#f4f1ec; --paper:#fffdfa; --ink:#16191f; --ink2:#4a505b; --muted:#8a8f99;
+  --line:#e2ddd4; --accent:#e8590c; --accent2:#ff7a2e; --dark:#1b1f27; --dark2:#252a34;
+  --r:18px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img,svg{display:block;max-width:100%}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+h1,h2,h3{font-family:Unbounded,Manrope,sans-serif;font-weight:600;letter-spacing:-.02em;margin:0}
+h2{font-size:clamp(28px,4vw,44px);line-height:1.1}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:18px}
+.eyebrow:before{content:"";width:22px;height:2px;background:currentColor}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:999px;padding:16px 28px;font:700 16px Manrope,sans-serif;text-decoration:none;cursor:pointer;transition:transform .15s,background .15s,box-shadow .15s}
+.btn svg{width:20px;height:20px}
+.btn-main{background:var(--accent);color:#fff;box-shadow:0 10px 30px -10px rgba(232,89,12,.7)}
+.btn-main:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.btn-ghost:hover{background:var(--ink);color:#fff}
+section{padding:110px 0}
+
+/* header */
+header{position:sticky;top:0;z-index:50;background:rgba(244,241,236,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:border-color .2s}
+header.scrolled{border-color:var(--line)}
+.hdr{display:flex;align-items:center;gap:32px;height:76px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;font-family:Unbounded;font-weight:700;font-size:20px;letter-spacing:-.02em}
+.logo-mark{width:38px;height:38px;border-radius:11px;background:var(--ink);display:grid;place-items:center}
+.logo small{display:block;font:500 11px Manrope;color:var(--muted);letter-spacing:0;margin-top:2px}
+nav{display:flex;gap:28px;margin-left:auto}
+nav a{text-decoration:none;font-weight:600;font-size:15px;color:var(--ink2)}
+nav a:hover{color:var(--accent)}
+.hdr-phone{text-decoration:none;font-weight:800;font-size:17px;white-space:nowrap;text-align:right}
+.hdr-phone b{display:block}
+.hdr-phone span{display:block;font-weight:500;font-size:12px;color:var(--muted);text-align:right}
+.hdr .btn{padding:12px 20px;font-size:15px}
+
+/* hero */
+.hero{padding:56px 0 90px;position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(32px,4.2vw,56px);line-height:1.06}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.lead{font-size:19px;color:var(--ink2);max-width:540px;margin:26px 0 36px}
+.hero-btns{display:flex;flex-wrap:wrap;gap:14px}
+.hero-note{margin-top:22px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;background:#2fb344;box-shadow:0 0 0 4px rgba(47,179,68,.18)}
+.hero-art{position:relative;aspect-ratio:1/1.02;border-radius:28px;background:var(--dark);overflow:hidden}
+.hero-art svg{width:100%;height:100%}
+.hero-badge{position:absolute;left:22px;bottom:22px;right:22px;background:rgba(255,253,250,.96);border-radius:16px;padding:16px 18px;display:flex;gap:14px;align-items:center}
+.hero-badge b{font-family:Unbounded;font-size:26px;color:var(--accent);white-space:nowrap}
+.hero-badge p{margin:0;font-size:14px;line-height:1.4;color:var(--ink2)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:72px;border-top:1px solid var(--line)}
+.stat{padding:28px 24px 0 0}
+.stat b{display:block;font-family:Unbounded;font-weight:600;font-size:clamp(30px,3.6vw,46px);line-height:1;letter-spacing:-.03em}
+.stat b sup{font-size:.5em;color:var(--accent);margin-left:2px}
+.stat span{display:block;margin-top:10px;color:var(--ink2);font-size:15px}
+
+/* about */
+.about{background:var(--paper)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px}
+.about p{color:var(--ink2);font-size:18px;margin:0 0 18px}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-content:start}
+.fact{border:1px solid var(--line);border-radius:var(--r);padding:24px;background:var(--bg)}
+.fact svg{width:30px;height:30px;color:var(--accent);margin-bottom:16px}
+.fact h3{font-family:Manrope;font-weight:800;font-size:17px;letter-spacing:0;margin-bottom:6px}
+.fact p{font-size:15px;margin:0;line-height:1.5}
+
+/* services */
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:32px;margin-bottom:52px}
+.sec-head p{max-width:420px;color:var(--ink2);margin:0}
+.services{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.svc{background:var(--paper);border-radius:var(--r);padding:30px;border:1px solid var(--line);display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s,border-color .2s}
+.svc:hover{transform:translateY(-4px);box-shadow:0 24px 50px -28px rgba(22,25,31,.35);border-color:transparent}
+.svc-ico{width:56px;height:56px;border-radius:15px;background:#fdeee4;color:var(--accent);display:grid;place-items:center;margin-bottom:26px}
+.svc-ico svg{width:28px;height:28px}
+.svc h3{font-size:19px;line-height:1.25;margin-bottom:12px}
+.svc p{color:var(--ink2);margin:0 0 20px;font-size:15px}
+.svc ul{list-style:none;padding:0;margin:auto 0 0;display:flex;flex-wrap:wrap;gap:8px}
+.svc li{font-size:13px;font-weight:600;background:var(--bg);border-radius:999px;padding:6px 12px;color:var(--ink2)}
+
+/* projects */
+.projects{background:var(--dark);color:#fff}
+.projects .sec-head p{color:#a9aeb8}
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:34px}
+.chip{border:1px solid #3a404c;background:transparent;color:#d6d9df;border-radius:999px;padding:9px 18px;font:600 14px Manrope;cursor:pointer;transition:.15s}
+.chip:hover{border-color:#8a8f99}
+.chip.on{background:#fff;color:var(--ink);border-color:#fff}
+.proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.proj{background:var(--dark2);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;transition:opacity .25s,transform .25s}
+.proj.hide{display:none}
+.proj-img{aspect-ratio:16/10;position:relative}
+.proj-img svg{width:100%;height:100%}
+.proj-tag{position:absolute;top:14px;left:14px;background:rgba(22,25,31,.75);backdrop-filter:blur(6px);color:#fff;font-size:12px;font-weight:700;padding:6px 11px;border-radius:999px}
+.proj-body{padding:22px 24px 26px;display:flex;flex-direction:column;flex:1}
+.proj h3{font-size:18px;line-height:1.3;margin-bottom:8px}
+.proj-meta{display:flex;flex-wrap:wrap;gap:6px 16px;color:#a9aeb8;font-size:14px;margin-bottom:14px}
+.proj-meta span{display:inline-flex;align-items:center;gap:6px}
+.proj-meta svg{width:15px;height:15px}
+.proj p{margin:0;color:#c9ccd3;font-size:15px}
+.geo{margin-top:64px;display:grid;grid-template-columns:.8fr 1.2fr;gap:48px;align-items:center;border-top:1px solid #333944;padding-top:56px}
+.geo h3{font-size:26px;line-height:1.2}
+.geo p{color:#a9aeb8;margin:14px 0 0}
+.cities{display:flex;flex-wrap:wrap;gap:10px}
+.city{display:flex;align-items:center;gap:10px;background:var(--dark2);border-radius:12px;padding:12px 16px;font-weight:600}
+.city b{font-family:Unbounded;font-size:14px;color:var(--accent2);font-weight:600}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;counter-reset:s}
+.step{padding:28px 24px;border-top:2px solid var(--ink);position:relative}
+.step:before{counter-increment:s;content:"0" counter(s);font-family:Unbounded;font-weight:600;font-size:14px;color:var(--accent);display:block;margin-bottom:22px}
+.step h3{font-family:Manrope;font-weight:800;font-size:19px;letter-spacing:0;margin-bottom:10px}
+.step p{color:var(--ink2);margin:0;font-size:15px}
+
+/* contacts */
+.contacts{background:var(--paper)}
+.ct-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:24px}
+.ct-main{background:var(--accent);color:#fff;border-radius:28px;padding:48px;position:relative;overflow:hidden}
+.ct-main h2{margin-bottom:16px}
+.ct-main>p{font-size:18px;opacity:.92;margin:0 0 34px;max-width:440px}
+.ct-phone{display:block;font-family:Unbounded;font-weight:600;font-size:clamp(28px,3.4vw,42px);text-decoration:none;letter-spacing:-.02em}
+.ct-hours{opacity:.85;font-size:15px;margin:6px 0 32px}
+.ct-main .btn{background:#fff;color:var(--accent)}
+.ct-main .btn:hover{background:var(--ink);color:#fff}
+.ct-main:after{content:"";position:absolute;right:-90px;bottom:-90px;width:300px;height:300px;border-radius:50%;border:56px solid rgba(255,255,255,.1)}
+.ct-list{display:flex;flex-direction:column;gap:12px}
+.ct-item{display:flex;align-items:center;gap:16px;padding:20px 22px;border:1px solid var(--line);border-radius:var(--r);background:var(--bg);text-decoration:none;transition:border-color .15s,background .15s}
+a.ct-item:hover{border-color:var(--accent);background:#fff}
+.ct-item .ic{width:46px;height:46px;border-radius:13px;background:var(--paper);display:grid;place-items:center;flex:none;color:var(--accent)}
+.ct-item .ic svg{width:22px;height:22px}
+.ct-item small{display:block;color:var(--muted);font-size:13px;font-weight:600}
+.ct-item b{font-size:16px;font-weight:700}
+
+/* requisites */
+.req-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:24px;align-items:start}
+.req-table{background:var(--paper);border-radius:var(--r);border:1px solid var(--line);overflow:hidden}
+.req-row{display:grid;grid-template-columns:220px 1fr auto;gap:16px;align-items:center;padding:15px 24px;border-bottom:1px solid var(--line)}
+.req-row:last-child{border-bottom:0}
+.req-row span{color:var(--muted);font-size:14px;font-weight:600}
+.req-row b{font-weight:600;font-size:15px;word-break:break-word}
+.copy{border:0;background:none;color:var(--muted);cursor:pointer;padding:6px;border-radius:8px;display:grid;place-items:center}
+.copy:hover{color:var(--accent);background:var(--bg)}
+.copy svg{width:17px;height:17px}
+.files{display:flex;flex-direction:column;gap:14px}
+.file{display:flex;align-items:center;gap:16px;padding:22px;border-radius:var(--r);background:var(--dark);color:#fff;text-decoration:none;transition:transform .15s}
+.file:hover{transform:translateY(-2px)}
+.file .pdf{width:48px;height:56px;border-radius:8px;background:#fff;color:var(--accent);font:800 12px Manrope;display:grid;place-items:end center;padding-bottom:9px;flex:none;position:relative}
+.file .pdf:before{content:"";position:absolute;top:0;right:0;border-style:solid;border-width:0 14px 14px 0;border-color:transparent var(--dark) #f0c4a8 transparent}
+.file b{display:block;font-size:16px}
+.file small{color:#a9aeb8;font-size:13px}
+.file .dl{margin-left:auto;width:22px;height:22px;color:var(--accent2)}
+
+/* footer */
+footer{background:var(--ink);color:#a9aeb8;padding:44px 0 40px;font-size:14px}
+.ft{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center}
+.ft .logo{color:#fff}
+.ft .logo-mark{background:var(--accent)}
+.ft a{color:#d6d9df}
+.ft-links{margin-left:auto;display:flex;gap:24px;flex-wrap:wrap}
+
+/* mobile call bar */
+.callbar{display:none}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:12px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:100}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+
+@media (max-width:1020px){
+  nav{display:none}
+  .hdr-phone{margin-left:auto}
+  .hero-grid,.about-grid,.ct-grid,.req-grid,.geo{grid-template-columns:1fr}
+  .hero-art{max-width:560px;aspect-ratio:4/3}
+  .services,.proj-grid{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr 1fr}
+  .about-grid{gap:40px}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  section{padding:72px 0}
+  .hdr{height:64px;gap:12px}
+  .hdr .btn,.hdr-phone span{display:none}
+  .hdr-phone{font-size:15px}
+  .logo{font-size:17px}.logo small{display:none}
+  .hero{padding:28px 0 64px}
+  .lead{font-size:17px;margin:20px 0 28px}
+  .hero-btns .btn{flex:1 1 100%}
+  .hero-art{aspect-ratio:1/1}
+  .stats{grid-template-columns:1fr 1fr;margin-top:48px}
+  .stat{padding:22px 12px 0 0}
+  .facts,.services,.proj-grid,.steps{grid-template-columns:1fr}
+  .sec-head{flex-direction:column;align-items:start;gap:16px;margin-bottom:36px}
+  .ct-main{padding:32px 24px;border-radius:22px}
+  .ct-main .btn{width:100%}
+  .req-row{grid-template-columns:1fr auto;gap:2px 12px;padding:14px 18px}
+  .req-row span{grid-column:1/-1}
+  .req-row b{grid-column:1}
+  .req-row .copy{grid-column:2;grid-row:2}
+  .ft-links{margin-left:0}
+  body{padding-bottom:84px}
+  .callbar{display:flex;gap:10px;position:fixed;left:0;right:0;bottom:0;z-index:60;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:rgba(244,241,236,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line)}
+  .callbar .btn{flex:1;padding:15px 12px}
+  .callbar .btn-ghost{flex:0 0 56px;padding:0}
+  .toast{bottom:100px}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-tg" viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3 18.8 19c-.2 1-.9 1.3-1.7.8l-4.7-3.5-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.8 8.8-7.9c.4-.3-.1-.5-.6-.2L6.7 12.9 2 11.4c-1-.3-1-1 .2-1.5L20.6 3c.9-.3 1.6.2 1.3 1.3z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 7 9 6 9-6"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-area" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v7H3zM14 14h7v7h-7zM14 3h7M21 3v7M3 14v7h7"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+  <symbol id="i-dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 21h16"/></symbol>
+  <symbol id="i-max" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.5 7.4L3 21l2.1-5.5A8.5 8.5 0 1 1 21 11.5z"/></symbol>
+</svg>
+
+<header id="top">
+  <div class="wrap hdr">
+    <a class="logo" href="#top" aria-label="Опора — на главную">
+      <span class="logo-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e8590c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9l8-6 8 6v12"/><path d="M9 21v-7h6v7"/></svg></span>
+      <span>Опора<small>монтаж инженерных систем</small></span>
+    </a>
+    <nav>
+      <a href="#about">О компании</a>
+      <a href="#services">Работы</a>
+      <a href="#projects">Объекты</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+    <a class="hdr-phone js-tel" href="tel:+73430000000"><b class="js-phone-txt">+7 (343) 000-00-00</b><span>Пн–Сб, 8:00–20:00</span></a>
+    <a class="btn btn-main js-tel" href="tel:+73430000000"><svg><use href="#i-phone"/></svg>Позвонить</a>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Екатеринбург и Свердловская область</div>
+        <h1>Монтаж инженерных систем <em>под ключ</em> — от проекта до сдачи</h1>
+        <p class="lead">Электрика, отопление, водоснабжение, вентиляция и слаботочка для коммерческих, производственных и жилых объектов. Свои бригады, работа по договору, гарантия 3 года.</p>
+        <div class="hero-btns">
+          <a class="btn btn-main js-tel" href="tel:+73430000000"><svg><use href="#i-phone"/></svg>Позвонить</a>
+          <a class="btn btn-ghost" href="#projects">Посмотреть объекты</a>
+        </div>
+        <div class="hero-note"><span class="dot"></span>Инженер перезвонит в течение 15 минут в рабочее время</div>
+      </div>
+      <div class="hero-art reveal">
+        <svg viewBox="0 0 520 530" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <pattern id="g" width="26" height="26" patternUnits="userSpaceOnUse"><path d="M26 0H0v26" fill="none" stroke="#2c323d" stroke-width="1"/></pattern>
+            <linearGradient id="glow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8590c" stop-opacity=".35"/><stop offset="1" stop-color="#e8590c" stop-opacity="0"/></linearGradient>
+          </defs>
+          <rect width="520" height="530" fill="#1b1f27"/>
+          <rect width="520" height="530" fill="url(#g)"/>
+          <circle cx="400" cy="110" r="150" fill="url(#glow)"/>
+          <!-- здание: разрез -->
+          <g fill="none" stroke="#d6d9df" stroke-width="2">
+            <path d="M80 430V150l180-80 180 80v280"/>
+            <path d="M80 250h360M80 340h360M60 430h400"/>
+            <path d="M260 70v360" stroke-dasharray="4 7" stroke="#5b6270"/>
+          </g>
+          <!-- окна -->
+          <g fill="#2c323d" stroke="#5b6270" stroke-width="1.5">
+            <rect x="110" y="180" width="54" height="44" rx="3"/><rect x="356" y="180" width="54" height="44" rx="3"/>
+            <rect x="110" y="272" width="54" height="44" rx="3"/><rect x="356" y="272" width="54" height="44" rx="3"/>
+            <rect x="110" y="362" width="54" height="44" rx="3"/><rect x="356" y="362" width="54" height="44" rx="3"/>
+          </g>
+          <!-- электрика -->
+          <g fill="none" stroke="#e8590c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M200 420V180h-20M200 268h-24M200 358h-24"/>
+          </g>
+          <g fill="#e8590c"><circle cx="200" cy="420" r="6"/><circle cx="180" cy="180" r="4"/><circle cx="176" cy="268" r="4"/><circle cx="176" cy="358" r="4"/></g>
+          <rect x="188" y="392" width="24" height="30" rx="3" fill="#1b1f27" stroke="#e8590c" stroke-width="2.5"/>
+          <!-- отопление/вода -->
+          <g fill="none" stroke-width="3" stroke-linecap="round">
+            <path d="M300 420V200M318 420V200" stroke="#ff9b5e"/>
+            <path d="M300 300h40M318 310h22" stroke="#ff9b5e"/>
+            <path d="M318 228h30M300 228h0" stroke="#ff9b5e"/>
+          </g>
+          <g fill="#252a34" stroke="#ff9b5e" stroke-width="2.5"><rect x="336" y="292" width="10" height="28" rx="2"/><rect x="344" y="218" width="10" height="22" rx="2"/></g>
+          <!-- вентиляция -->
+          <g fill="none" stroke="#8fb8de" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 8">
+            <path d="M100 236h320"/><path d="M100 326h320"/>
+          </g>
+          <g fill="#1b1f27" stroke="#8fb8de" stroke-width="2.5"><circle cx="230" cy="236" r="8"/><circle cx="380" cy="326" r="8"/></g>
+          <!-- размеры -->
+          <g stroke="#5b6270" stroke-width="1.2" fill="#8a8f99" font-family="Manrope,sans-serif" font-size="12" font-weight="600">
+            <path d="M40 150v280M34 150h12M34 430h12" fill="none"/>
+            <text x="22" y="296" transform="rotate(-90 22 296)" stroke="none">12 400</text>
+            <path d="M80 466h360M80 460v12M440 460v12" fill="none"/>
+            <text x="236" y="490" stroke="none">24 000</text>
+          </g>
+          <g font-family="Manrope,sans-serif" font-size="11" font-weight="700" letter-spacing="1">
+            <text x="78" y="44" fill="#e8590c">ЭОМ</text><text x="118" y="44" fill="#ff9b5e">ОВ · ВК</text><text x="182" y="44" fill="#8fb8de">ВЕНТ</text>
+          </g>
+        </svg>
+        <div class="hero-badge"><b>3 года</b><p>гарантии на все монтажные работы по договору — с выездом в течение 24 часов</p></div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat reveal"><b>12<sup>лет</sup></b><span>на рынке инженерного монтажа</span></div>
+      <div class="stat reveal"><b>180<sup>+</sup></b><span>сданных объектов</span></div>
+      <div class="stat reveal"><b>9</b><span>городов области</span></div>
+      <div class="stat reveal"><b>46</b><span>монтажников в штате</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap about-grid">
+    <div class="reveal">
+      <div class="eyebrow">О компании</div>
+      <h2>Делаем инженерку, которую потом не приходится переделывать</h2>
+      <p style="margin-top:28px">«Опора» с 2014 года монтирует инженерные системы на объектах от квартиры до производственного цеха. Начинали как бригада электриков, сейчас закрываем весь раздел инженерки: проект, закупку, монтаж, пусконаладку и сервис.</p>
+      <p>Работаем с генподрядчиками, управляющими компаниями, бизнесом и частными заказчиками. Каждый объект ведёт свой инженер — один человек на связи от замера до подписания актов.</p>
+    </div>
+    <div class="facts">
+      <div class="fact reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><h3>Допуск СРО</h3><p>Членство в саморегулируемой организации, работы на объектах капстроительства.</p></div>
+      <div class="fact reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2M16 3.1a4 4 0 0 1 0 7.8M22 21v-2a4 4 0 0 0-3-3.9"/></svg><h3>Свои бригады</h3><p>Без субподряда: монтажники в штате, с допусками по электробезопасности.</p></div>
+      <div class="fact reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg><h3>Смета без сюрпризов</h3><p>Фиксируем цену в договоре. Дополнительные работы — только после согласования.</p></div>
+      <div class="fact reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><h3>Сроки по графику</h3><p>Еженедельный фотоотчёт и график работ, который видит заказчик.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><div class="eyebrow">Виды работ</div><h2>Что мы делаем</h2></div>
+      <p>Берём отдельный раздел или весь комплекс инженерных систем — так дешевле и быстрее, чем собирать несколько подрядчиков.</p>
+    </div>
+    <div class="services">
+      <article class="svc reveal">
+        <div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg></div>
+        <h3>Электромонтаж</h3>
+        <p>Силовые и осветительные сети, щиты, вводно-распределительные устройства, наружное освещение.</p>
+        <ul><li>ВРУ и щиты</li><li>Кабельные трассы</li><li>Освещение</li></ul>
+      </article>
+      <article class="svc reveal">
+        <div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1-2.1-.2-4.1 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3.3.3 1.6 1.4 2.8 2.5 2.8z"/></svg></div>
+        <h3>Отопление и котельные</h3>
+        <p>Радиаторное и напольное отопление, тепловые пункты, газовые и электрокотельные.</p>
+        <ul><li>ИТП</li><li>Тёплый пол</li><li>Котельные</li></ul>
+      </article>
+      <article class="svc reveal">
+        <div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7S5 10 5 15a7 7 0 0 0 14 0c0-5-7-12.3-7-12.3z"/></svg></div>
+        <h3>Водоснабжение и канализация</h3>
+        <p>Внутренние сети ВК, насосные станции, водоподготовка, ливневая и дренажная канализация.</p>
+        <ul><li>Сети ВК</li><li>Насосные</li><li>Водоподготовка</li></ul>
+      </article>
+      <article class="svc reveal">
+        <div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.6 4.6A2 2 0 1 1 11 8H2M12.6 19.4A2 2 0 1 0 14 16H2M17.5 8a2.5 2.5 0 1 1 2 4H2"/></svg></div>
+        <h3>Вентиляция и кондиционирование</h3>
+        <p>Приточно-вытяжные системы, дымоудаление, сплит- и VRF-системы, чиллеры.</p>
+        <ul><li>Приток / вытяжка</li><li>VRF</li><li>Дымоудаление</li></ul>
+      </article>
+      <article class="svc reveal">
+        <div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4M7 8h.01M11 8h6M7 12h.01M11 12h6"/></svg></div>
+        <h3>Слаботочные системы</h3>
+        <p>СКС, видеонаблюдение, контроль доступа, пожарная сигнализация и оповещение.</p>
+        <ul><li>СКС</li><li>Видео и СКУД</li><li>АПС и СОУЭ</li></ul>
+      </article>
+      <article class="svc reveal">
+        <div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></svg></div>
+        <h3>Пусконаладка и сервис</h3>
+        <p>Наладка, исполнительная документация, сдача надзорным органам и сервисный договор.</p>
+        <ul><li>ПНР</li><li>Исполнительная</li><li>Обслуживание</li></ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="projects" id="projects">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><div class="eyebrow">Опыт работы</div><h2>Объекты, которые мы сдали</h2></div>
+      <p>Часть объектов за последние три года. Полный список с актами и отзывами пришлём по запросу.</p>
+    </div>
+    <div class="filters" role="tablist">
+      <button class="chip on" data-f="all">Все</button>
+      <button class="chip" data-f="com">Коммерческие</button>
+      <button class="chip" data-f="ind">Производство</button>
+      <button class="chip" data-f="res">Жилые</button>
+    </div>
+    <div class="proj-grid" id="projGrid"></div>
+
+    <div class="geo reveal">
+      <div>
+        <h3>География работ</h3>
+        <p>Основная часть объектов — Екатеринбург и города в радиусе 200 км. На крупные объекты выезжаем по всему Уралу.</p>
+      </div>
+      <div class="cities" id="cities"></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><div class="eyebrow">Как работаем</div><h2>Четыре шага до сдачи объекта</h2></div>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><h3>Звонок и выезд</h3><p>Инженер приезжает на объект или изучает проект — бесплатно.</p></div>
+      <div class="step reveal"><h3>Смета и договор</h3><p>За 2–3 дня готовим смету и график. Цена фиксируется в договоре.</p></div>
+      <div class="step reveal"><h3>Монтаж</h3><p>Работаем по графику, раз в неделю присылаем фотоотчёт.</p></div>
+      <div class="step reveal"><h3>Сдача и гарантия</h3><p>Пусконаладка, исполнительная документация, 3 года гарантии.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="contacts" id="contacts">
+  <div class="wrap ct-grid">
+    <div class="ct-main reveal">
+      <h2>Обсудим ваш объект?</h2>
+      <p>Позвоните — инженер ответит на вопросы и договорится о выезде на объект.</p>
+      <a class="ct-phone js-tel js-phone-txt" href="tel:+73430000000">+7 (343) 000-00-00</a>
+      <div class="ct-hours">Пн–Сб, 8:00–20:00</div>
+      <a class="btn js-tel" href="tel:+73430000000"><svg><use href="#i-phone"/></svg>Позвонить</a>
+    </div>
+    <div class="ct-list">
+      <a class="ct-item reveal js-mail" href="mailto:info@opora-montazh.ru"><span class="ic"><svg><use href="#i-mail"/></svg></span><span><small>Почта для смет и документов</small><b class="js-mail-txt">info@opora-montazh.ru</b></span></a>
+      <a class="ct-item reveal" href="link.html#Telegram"><span class="ic"><svg><use href="#i-tg"/></svg></span><span><small>Telegram</small><b>@opora_montazh</b></span></a>
+      <a class="ct-item reveal" href="link.html#MAX"><span class="ic"><svg><use href="#i-max"/></svg></span><span><small>MAX</small><b>+7 (343) 000-00-00</b></span></a>
+      <div class="ct-item reveal"><span class="ic"><svg><use href="#i-pin"/></svg></span><span><small>Офис и склад</small><b>Екатеринбург, ул. Монтажников, 4</b></span></div>
+    </div>
+  </div>
+</section>
+
+<section id="requisites">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><div class="eyebrow">Для бухгалтерии</div><h2>Реквизиты</h2></div>
+      <p>Нажмите на значок справа, чтобы скопировать строку, или скачайте карточку предприятия целиком.</p>
+    </div>
+    <div class="req-grid">
+      <div class="req-table reveal" id="reqTable"></div>
+      <div class="files reveal">
+        <a class="file" href="rekvizity.pdf" download="Опора — карточка предприятия.pdf"><span class="pdf">PDF</span><span><b>Карточка предприятия</b><small>Реквизиты ИП · 1 стр.</small></span><svg class="dl"><use href="#i-dl"/></svg></a>
+        <a class="file" href="rekvizity.pdf" target="_blank" rel="noopener"><span class="pdf">PDF</span><span><b>Открыть в браузере</b><small>Для печати или пересылки</small></span><svg class="dl"><use href="#i-dl"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap ft">
+    <a class="logo" href="#top"><span class="logo-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9l8-6 8 6v12"/><path d="M9 21v-7h6v7"/></svg></span>Опора</a>
+    <span>© 2014–<span id="year">2026</span> ИП Захаров И. С.</span>
+    <div class="ft-links">
+      <a href="privacy.html">Политика конфиденциальности</a>
+      <a href="rekvizity.pdf" target="_blank" rel="noopener">Реквизиты</a>
+    </div>
+  </div>
+</footer>
+
+<div class="callbar">
+  <a class="btn btn-main js-tel" href="tel:+73430000000"><svg><use href="#i-phone"/></svg>Позвонить</a>
+  <a class="btn btn-ghost" href="link.html#Telegram" aria-label="Написать в Telegram"><svg><use href="#i-tg"/></svg></a>
+</div>
+<div class="toast" id="toast">Скопировано</div>
+
+<script>
+/* ================= CONFIG: правьте здесь =================
+   Телефон и почта подставятся во все кнопки и ссылки автоматически. */
+const CONFIG = {
+  phone: "+7 (343) 000-00-00",
+  email: "info@opora-montazh.ru",
+  requisites: [
+    ["Полное наименование", "Индивидуальный предприниматель Захаров Илья Сергеевич"],
+    ["ИНН", "660000000000"],
+    ["ОГРНИП", "314660000000000"],
+    ["Юридический адрес", "620000, г. Екатеринбург, ул. Монтажников, д. 4"],
+    ["Расчётный счёт", "40802810000000000000"],
+    ["Банк", "ПАО «Уральский банк», г. Екатеринбург"],
+    ["БИК", "046500000"],
+    ["Корр. счёт", "30101810000000000000"]
+  ],
+  projects: [
+    {t:"Бизнес-центр «Высота»", type:"com", city:"Екатеринбург", year:2025, area:"8 400 м²", work:"Электрика, вентиляция и СКС на 9 этажах, работы без остановки арендаторов."},
+    {t:"Цех металлообработки", type:"ind", city:"Верхняя Пышма", year:2025, area:"3 200 м²", work:"Силовые сети на 1,2 МВт, ВРУ, промышленная вытяжка от станков."},
+    {t:"Жилой комплекс «Береговой»", type:"res", city:"Екатеринбург", year:2024, area:"212 квартир", work:"Отопление, ВК и электрика в двух секциях по 17 этажей."},
+    {t:"Сеть кофеен, 6 точек", type:"com", city:"Екатеринбург, Березовский", year:2024, area:"6 объектов", work:"Типовой проект электрики и вентиляции, монтаж каждой точки за 10 дней."},
+    {t:"Логистический склад", type:"ind", city:"Арамиль", year:2023, area:"11 000 м²", work:"Освещение, отопление воздушными завесами, видеонаблюдение и СКУД."},
+    {t:"Загородный дом", type:"res", city:"Сысерть", year:2023, area:"340 м²", work:"Котельная, тёплый пол, водоподготовка и щит с автоматикой."}
+  ],
+  cities: [["Екатеринбург",104],["Верхняя Пышма",14],["Березовский",12],["Арамиль",9],["Первоуральск",11],["Каменск-Уральский",8],["Сысерть",7],["Ревда",9],["Нижний Тагил",6]]
+};
+/* ========================================================= */
+
+const tel = "tel:" + CONFIG.phone.replace(/[^\d+]/g, "");
+document.querySelectorAll(".js-tel").forEach(a => a.href = tel);
+document.querySelectorAll(".js-phone-txt").forEach(e => e.textContent = CONFIG.phone);
+document.querySelectorAll(".js-mail").forEach(a => a.href = "mailto:" + CONFIG.email);
+document.querySelectorAll(".js-mail-txt").forEach(e => e.textContent = CONFIG.email);
+document.getElementById("year").textContent = new Date().getFullYear();
+
+const toast = document.getElementById("toast");
+function showToast(t){ toast.textContent = t; toast.classList.add("show"); clearTimeout(showToast.t); showToast.t = setTimeout(() => toast.classList.remove("show"), 1600); }
+
+document.getElementById("reqTable").innerHTML = CONFIG.requisites.map(([k, v]) =>
+  `<div class="req-row"><span>${k}</span><b>${v}</b><button class="copy" data-v="${v.replace(/"/g,'&quot;')}" aria-label="Скопировать: ${k}"><svg><use href="#i-copy"/></svg></button></div>`).join("");
+document.getElementById("reqTable").addEventListener("click", e => {
+  const b = e.target.closest(".copy"); if (!b) return;
+  const v = b.dataset.v;
+  (navigator.clipboard ? navigator.clipboard.writeText(v) : Promise.reject()).then(() => showToast("Скопировано"), () => showToast(v));
+});
+
+/* картинки объектов — чертёжные иллюстрации, на рабочем сайте заменяются фото */
+const palettes = {com:["#2f3a4f","#8fb8de"], ind:["#3b3027","#ff9b5e"], res:["#28382f","#8fd4a8"]};
+const typeName = {com:"Коммерческий", ind:"Производство", res:"Жилой"};
+function art(p, i){
+  const [bg, c] = palettes[p.type];
+  const shapes = {
+    com:`<g fill="none" stroke="${c}" stroke-width="2"><rect x="120" y="40" width="120" height="170"/><path d="M120 70h120M120 100h120M120 130h120M120 160h120M120 190h120M160 40v170M200 40v170"/></g>`,
+    ind:`<g fill="none" stroke="${c}" stroke-width="2"><path d="M60 210V120l50 30v-30l50 30v-30l50 30V70h30v140z"/><path d="M240 70V30h16v40"/><path d="M80 180h20M130 180h20M180 180h20"/></g>`,
+    res:`<g fill="none" stroke="${c}" stroke-width="2"><path d="M90 210V100l90-60 90 60v110z"/><rect x="155" y="150" width="50" height="60"/><rect x="115" y="115" width="34" height="30"/><rect x="211" y="115" width="34" height="30"/></g>`
+  }[p.type];
+  return `<svg viewBox="0 0 360 225" preserveAspectRatio="xMidYMid slice"><defs><pattern id="pg${i}" width="18" height="18" patternUnits="userSpaceOnUse"><path d="M18 0H0v18" fill="none" stroke="rgba(255,255,255,.06)"/></pattern></defs><rect width="360" height="225" fill="${bg}"/><rect width="360" height="225" fill="url(#pg${i})"/><circle cx="${280 - i*20}" cy="60" r="70" fill="${c}" opacity=".12"/>${shapes}<path d="M20 210h320" stroke="${c}" stroke-opacity=".5" stroke-width="1.5"/></svg>`;
+}
+document.getElementById("projGrid").innerHTML = CONFIG.projects.map((p, i) => `
+  <article class="proj reveal" data-type="${p.type}">
+    <div class="proj-img">${art(p, i)}<span class="proj-tag">${typeName[p.type]}</span></div>
+    <div class="proj-body">
+      <h3>${p.t}</h3>
+      <div class="proj-meta"><span><svg><use href="#i-pin"/></svg>${p.city}</span><span><svg><use href="#i-cal"/></svg>${p.year}</span><span><svg><use href="#i-area"/></svg>${p.area}</span></div>
+      <p>${p.work}</p>
+    </div>
+  </article>`).join("");
+document.getElementById("cities").innerHTML = CONFIG.cities.map(([c, n]) => `<div class="city">${c}<b>${n}</b></div>`).join("");
+
+document.querySelector(".filters").addEventListener("click", e => {
+  const b = e.target.closest(".chip"); if (!b) return;
+  document.querySelectorAll(".chip").forEach(x => x.classList.toggle("on", x === b));
+  document.querySelectorAll(".proj").forEach(p => p.classList.toggle("hide", b.dataset.f !== "all" && p.dataset.type !== b.dataset.f));
+});
+
+const hdr = document.querySelector("header");
+addEventListener("scroll", () => hdr.classList.toggle("scrolled", scrollY > 10), {passive:true});
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), {threshold:.12});
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+</script>
+</body>
+</html>
