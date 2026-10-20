@@ -178,7 +178,7 @@
         </div>
         <canvas class="wave" id="wave" aria-hidden="true"></canvas>
         <div class="controls" id="startControls">
-          <button class="btn btn-main" id="btnExample"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></svg>Прослушать пример разговора</button>
+          <button class="btn btn-main" id="btnExample"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></svg>Показать пример разговора</button>
           <button class="btn btn-ghost" id="btnLive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Поговорить самому</button>
         </div>
         <div class="controls" id="callControls" hidden>
@@ -228,7 +228,7 @@
           <li>Записи и данные хранятся в России, по 152-ФЗ.</li>
           <li>На выходе тот же Matter Draft, что и в веб-приёме. Он уходит в CRM и Process Layer.</li>
         </ol>
-        <div class="note">Здесь голос ассистента синтезирует ваш браузер, поэтому звучит проще. В рабочей версии говорит SpeechKit.</div>
+        <div class="note">Здесь разговор показан текстом. В рабочей версии ассистент говорит голосом Yandex SpeechKit.</div>
       </section>
     </div>
   </div>
@@ -349,14 +349,14 @@
     var stop = sel.status === 'stop';
     $('btnExample').disabled = busy;
     $('btnLive').disabled = busy || stop;
-    $('hint').textContent = stop ? 'Клиент попросил не звонить: номер в стоп-листе, звонок недоступен. Пример разговора можно прослушать — он про Олега Савельева.' :
+    $('hint').textContent = stop ? 'Клиент попросил не звонить: номер в стоп-листе, звонок недоступен. Пример разговора можно посмотреть — он про Олега Савельева.' :
       sel.scenario ? 'Пример: клиент оставил на сайте заявку «проблемы с работодателем». Во втором режиме клиентом будете вы.' :
         'Пример разговора записан с Олегом Савельевым. В режиме «Поговорить самому» клиентом будете вы, а ассистент позвонит ' + sel.name.split(' ')[0] + '.';
   }
   setInterval(function () { if (!busy) { renderQueue(); renderWho(); } }, 30000);
 
   /* ---------- голоса ---------- */
-  var synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
+  var synth = null; // озвучку браузером не используем: в рабочей версии голос SpeechKit
   var voices = { a: null, c: null };
   function pickVoices() {
     if (!synth) return;
@@ -770,7 +770,7 @@
   }
 
   renderQueue(); renderWho();
-  if (!synth) $('hint').textContent += ' Браузер не умеет синтезировать речь, поэтому разговор пойдёт текстом.';
+  
 })();
 </script>
 </body>
