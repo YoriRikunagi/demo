@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ЮРОС · Обзвон клиентов</title>
+<meta name="description" content="Голосовой ассистент ЮРОС обзванивает клиентов, ведёт предварительный разговор и собирает карточку дела для юриста.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>
+  try { var t = localStorage.getItem('yuros-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+<style>
+  [hidden]{display:none!important}
+  .page{padding-top:22px;padding-bottom:8px}
+  .page-h{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 20px;margin-bottom:18px}
+  .page-h h1{font-size:24px}
+  .page-h p{margin:4px 0 0;color:var(--ink2);max-width:640px}
+  .grid{display:grid;grid-template-columns:290px minmax(0,1fr) 370px;gap:16px;align-items:start}
+  .zone-queue{order:1} .zone-call{order:2} .zone-card{order:3}
+  @media (max-width:1180px){ .grid{grid-template-columns:minmax(0,1fr) 360px} .zone-call{order:1} .zone-card{order:2} .zone-queue{order:3;grid-column:1 / -1} }
+  @media (max-width:860px){ .grid{grid-template-columns:minmax(0,1fr)} .zone-call{order:1} .zone-card{order:2} .zone-queue{order:3} }
+  .card-h .count{margin-left:auto}
+  .card-h h2{font-size:15px}
+
+  /* очередь */
+  .q-list{list-style:none;margin:0;padding:8px;display:flex;flex-direction:column;gap:6px}
+  @media (max-width:1180px) and (min-width:861px){ .q-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))} }
+  .q-item{border:1px solid transparent;border-radius:var(--r2);padding:10px 12px;cursor:pointer;transition:background .15s,border-color .15s;min-width:0}
+  .q-item:hover{background:var(--soft)}
+  .q-item.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .q-item.stop{opacity:.62}
+  .q-top{display:flex;align-items:center;gap:8px;min-width:0}
+  .q-name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .q-time{margin-left:auto;font-size:12px;color:var(--muted);white-space:nowrap}
+  .q-meta{font-size:12.5px;color:var(--ink2);margin-top:2px}
+  .q-meta .mono{font-size:12px}
+  .q-st{margin-top:7px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .q-st .chip{white-space:normal}
+  .q-call{margin-top:8px;padding:7px 12px;font-size:13px}
+  .rules{border-top:1px solid var(--line2);padding:12px 18px 14px}
+  .rules h3{font-size:13px;margin-bottom:6px;color:var(--ink2)}
+  .rules ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px;font-size:12.5px;color:var(--ink2)}
+  .rules li{display:flex;gap:8px;align-items:flex-start}
+  .rules li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--muted);margin-top:8px;flex:none}
+
+  /* звонок */
+  .who{display:flex;align-items:center;gap:12px}
+  .who-info{flex:1;min-width:0}
+  .avatar{width:42px;height:42px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:700;color:var(--ink2);flex:none}
+  .who-name{font-weight:600;font-size:16px}
+  .who-sub{font-size:13px;color:var(--muted)}
+  .timer{margin-left:auto;font:500 20px/1 "JetBrains Mono",ui-monospace,monospace;color:var(--ink2);font-variant-numeric:tabular-nums}
+  .call-state{display:flex;align-items:center;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .speakers{display:flex;gap:6px;margin-left:auto}
+  .spk{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:600;background:var(--soft);color:var(--muted);transition:background .2s,color .2s}
+  .spk .dot{background:var(--line)}
+  .spk.on.a{background:var(--accent-soft);color:var(--accent)} .spk.on.a .dot{background:var(--accent);animation:pulse 1s infinite}
+  .spk.on.c{background:var(--emo-soft);color:var(--emo)} .spk.on.c .dot{background:var(--emo);animation:pulse 1s infinite}
+  @keyframes pulse{50%{opacity:.35}}
+  .wave{display:block;width:100%;height:78px;margin-top:12px;border-radius:var(--r2);background:var(--soft)}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .controls .btn{flex:1 1 auto}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:8px}
+  .transcript{border-top:1px solid var(--line2);padding:14px 18px;display:flex;flex-direction:column;gap:10px;max-height:460px;overflow-y:auto;scroll-behavior:smooth;min-height:140px}
+  .t-empty{color:var(--muted);font-size:13.5px;text-align:center;margin:auto;padding:20px 0;max-width:380px}
+  .msg{max-width:88%;display:flex;flex-direction:column;gap:3px}
+  .msg .lbl{font-size:11.5px;font-weight:600;color:var(--muted);display:flex;gap:6px;align-items:center}
+  .msg .bub{padding:9px 13px;border-radius:14px;font-size:14.5px;line-height:1.5;overflow-wrap:anywhere}
+  .msg.a{align-self:flex-start} .msg.a .bub{background:var(--accent-soft);border-top-left-radius:4px}
+  .msg.c{align-self:flex-end;text-align:left} .msg.c .lbl{justify-content:flex-end} .msg.c .bub{background:var(--soft);border-top-right-radius:4px}
+  .msg.sys{align-self:center;max-width:100%} .msg.sys .bub{background:transparent;color:var(--muted);font-size:12.5px;padding:2px 8px;text-align:center}
+  .msg.live .bub::after{content:"▍";color:var(--muted);animation:pulse .8s infinite;margin-left:2px}
+  .msg.interim .bub{opacity:.6;font-style:italic}
+  .tag{font-size:10.5px;padding:1px 6px;border-radius:999px;background:var(--warn-soft);color:var(--warn);font-weight:600}
+  .answer{display:none;gap:8px;padding:12px 18px;border-top:1px solid var(--line2);align-items:center}
+  .answer.on{display:flex}
+  .answer input{flex:1;min-width:0;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:10px 12px;outline:none}
+  .answer input:focus{border-color:var(--accent)}
+  .mic{width:42px;height:42px;padding:0;border-radius:50%;flex:none}
+  .mic.rec{background:var(--bad);color:#fff;border-color:transparent;animation:pulse 1.2s infinite}
+
+  /* карточка */
+  .ctype{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .ctype b{font-size:16px}
+  .conf{font-size:12px;color:var(--muted)}
+  .fields{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column}
+  .fld{padding:10px 0;border-top:1px solid var(--line2);border-radius:6px;transition:background .6s}
+  .fld:first-child{border-top:0}
+  .fld-h{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+  .fld-h .tag{margin-left:auto}
+  .fld-v{font-weight:600;margin-top:2px;overflow-wrap:anywhere}
+  .fld-v.none{color:var(--bad);font-weight:500}
+  .fld-q{font-size:12.5px;color:var(--ink2);margin-top:3px;padding-left:8px;border-left:2px solid var(--line);overflow-wrap:anywhere}
+  .fld.flash{background:var(--hl);animation:flash 1.6s ease-out forwards}
+  @keyframes flash{0%{background:var(--hl)}100%{background:transparent}}
+  .flags{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+  .flag{border-radius:var(--r2);padding:9px 12px;font-size:13px;background:var(--soft)}
+  .flag b{display:block;font-size:13.5px}
+  .flag.high{background:var(--bad-soft)} .flag.high b{color:var(--bad)}
+  .flag.medium{background:var(--warn-soft)} .flag.medium b{color:var(--warn)}
+  .flag.info{background:var(--accent-soft)} .flag.info b{color:var(--accent)}
+  .flag .basis{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .sect{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:16px 0 6px}
+  .card-empty{color:var(--muted);font-size:13.5px}
+  .summary{display:none;border-top:1px solid var(--line2)}
+  .summary.on{display:block}
+  .route{border:1px solid var(--line);border-radius:var(--r2);padding:12px}
+  .route-t{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:600}
+  .route p{margin:6px 0 0;font-size:13.5px;color:var(--ink2)}
+  .alts{margin:8px 0 0;padding-left:18px;font-size:13px;color:var(--ink2)}
+  .slot{display:flex;align-items:center;gap:10px;margin-top:10px;padding:10px 12px;border-radius:var(--r2);background:var(--ok-soft);color:var(--ok);font-weight:600;font-size:14px}
+  .slot.none{background:var(--soft);color:var(--ink2);font-weight:500}
+  .valid{display:flex;align-items:center;gap:8px;margin:10px 0 8px;font-size:13px;flex-wrap:wrap}
+  .valid .mono{font-size:12px;color:var(--muted)}
+  .errs{margin:0 0 8px;padding-left:18px;color:var(--bad);font-size:12.5px}
+  #jsonBox{display:none} #jsonBox.on{display:block}
+  .how{padding:14px 18px}
+  .how h3{font-size:14px;margin-bottom:8px}
+  .how ol{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink2)}
+  .how .note{margin-top:10px;font-size:12.5px;color:var(--muted)}
+  .stack{display:flex;flex-direction:column;gap:16px}
+  .err-box{color:var(--bad);font-size:13px;margin-top:8px}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html"><span class="brand-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 7h14M7 7l-3 7a3 3 0 0 0 6 0L7 7zM17 7l-3 7a3 3 0 0 0 6 0l-3-7z"/></svg></span>ЮРОС <small>Smart Intake</small></a>
+  <nav class="tabs"><a href="index.html">Приём обращения</a><a href="call.html" class="on">Обзвон клиентов</a></nav>
+  <button class="theme-btn" id="themeBtn" title="Тема">◐</button>
+</div></header>
+
+<main class="wrap page">
+  <div class="page-h">
+    <div>
+      <h1>Голосовой ассистент обзвона</h1>
+      <p>Ассистент перезванивает по заявкам, задаёт уточняющие вопросы обычным голосом и собирает карточку дела для юриста. Советов не даёт, исход не обещает.</p>
+    </div>
+    <span class="chip acc"><span class="dot" style="background:currentColor"></span>Канал: voice_call</span>
+  </div>
+
+  <div class="grid">
+    <!-- очередь -->
+    <section class="card zone-queue" aria-label="Очередь обзвона">
+      <div class="card-h"><h2>Очередь обзвона</h2><span class="chip count" id="qCount"></span></div>
+      <ul class="q-list" id="queue"></ul>
+      <div class="rules">
+        <h3>Правила обзвона</h3>
+        <ul>
+          <li>Звоним с 9:00 до 20:00 по времени клиента</li>
+          <li>Не больше 3 попыток, между ними не меньше 2 часов</li>
+          <li>«Не звоните мне» — номер сразу в стоп-лист</li>
+          <li>В начале предупреждаем: идёт запись, говорит ассистент, а не человек</li>
+          <li>По просьбе клиента переводим на живого специалиста</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- звонок -->
+    <section class="card zone-call" aria-label="Звонок">
+      <div class="card-b">
+        <div class="who">
+          <div class="avatar" id="cAvatar">ОС</div>
+          <div class="who-info">
+            <div class="who-name" id="cName">—</div>
+            <div class="who-sub" id="cSub">—</div>
+          </div>
+          <div class="timer" id="timer">00:00</div>
+        </div>
+        <div class="call-state">
+          <span class="chip" id="callState">Готов к звонку</span>
+          <div class="speakers">
+            <span class="spk a" id="spkA"><span class="dot"></span>Ассистент</span>
+            <span class="spk c" id="spkC"><span class="dot"></span>Клиент</span>
+          </div>
+        </div>
+        <canvas class="wave" id="wave" aria-hidden="true"></canvas>
+        <div class="controls" id="startControls">
+          <button class="btn btn-main" id="btnExample"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></svg>Прослушать пример разговора</button>
+          <button class="btn btn-ghost" id="btnLive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Поговорить самому</button>
+        </div>
+        <div class="controls" id="callControls" hidden>
+          <button class="btn btn-ghost" id="btnPause">Пауза</button>
+          <button class="btn btn-ghost" id="btnSkip">Пропустить до конца</button>
+          <button class="btn btn-ghost" id="btnHang" style="color:var(--bad)">Завершить звонок</button>
+        </div>
+        <div class="hint" id="hint">Пример: клиент оставил на сайте заявку «проблемы с работодателем». Во втором режиме клиентом будете вы.</div>
+      </div>
+      <div class="transcript" id="transcript" aria-live="polite">
+        <div class="t-empty" id="tEmpty">Здесь появится расшифровка разговора. Звук включится после нажатия кнопки.</div>
+      </div>
+      <form class="answer" id="answerForm" autocomplete="off">
+        <button type="button" class="btn btn-ghost mic" id="micBtn" title="Ответить голосом" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+        <input id="answerInput" placeholder="Ваш ответ ассистенту" aria-label="Ваш ответ">
+        <button class="btn btn-main" type="submit">Ответить</button>
+      </form>
+    </section>
+
+    <!-- карточка -->
+    <div class="stack zone-card">
+      <section class="card" aria-label="Карточка из звонка">
+        <div class="card-h"><h2>Карточка из звонка</h2><span class="chip count" id="cardState">ждёт звонка</span></div>
+        <div class="card-b" id="cardBody">
+          <div class="card-empty">Карточка заполняется по ходу разговора: каждое поле берётся из слов клиента, под ним видна цитата-источник.</div>
+        </div>
+        <div class="summary" id="summary">
+          <div class="card-b">
+            <div class="sect" style="margin-top:0">Итог звонка</div>
+            <div id="routeBox"></div>
+            <div id="slotBox"></div>
+            <div class="sect">Matter Draft</div>
+            <button class="btn btn-ghost" id="btnJson" style="width:100%">Показать Matter Draft (JSON)</button>
+            <div id="jsonBox">
+              <div class="valid" id="validBox"></div>
+              <pre class="json" id="jsonPre"></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="card how">
+        <h3>Как устроено в рабочей версии</h3>
+        <ol>
+          <li>Звонок идёт через телефонию Voximplant (или Mango Office / UIS) с обычного городского номера по SIP.</li>
+          <li>Речь клиента распознаёт, а ответы озвучивает Yandex SpeechKit: естественные голоса, потоковый режим, ассистент отвечает через 0,8–1,2 секунды.</li>
+          <li>Разговор ведёт YandexGPT в Yandex Cloud по сценарию юриста: спрашивает только то, чего не хватает в карточке.</li>
+          <li>Записи и данные хранятся в России, по 152-ФЗ.</li>
+          <li>На выходе тот же Matter Draft, что и в веб-приёме. Он уходит в CRM и Process Layer.</li>
+        </ol>
+        <div class="note">Здесь голос ассистента синтезирует ваш браузер, поэтому звучит проще. В рабочей версии говорит SpeechKit.</div>
+      </section>
+    </div>
+  </div>
+
+  <div class="disclaimer" id="disclaimer"></div>
+</main>
+
+<script src="engine.js"></script>
+<script id="scenario-src">
+/* Сценарий разговора. Даты считаются от сегодняшнего дня, чтобы сроки в карточке были живыми. */
+(function (root) {
+  var MON_GEN = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+  var DOW_ACC = ['воскресенье', 'понедельник', 'вторник', 'среду', 'четверг', 'пятницу', 'субботу'];
+  function nextWorkday(d) { var r = new Date(d); do { r.setDate(r.getDate() + 1); } while (r.getDay() === 0 || r.getDay() === 6); return r; }
+  function buildScenario(now) {
+    now = now ? new Date(now) : new Date(); now.setHours(0, 0, 0, 0);
+    var fired = new Date(now); fired.setDate(fired.getDate() - 19);
+    var fd = fired.getDate(), fm = MON_GEN[fired.getMonth()];
+    var part = fd <= 10 ? 'в начале' : fd <= 20 ? 'в середине' : 'в конце';
+    var s1 = nextWorkday(now), s2 = nextWorkday(s1);
+    var tomorrow = new Date(now); tomorrow.setDate(tomorrow.getDate() + 1);
+    var s1txt = (s1.getTime() === tomorrow.getTime() ? 'завтра' : 'в ' + DOW_ACC[s1.getDay()]) + ' в 16:30';
+    var s2txt = 'в ' + DOW_ACC[s2.getDay()] + ', ' + s2.getDate() + ' ' + MON_GEN[s2.getMonth()] + ', в 11:00';
+    var slot = { date: s2, label: DOW_ACC[s2.getDay()].replace('среду', 'среда').replace('пятницу', 'пятница').replace(/^./, function (c) { return c.toUpperCase(); }) + ', ' + s2.getDate() + ' ' + MON_GEN[s2.getMonth()] + ', 11:00', who: 'трудовой юрист, по телефону или видеосвязи' };
+    var lines = [
+      { who: 'a', text: 'Добрый день! Это ассистент юридической платформы ЮРОС. Я голосовой помощник, а не человек, и наш разговор записывается. Если захотите поговорить с живым специалистом, просто скажите. Олег, вам удобно сейчас пару минут поговорить?' },
+      { who: 'c', text: 'Да, удобно. Я как раз ждал, что перезвоните.' },
+      { who: 'a', text: 'Спасибо. Вы оставили на сайте заявку «проблемы с работодателем». Расскажите своими словами, что случилось?' },
+      { who: 'c', text: 'Короче, меня уволили, и до сих пор не рассчитались. Я там два года отработал, а теперь говорят: денег нет, ждите. Это просто издевательство какое-то!' },
+      { who: 'a', text: 'Понимаю, ситуация неприятная. Запишу детали, чтобы юристу не пришлось переспрашивать. Как называется компания-работодатель?' },
+      { who: 'c', text: 'ООО «СеверСтрой». Монтажом занимаемся. Ну, занимались.', say: 'О-О-О «Северстрой». Монтажом занимаемся. Ну, занимались.' },
+      { who: 'a', text: 'Записываю. А когда именно вас уволили?' },
+      { who: 'c', text: 'Ну я не помню точно, ' + part + ' ' + fm + ' где-то.', vague: true },
+      { who: 'a', text: 'Хорошо. Дата здесь важна, от неё считаются сроки. Попробуйте вспомнить число, например по последнему рабочему дню.' },
+      { who: 'c', text: 'Сейчас, в телефоне гляну. Вот. Уволили ' + fd + ' ' + fm + ', это был последний рабочий день.' },
+      { who: 'a', text: 'Спасибо. Теперь про деньги. Сколько вам остались должны с учётом зарплаты, отпускных и', cut: true },
+      { who: 'c', text: 'Да всё вместе где-то 86 тысяч рублей не выплатили! Зарплата за два месяца плюс отпускные.', interrupt: true },
+      { who: 'a', text: 'Записываю: около 86 тысяч рублей. Вас оформляли официально, по трудовому договору?' },
+      { who: 'c', text: 'Да, официально, по трудовому договору, всё как положено.' },
+      { who: 'a', text: 'Хорошо. Трудовую книжку или приказ об увольнении вам выдали?' },
+      { who: 'c', text: 'Трудовую выдали в тот же день. Копию приказа я как-то не спрашивал.' },
+      { who: 'a', text: 'Понятно. И последний вопрос: какой результат для вас был бы хорошим?' },
+      { who: 'c', text: 'Хочу, чтобы вернули все деньги до копейки и компенсацию за задержку. Я же выиграю, да?' },
+      { who: 'a', text: 'Оценить шансы может только юрист, когда посмотрит документы. Я этого не делаю и обещать исход не буду. Могу записать вас на консультацию к юристу по трудовым спорам. Есть время ' + s1txt + ' или ' + s2txt + '. Как вам удобнее?', boundary: true },
+      { who: 'c', text: 'Давайте второй вариант, в ' + DOW_ACC[s2.getDay()] + ' утром мне нормально.' },
+      { who: 'a', text: 'Записываю: ' + s2txt + ', консультация с трудовым юристом. Возьмите, пожалуйста, трудовой договор, трудовую книжку и расчётные листки, если есть. Сейчас пришлю в Telegram сообщение с карточкой обращения и ссылкой на консультацию. Если удобнее SMS, скажите.' },
+      { who: 'c', text: 'В Telegram удобно. Спасибо, а то я уже не знал, куда бежать.' },
+      { who: 'a', text: 'Пожалуйста, Олег. Юрист увидит всё, что вы рассказали, начинать с нуля не придётся. Хорошего дня!' }
+    ];
+    return { lines: lines, slot: slot, fired: fired };
+  }
+  root.buildScenario = buildScenario;
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+<script id="app">
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var META = { channel: 'voice_call', user_type: 'individual' };
+
+  /* ---------- тема ---------- */
+  $('themeBtn').addEventListener('click', function () {
+    var root = document.documentElement;
+    var cur = root.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = cur === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('yuros-theme', next); } catch (e) {}
+    readColors();
+  });
+
+  $('disclaimer').innerHTML = esc(Intake.DISCLAIMER) + '<br>Голосовой ассистент не даёт юридических советов и не оценивает шансы: он только собирает сведения и записывает на консультацию к юристу.';
+
+  /* ---------- очередь ---------- */
+  var ST = {
+    queue: { t: 'в очереди', c: '' }, calling: { t: 'звоним', c: 'acc' }, retry: { t: 'не взял — повтор в 18:40', c: 'warn' },
+    tomorrow: { t: 'перезвонить завтра в 11:00', c: 'warn' }, done: { t: 'карточка передана юристу', c: 'ok' }, stop: { t: 'отказ — в стоп-листе', c: 'bad' }, live: { t: 'на линии', c: 'acc' }
+  };
+  var SRC = { site: 'заявка с сайта', tg: 'Telegram-бот', intake: 'анкета Smart Intake не дозаполнена' };
+  var clients = [
+    { id: 1, name: 'Олег Савельев', ini: 'ОС', phone: '+7 9•• •••-••-12', city: 'Екатеринбург', tz: 5, src: 'site', topic: '«проблемы с работодателем»', status: 'queue', tries: 0, scenario: true },
+    { id: 2, name: 'Ирина Белова', ini: 'ИБ', phone: '+7 9•• •••-••-47', city: 'Москва', tz: 3, src: 'intake', topic: 'потребительский спор, нет даты покупки', status: 'retry', tries: 1 },
+    { id: 3, name: 'Тимур Гарипов', ini: 'ТГ', phone: '+7 9•• •••-••-05', city: 'Казань', tz: 3, src: 'tg', topic: 'ДТП, спор со страховой', status: 'tomorrow', tries: 2 },
+    { id: 4, name: 'Наталья Ким', ini: 'НК', phone: '+7 9•• •••-••-81', city: 'Новосибирск', tz: 7, src: 'site', topic: 'аренда, не вернули залог', status: 'done', tries: 1 },
+    { id: 5, name: 'Сергей Лаптев', ini: 'СЛ', phone: '+7 9•• •••-••-33', city: 'Краснодар', tz: 3, src: 'intake', topic: 'долги по кредитам', status: 'queue', tries: 0 },
+    { id: 6, name: 'Вера Остапенко', ini: 'ВО', phone: '+7 9•• •••-••-68', city: 'Владивосток', tz: 10, src: 'tg', topic: 'наследство', status: 'stop', tries: 1 }
+  ];
+  var sel = clients[0];
+  function localTime(c) { var d = new Date(Date.now() + (c.tz * 60 + new Date().getTimezoneOffset()) * 60000); return d; }
+  function hhmm(d) { return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+  function inWindow(c) { var h = localTime(c).getHours(); return h >= 9 && h < 20; }
+  function renderQueue() {
+    var active = clients.filter(function (c) { return c.status === 'queue' || c.status === 'retry' || c.status === 'calling' || c.status === 'live'; }).length;
+    $('qCount').textContent = active + ' к звонку';
+    $('queue').innerHTML = clients.map(function (c) {
+      var s = ST[c.status]; var t = localTime(c);
+      var canCall = c.status !== 'stop' && !busy;
+      return '<li class="q-item' + (c === sel ? ' sel' : '') + (c.status === 'stop' ? ' stop' : '') + '" data-id="' + c.id + '" tabindex="0">' +
+        '<div class="q-top"><span class="q-name">' + esc(c.name) + '</span><span class="q-time" title="Время у клиента">' + esc(c.city) + ' · ' + hhmm(t) + '</span></div>' +
+        '<div class="q-meta"><span class="mono">' + esc(c.phone) + '</span> · UTC+' + c.tz + '</div>' +
+        '<div class="q-meta">' + esc(SRC[c.src]) + ': ' + esc(c.topic) + '</div>' +
+        '<div class="q-st"><span class="chip ' + s.c + '">' + esc(s.t) + '</span><span class="small muted">попыток ' + c.tries + ' из 3</span>' +
+        (inWindow(c) || c.status === 'stop' ? '' : '<span class="chip warn">вне окна 9–20</span>') + '</div>' +
+        (c === sel && canCall ? '<button class="btn btn-main q-call" data-call="' + c.id + '">Позвонить</button>' : '') +
+        '</li>';
+    }).join('');
+  }
+  $('queue').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-call]');
+    if (b) { e.stopPropagation(); if (busy) return; if (sel.scenario) startExample(); else startLive(); return; }
+    var li = e.target.closest('.q-item'); if (!li || busy) return;
+    sel = clients.find(function (c) { return c.id === +li.dataset.id; }); renderQueue(); renderWho();
+  });
+  $('queue').addEventListener('keydown', function (e) { if (e.key === 'Enter' && e.target.classList.contains('q-item')) e.target.click(); });
+  function renderWho() {
+    $('cAvatar').textContent = sel.ini; $('cName').textContent = sel.name;
+    $('cSub').textContent = sel.phone + ' · ' + sel.city + ', у клиента ' + hhmm(localTime(sel));
+    var stop = sel.status === 'stop';
+    $('btnExample').disabled = busy;
+    $('btnLive').disabled = busy || stop;
+    $('hint').textContent = stop ? 'Клиент попросил не звонить: номер в стоп-листе, звонок недоступен. Пример разговора можно прослушать — он про Олега Савельева.' :
+      sel.scenario ? 'Пример: клиент оставил на сайте заявку «проблемы с работодателем». Во втором режиме клиентом будете вы.' :
+        'Пример разговора записан с Олегом Савельевым. В режиме «Поговорить самому» клиентом будете вы, а ассистент позвонит ' + sel.name.split(' ')[0] + '.';
+  }
+  setInterval(function () { if (!busy) { renderQueue(); renderWho(); } }, 30000);
+
+  /* ---------- голоса ---------- */
+  var synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
+  var voices = { a: null, c: null };
+  function pickVoices() {
+    if (!synth) return;
+    var ru = synth.getVoices().filter(function (v) { return /^ru/i.test(v.lang); });
+    if (!ru.length) return;
+    var score = function (v) {
+      var n = v.name; var s = 0;
+      if (/milena|милена/i.test(n)) s += 50; if (/yuri|юрий/i.test(n)) s += 40; if (/google/i.test(n)) s += 35;
+      if (/enhanced|premium|natural|neural|online/i.test(n)) s += 20; if (v.localService === false) s += 3; return s;
+    };
+    ru.sort(function (x, y) { return score(y) - score(x); });
+    voices.a = ru[0];
+    voices.c = ru.find(function (v) { return v !== voices.a && v.name !== voices.a.name; }) || null;
+  }
+  if (synth) { pickVoices(); if (typeof synth.addEventListener === 'function') synth.addEventListener('voiceschanged', pickVoices); else synth.onvoiceschanged = pickVoices; }
+
+  function splitSentences(t) { return (t.match(/[^.!?…]+[.!?…]+["»]?|[^.!?…]+$/g) || [t]).map(function (s) { return s.trim(); }).filter(Boolean); }
+
+  /* ---------- состояние звонка ---------- */
+  var busy = false, paused = false, aborted = false, skipping = false, mode = null, current = null;
+  var speaking = null, level = 0, t0 = 0, timerId = 0, pausedAt = 0, pausedTotal = 0;
+  function sleep(ms) {
+    return new Promise(function (res) {
+      var left = ms; var iv = setInterval(function () { if (aborted || skipping) { clearInterval(iv); return res(); } if (!paused) left -= 50; if (left <= 0) { clearInterval(iv); res(); } }, 50);
+    });
+  }
+  function waitUnpaused() { return new Promise(function (res) { (function chk() { if (!paused || aborted || skipping) res(); else setTimeout(chk, 80); })(); }); }
+  function speakOne(text, who) {
+    var v = voices[who];
+    if (!synth || !v) return sleep(Math.max(900, text.length * 62)).then(function () { return paused ? 'cut' : 'done'; });
+    return new Promise(function (res) {
+      var u = new SpeechSynthesisUtterance(text); var done = false;
+      u.voice = v; u.lang = v.lang; u.rate = who === 'a' ? 1.0 : 1.06; u.pitch = who === 'a' ? 1.0 : 0.92;
+      var fin = function (r) { if (done) return; done = true; clearTimeout(guard); res(r); };
+      u.onend = function () { fin(paused || aborted || skipping ? 'cut' : 'done'); };
+      u.onerror = function () { fin('cut'); };
+      var guard = setTimeout(function () { fin('done'); }, text.length * 140 + 4000);
+      try { synth.resume(); } catch (e) {}
+      synth.speak(u);
+    });
+  }
+  /* реплика: озвучка по предложениям (обход обрыва длинных фраз в Chrome) и вывод текста по ходу */
+  async function sayLine(line) {
+    var bub = addMsg(line.who, '', { live: true, interrupt: line.interrupt, cut: line.cut });
+    var shown = splitSentences(line.text), spoken = splitSentences(line.say || line.text);
+    if (spoken.length !== shown.length) spoken = shown;
+    var silent = line.who === 'c' && !voices.c;
+    setSpeaker(line.who);
+    for (var i = 0; i < shown.length; i++) {
+      if (aborted || skipping) break;
+      bub.textContent += (i ? ' ' : '') + shown[i]; scrollT();
+      while (true) {
+        await waitUnpaused(); if (aborted || skipping) break;
+        var r = silent ? await sleep(Math.max(900, shown[i].length * 60)).then(function () { return paused ? 'cut' : 'done'; }) : await speakOne(spoken[i], line.who);
+        if (r === 'cut' && paused && !aborted && !skipping) continue;
+        break;
+      }
+    }
+    if (skipping || aborted) bub.textContent = line.text + (line.cut ? '…' : '');
+    else if (line.cut) bub.textContent += '…';
+    bub.parentNode.classList.remove('live');
+    setSpeaker(null);
+  }
+  function setSpeaker(w) {
+    speaking = w;
+    $('spkA').classList.toggle('on', w === 'a'); $('spkC').classList.toggle('on', w === 'c');
+  }
+
+  /* ---------- расшифровка ---------- */
+  function addMsg(who, text, o) {
+    o = o || {};
+    var e = $('tEmpty'); if (e) e.remove();
+    var m = document.createElement('div');
+    m.className = 'msg ' + who + (o.live ? ' live' : '') + (o.interim ? ' interim' : '');
+    var lbl = who === 'a' ? 'Ассистент' : who === 'c' ? 'Клиент' : '';
+    var tags = (o.interrupt ? '<span class="tag">перебивает</span>' : '') + (o.cut ? '<span class="tag">перебили</span>' : '') + (o.tag ? '<span class="tag">' + esc(o.tag) + '</span>' : '');
+    m.innerHTML = (lbl ? '<div class="lbl">' + lbl + tags + '</div>' : '') + '<div class="bub"></div>';
+    var b = m.querySelector('.bub'); b.textContent = text;
+    $('transcript').appendChild(m); scrollT();
+    return b;
+  }
+  function sys(text) { addMsg('sys', text); }
+  function scrollT() { var t = $('transcript'); t.scrollTop = t.scrollHeight; }
+
+  /* ---------- таймер и статус ---------- */
+  function setState(text, cls) { var s = $('callState'); s.textContent = text; s.className = 'chip ' + (cls || ''); }
+  function startTimer() {
+    t0 = Date.now(); pausedTotal = 0; clearInterval(timerId);
+    timerId = setInterval(function () {
+      if (paused) return;
+      var s = Math.floor((Date.now() - t0 - pausedTotal) / 1000);
+      $('timer').textContent = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+    }, 250);
+  }
+  function stopTimer() { clearInterval(timerId); }
+
+  /* ---------- волна ---------- */
+  var cv = $('wave'), ctx = cv.getContext('2d'), colors = {};
+  function readColors() { var cs = getComputedStyle(document.documentElement); colors = { a: cs.getPropertyValue('--accent').trim(), c: cs.getPropertyValue('--emo').trim(), idle: cs.getPropertyValue('--line').trim(), rec: cs.getPropertyValue('--bad').trim() }; }
+  readColors();
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', readColors); } catch (e) {}
+  var listening = false;
+  function drawWave(ts) {
+    var dpr = window.devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
+    if (cv.width !== Math.round(w * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+    var active = (speaking && !paused) || listening;
+    level += ((active ? 1 : 0) - level) * 0.08;
+    var n = Math.max(24, Math.floor(w / 7)), bw = 3, gap = (w - n * bw) / (n - 1), t = ts / 1000;
+    ctx.fillStyle = speaking === 'a' ? colors.a : speaking === 'c' ? colors.c : listening ? colors.rec : colors.idle;
+    for (var i = 0; i < n; i++) {
+      var x = i * (bw + gap), p = i / n;
+      var env = Math.sin(Math.PI * p);
+      var v = 0.5 + 0.5 * Math.sin(t * 7.3 + i * 0.55) * Math.sin(t * 2.1 + i * 0.21) + 0.25 * Math.sin(t * 13 + i * 1.7);
+      var amp = 2 + level * env * Math.abs(v) * (h * 0.42) * (0.7 + 0.3 * Math.sin(t * 3.4 + i));
+      ctx.globalAlpha = active ? 0.9 : 0.6;
+      ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, h / 2 - amp, bw, amp * 2, 1.5); else ctx.rect(x, h / 2 - amp, bw, amp * 2); ctx.fill();
+    }
+    requestAnimationFrame(drawWave);
+  }
+  requestAnimationFrame(drawWave);
+
+  /* ---------- карточка ---------- */
+  var prevSnap = {};
+  function confCls(c) { return c > 0.8 ? 'ok' : c >= 0.5 ? 'warn' : 'bad'; }
+  function renderCard(st, opts) {
+    opts = opts || {};
+    var body = $('cardBody');
+    if (!st || !st.case.type) {
+      body.innerHTML = '<div class="card-empty">Тип дела пока не ясен. Ассистент продолжает спрашивать.</div>';
+      return;
+    }
+    var c = st.case, html = '';
+    html += '<div class="ctype"><b>' + esc(c.label) + '</b><span class="chip ' + confCls(c.confidence) + '">уверенность ' + Math.round(c.confidence * 100) + '%</span></div>';
+    if (c.law) html += '<div class="conf" style="margin-top:4px">' + esc(c.law) + '</div>';
+    html += '<ul class="fields">';
+    var snap = {}, changed = [];
+    Object.keys(st.fields).forEach(function (k) {
+      var f = st.fields[k]; var val = f.display || (f.value === true ? 'да' : f.value === false ? 'нет' : f.value);
+      var key = JSON.stringify([val, f.status]); snap[k] = key;
+      if (prevSnap[k] !== undefined && prevSnap[k] !== key) changed.push(k); else if (prevSnap[k] === undefined && f.status !== 'missing' && Object.keys(prevSnap).length) changed.push(k);
+      var cls = confCls(f.confidence);
+      var none = f.status === 'missing';
+      var q = f.provenance && f.provenance.quote;
+      html += '<li class="fld" data-k="' + k + '"><div class="fld-h"><span class="dot ' + cls + '"></span>' + esc(f.label) +
+        (f.status === 'uncertain' ? '<span class="tag">AI_UNCERTAIN</span>' : '') + (none ? '' : '<span class="conf"' + (f.status === 'uncertain' ? '' : ' style="margin-left:auto"') + '>' + Math.round(f.confidence * 100) + '%</span>') + '</div>' +
+        '<div class="fld-v' + (none ? ' none' : '') + '">' + esc(none ? (f.error ? f.error : f.hint ? 'упомянут, но не назван' : 'не названо') : val) + '</div>' +
+        (q && !none ? '<div class="fld-q">«' + esc(q) + '»' + (f.provenance.source === 'user_answer' ? ' <span class="muted">· ответ на вопрос</span>' : '') + '</div>' : '') +
+        (f.note && !none ? '<div class="conf" style="margin-top:2px">' + esc(f.note) + '</div>' : '') + '</li>';
+    });
+    html += '</ul>';
+    if (st.redFlags.length) {
+      html += '<div class="sect">Сроки и риски</div><div class="flags">' + st.redFlags.map(function (f) {
+        return '<div class="flag ' + esc(f.level) + '"><b>' + esc(f.title) + '</b>' + esc(f.text) + '<div class="basis">' + esc(f.basis) + '</div></div>';
+      }).join('') + '</div>';
+    }
+    if (st.emotions && st.emotions.length) html += '<div class="sect">Эмоции, не вошедшие в факты</div><div class="small muted">' + st.emotions.map(function (e) { return '«' + esc(e.text) + '»'; }).join(' · ') + '</div>';
+    body.innerHTML = html;
+    if (!opts.noFlash) changed.forEach(function (k) { var el = body.querySelector('[data-k="' + k + '"]'); if (el) el.classList.add('flash'); });
+    prevSnap = snap;
+    var filled = Object.values(st.fields).filter(function (f) { return f.status !== 'missing'; }).length;
+    $('cardState').textContent = filled + ' из ' + Object.keys(st.fields).length + ' полей';
+  }
+
+  /* ---------- итог ---------- */
+  var lastDraft = null;
+  function hl(json) {
+    return esc(json).replace(/(&quot;(?:\\.|[^&\\]|&(?!quot;))*?&quot;)(\s*:)?|\b(true|false|null)\b|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g, function (m, s, colon, b, n) {
+      if (s) return colon ? '<span class="k">' + s + '</span>' + colon : '<span class="s">' + s + '</span>';
+      if (b) return '<span class="b">' + b + '</span>';
+      return '<span class="n">' + n + '</span>';
+    });
+  }
+  async function finalize(st, slot, outcome) {
+    $('summary').classList.add('on');
+    var html = '';
+    if (st && st.case.type) {
+      var r = Intake.routing(st).routes;
+      var top = r[0];
+      var lvl = { high: ['ok', 'высокая'], medium: ['warn', 'средняя'], low: ['bad', 'низкая'] }[top.confidence_level] || ['', top.confidence_level];
+      html += '<div class="route"><div class="route-t">' + esc(top.title) + (top.specialization ? ': ' + esc(top.specialization) : '') + '<span class="chip ' + lvl[0] + '">уверенность ' + lvl[1] + '</span></div>' +
+        '<p>' + esc(top.rationale) + '</p>' +
+        (top.alternatives && top.alternatives.length ? '<ul class="alts">' + top.alternatives.map(function (a) { return '<li><b>' + esc(a.title) + '</b>: ' + esc(a.note) + '</li>'; }).join('') + '</ul>' : '') +
+        '<p class="small muted">Это рекомендация маршрута. Финальное решение за клиентом.</p></div>';
+    } else html += '<div class="card-empty">Тип дела не определён: карточка уйдёт юристу общей практики.</div>';
+    $('routeBox').innerHTML = html;
+    $('slotBox').innerHTML = slot ? '<div class="slot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><span>Консультация: ' + esc(slot.label) + '<br><span class="small" style="font-weight:500">' + esc(slot.who) + '. Карточка и ссылка отправлены в Telegram.</span></span></div>' :
+      '<div class="slot none">' + esc(outcome || 'Консультация не назначена') + '</div>';
+    $('jsonBox').classList.remove('on'); $('btnJson').textContent = 'Показать Matter Draft (JSON)';
+    lastDraft = null;
+    if (st && st.case.type) {
+      try {
+        var res = await Intake.buildDraft(st, null, false);
+        lastDraft = res;
+      } catch (e) { $('validBox').innerHTML = '<span class="chip bad">Ошибка сборки</span>'; }
+    }
+    $('btnJson').disabled = !lastDraft;
+  }
+  $('btnJson').addEventListener('click', function () {
+    if (!lastDraft) return;
+    var box = $('jsonBox'), on = !box.classList.contains('on');
+    box.classList.toggle('on', on); this.textContent = on ? 'Скрыть Matter Draft' : 'Показать Matter Draft (JSON)';
+    if (!on) return;
+    var d = lastDraft.draft, errs = lastDraft.errors;
+    $('validBox').innerHTML = (errs.length ? '<span class="chip bad">Проверка по JSON Schema: ' + errs.length + ' ошибок</span>' : '<span class="chip ok">Проверка по JSON Schema: пройдена</span>') +
+      '<span class="mono" title="' + esc(d.audit.input_sha256) + '">sha256 ' + esc(d.audit.input_sha256.slice(0, 12)) + '…</span><span class="mono">' + esc(d.matter_id) + '</span>' +
+      (errs.length ? '<ul class="errs">' + errs.map(function (e) { return '<li>' + esc(e) + '</li>'; }).join('') + '</ul>' : '');
+    $('jsonPre').innerHTML = hl(JSON.stringify(d, null, 2));
+  });
+
+  /* ---------- общий старт/стоп ---------- */
+  function resetCall() {
+    $('transcript').innerHTML = ''; prevSnap = {};
+    $('cardBody').innerHTML = '<div class="card-empty">Слушаем клиента…</div>'; $('cardState').textContent = 'идёт звонок';
+    $('summary').classList.remove('on'); $('timer').textContent = '00:00';
+  }
+  function beginCall(m, client) {
+    busy = true; paused = false; aborted = false; skipping = false; mode = m; current = client;
+    if (synth) { try { synth.cancel(); } catch (e) {} }
+    sel = client; client.status = 'calling'; renderQueue(); renderWho();
+    resetCall();
+    $('startControls').hidden = true; $('callControls').hidden = false;
+    $('btnPause').textContent = 'Пауза'; $('btnPause').hidden = m !== 'example'; $('btnSkip').hidden = m !== 'example';
+    $('btnHang').hidden = m !== 'live';
+  }
+  function endCall(status, tries) {
+    busy = false; listening = false; setSpeaker(null); stopTimer();
+    if (synth) { try { synth.cancel(); } catch (e) {} }
+    stopRec();
+    $('answerForm').classList.remove('on'); $('micBtn').hidden = true;
+    if (current) { current.status = status || 'done'; current.tries += tries || 1; }
+    $('startControls').hidden = false; $('callControls').hidden = true;
+    setState(status === 'stop' ? 'Номер в стоп-листе' : 'Звонок завершён', status === 'stop' ? 'bad' : 'ok');
+    renderQueue(); renderWho();
+  }
+  async function dial() {
+    setState('Набираем номер…', 'acc'); sys('Звоним ' + current.name + ', ' + current.phone);
+    await sleep(1400); if (aborted) return false;
+    setState('Идёт разговор', 'acc'); current.status = 'live'; renderQueue();
+    sys('Клиент взял трубку. Запись разговора включена.');
+    startTimer(); return true;
+  }
+
+  $('btnPause').addEventListener('click', function () {
+    paused = !paused;
+    if (paused) { pausedAt = Date.now(); if (synth) try { synth.cancel(); } catch (e) {} this.textContent = 'Продолжить'; setState('Пауза', 'warn'); }
+    else { pausedTotal += Date.now() - pausedAt; this.textContent = 'Пауза'; setState('Идёт разговор', 'acc'); }
+  });
+  $('btnSkip').addEventListener('click', function () {
+    skipping = true; if (paused) { pausedTotal += Date.now() - pausedAt; } paused = false;
+    if (synth) try { synth.cancel(); } catch (e) {}
+  });
+  $('btnHang').addEventListener('click', function () { hangup = true; aborted = true; if (synth) try { synth.cancel(); } catch (e) {} if (answerResolve) answerResolve(null); });
+
+  /* ---------- режим а: пример разговора ---------- */
+  $('btnExample').addEventListener('click', startExample);
+  async function startExample() {
+    var client = clients.find(function (c) { return c.scenario; });
+    beginCall('example', client);
+    var sc = window.buildScenario(new Date());
+    var clientText = [];
+    var update = function (flash) { var st = Intake.analyze(clientText.join('\n'), META); renderCard(st, { noFlash: !flash }); return st; };
+    if (!(await dial())) return;
+    for (var i = 0; i < sc.lines.length; i++) {
+      var ln = sc.lines[i];
+      if (skipping) {
+        addMsg(ln.who, ln.text + (ln.cut ? '…' : ''), { interrupt: ln.interrupt, cut: ln.cut });
+        if (ln.who === 'c') clientText.push(ln.text);
+        continue;
+      }
+      await sayLine(ln);
+      if (ln.who === 'c') { clientText.push(ln.text); update(true); }
+      if (!skipping && !ln.cut && i + 1 < sc.lines.length) await sleep(ln.who === 'c' ? 450 : 300);
+    }
+    if (skipping) sys('Разговор пропущен до конца');
+    var st = update(!skipping);
+    sys('Звонок завершён. Карточка передана трудовому юристу.');
+    endCall('done', 1);
+    await finalize(st, sc.slot);
+  }
+
+  /* ---------- режим б: разговор с пользователем ---------- */
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var rec = null, answerResolve = null, hangup = false;
+  function stopRec() { if (rec) { try { rec.abort(); } catch (e) {} rec = null; } listening = false; $('micBtn').classList.remove('rec'); }
+  function startRec() {
+    if (!SR || !answerResolve) return;
+    stopRec();
+    var r = new SR(); rec = r; r.lang = 'ru-RU'; r.interimResults = true; r.continuous = false; r.maxAlternatives = 1;
+    var interim = null, finalText = '';
+    r.onstart = function () { listening = true; $('micBtn').classList.add('rec'); setState('Слушаю вас…', 'bad'); };
+    r.onresult = function (e) {
+      var txt = '', fin = false;
+      for (var i = e.resultIndex; i < e.results.length; i++) { txt += e.results[i][0].transcript; if (e.results[i].isFinal) fin = true; }
+      if (!interim) interim = addMsg('c', '', { interim: true });
+      interim.textContent = txt; scrollT();
+      if (fin) finalText = txt;
+    };
+    r.onerror = function (e) {
+      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { SR = null; $('micBtn').hidden = true; sys('Микрофон недоступен. Отвечайте текстом в поле ниже.'); $('answerInput').focus(); }
+    };
+    r.onend = function () {
+      listening = false; $('micBtn').classList.remove('rec'); if (rec === r) rec = null;
+      if (interim) interim.parentNode.remove();
+      if (finalText.trim() && answerResolve) { submitAnswer(finalText.trim()); }
+      else if (answerResolve) setState('Нажмите на микрофон или напишите ответ', 'warn');
+    };
+    try { r.start(); } catch (e) {}
+  }
+  function submitAnswer(text) {
+    if (!answerResolve || !text) return;
+    stopRec();
+    addMsg('c', text);
+    var r = answerResolve; answerResolve = null; $('answerInput').value = '';
+    r(text);
+  }
+  $('answerForm').addEventListener('submit', function (e) { e.preventDefault(); submitAnswer($('answerInput').value.trim()); });
+  $('micBtn').addEventListener('click', function () { if (listening) stopRec(); else startRec(); });
+  function listen() {
+    return new Promise(function (res) {
+      answerResolve = res;
+      $('answerForm').classList.add('on');
+      $('micBtn').hidden = !SR;
+      setState(SR ? 'Слушаю вас…' : 'Ваш ответ', 'acc');
+      if (SR) startRec(); else $('answerInput').focus({ preventScroll: true });
+    });
+  }
+  async function agent(text) { await sayLine({ who: 'a', text: text }); }
+
+  $('btnLive').addEventListener('click', startLive);
+  async function startLive() {
+    if (sel.status === 'stop') return;
+    var client = sel; hangup = false;
+    beginCall('live', client);
+    var first = client.name.split(' ')[0];
+    var sc = window.buildScenario(new Date());
+    var replies = [], pairs = [], asked = {};
+    var compute = function () {
+      var st = Intake.analyze(replies.join('\n'), META);
+      pairs.forEach(function (p, i) {
+        st.asked[p.q.key] = true;
+        var f = st.fields[p.q.key];
+        if (f && f.status !== 'ok') { st.answers.push(p.a); Intake.applyAnswer(st, p.q, p.a, i + 1); }
+      });
+      Object.keys(asked).forEach(function (k) { st.asked[k] = true; });
+      st.rounds = pairs.length;
+      return st;
+    };
+    var exitCheck = async function (a) {
+      if (/не звоните|больше не звон|не надо звонить|удалите (мой )?номер/i.test(a)) {
+        await agent('Хорошо, понятно. Больше звонить не будем, номер внесён в стоп-лист. Всего доброго!');
+        return 'stop';
+      }
+      if (/жив(ой|ым|ого) (человек|оператор|специалист)|с человеком|позовите (юриста|оператора|человека)|соедините/i.test(a)) {
+        await agent('Конечно. Соединяю вас со специалистом, оставайтесь на линии.');
+        sys('Перевод на дежурного специалиста. Подключается в рабочей версии.');
+        return 'human';
+      }
+      return null;
+    };
+    var adviceCheck = async function (a) {
+      if (/выигра|шанс|что (мне )?делать|посоветуйте|подскажите,? как|есть смысл|прав ли я/i.test(a)) {
+        await agent('Оценить шансы и посоветовать, как поступить, может только юрист. Я помогу собрать всё, чтобы консультация прошла быстро.');
+      }
+    };
+    if (!(await dial())) return;
+    var ended = null, st = null;
+    try {
+      await agent('Добрый день, ' + first + '! Это ассистент юридической платформы ЮРОС. Я голосовой помощник, а не человек, и разговор записывается. Если захотите поговорить с живым специалистом, просто скажите.');
+      if (hangup) throw 0;
+      await agent('Расскажите, пожалуйста, что у вас случилось?');
+      if (hangup) throw 0;
+      var a = await listen(); if (a === null || hangup) throw 0;
+      ended = await exitCheck(a); if (ended) throw 0;
+      replies.push(a); st = compute(); renderCard(st); await adviceCheck(a);
+      var count = 1;
+      while (count < 5 && !hangup) {
+        st = compute();
+        var q;
+        if (!st.case.type) {
+          q = { key: '_type', q: 'Подскажите, о чём ситуация: работа, покупка, ДТП, аренда, семья, долги или наследство?', kind: 'free' };
+          if (asked._type) break;
+        } else {
+          q = Intake.questions(st, 10).filter(function (x) { return !asked[x.key]; })[0];
+          if (!q) break;
+        }
+        asked[q.key] = true;
+        await agent(q.q); if (hangup) throw 0;
+        a = await listen(); if (a === null || hangup) throw 0;
+        ended = await exitCheck(a); if (ended) throw 0;
+        replies.push(a);
+        if (q.key !== '_type' && st.fields[q.key]) pairs.push({ q: q, a: a });
+        st = compute(); renderCard(st);
+        await adviceCheck(a);
+        count++;
+      }
+      st = compute(); renderCard(st, { noFlash: true });
+      var spec = st.case.type ? Intake.TYPES[st.case.type].spec : 'юрист общей практики';
+      var slotTxt = sc.slot.label.replace(/, 11:00$/, '') + ' в 11:00';
+      await agent('Спасибо, ' + first + ', всё записано. Советов я не даю и исход не обещаю: это сделает юрист. Предлагаю консультацию: ' + slotTxt.toLowerCase() + ', ' + spec + '. Пришлю в Telegram карточку обращения и ссылку. Хорошего дня!');
+      sys('Звонок завершён. Карточка передана: ' + spec + '.');
+      endCall('done', 1);
+      await finalize(st, { date: sc.slot.date, label: sc.slot.label, who: spec + ', по телефону или видеосвязи' });
+    } catch (e) {
+      if (e && e !== 0) { console.error(e); }
+      st = replies.length ? compute() : null;
+      if (ended === 'stop') { sys('Клиент попросил не звонить. Номер в стоп-листе.'); endCall('stop', 1); await finalize(st, null, 'Клиент отказался от разговора, номер в стоп-листе'); }
+      else if (ended === 'human') { endCall('done', 1); await finalize(st, null, 'Переведён на живого специалиста'); }
+      else { sys('Звонок прерван.'); endCall(replies.length ? 'tomorrow' : 'retry', 1); if (st) await finalize(st, null, 'Разговор прерван, перезвоним'); }
+    }
+  }
+
+  renderQueue(); renderWho();
+  if (!synth) $('hint').textContent += ' Браузер не умеет синтезировать речь, поэтому разговор пойдёт текстом.';
+})();
+</script>
+</body>
+</html>
