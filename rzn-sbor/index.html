@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Сборщик МИ · Росздравнадзор</title>
+<meta name="description" content="Сбор характеристик медицинских изделий из реестра Росздравнадзора в Excel">
+<meta name="theme-color" content="#f3f3f3">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230067c0'/%3E%3Cpath d='M9 8h10l4 4v12H9z' fill='%23fff'/%3E%3Cpath d='M12 16h8M12 19.5h8M12 23h5' stroke='%230067c0' stroke-width='1.8'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+<script>try{var t=localStorage.getItem('rzn.theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body>
+<div class="window" id="win">
+  <header class="titlebar">
+    <div class="tb-app">
+      <svg class="tb-logo" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--accent)"/><path d="M9 8h10l4 4v12H9z" fill="#fff"/><path d="M12 16h8M12 19.5h8M12 23h5" stroke="var(--accent)" stroke-width="1.8"/></svg>
+      <span class="tb-title">Сборщик МИ · Росздравнадзор</span>
+      <span class="tb-proj" id="tbProject"></span>
+    </div>
+    <div class="tb-actions">
+      <button class="tb-btn" id="themeBtn" title="Тема оформления" aria-label="Переключить тему"><svg viewBox="0 0 16 16"><path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zm0 1.2v10.6A5.3 5.3 0 0 1 8 2.7z" fill="currentColor"/></svg></button>
+      <span class="tb-sys" aria-hidden="true">
+        <i><svg viewBox="0 0 10 10"><path d="M0 5h10" stroke="currentColor"/></svg></i>
+        <i><svg viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9" fill="none" stroke="currentColor"/></svg></i>
+        <i class="x"><svg viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor"/></svg></i>
+      </span>
+    </div>
+  </header>
+  <div class="body">
+    <nav class="nav" id="nav" aria-label="Разделы"></nav>
+    <main class="main" id="main" tabindex="-1"></main>
+    <aside class="panel" id="panel" aria-label="Источник значения" hidden></aside>
+  </div>
+  <footer class="statusbar" id="statusbar"></footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="app.js"></script>
+</body>
+</html>
