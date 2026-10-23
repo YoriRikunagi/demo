@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Прототип мобильного приложения</title>
+<style>
+:root{--bg:#eef1f5;--ink:#161a22;--mut:#6b7385;--line:#e3e7ee;--acc:#2563eb;--ok:#16a34a;--bad:#dc2626;--card:#fff}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+body{font:15px/1.4 -apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;gap:40px;align-items:center;justify-content:center;padding:24px;flex-wrap:wrap}
+.phone{width:340px;height:700px;background:#000;border-radius:44px;padding:11px;box-shadow:0 20px 60px #0003;flex:none}
+.screen{position:relative;width:100%;height:100%;background:#fff;border-radius:34px;overflow:hidden;display:flex;flex-direction:column}
+.status{height:34px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 24px 4px;font-size:12px;font-weight:600;background:#fff;z-index:3}
+.view{flex:1;position:relative;overflow:hidden}
+.page{position:absolute;inset:0;overflow:auto;background:var(--bg);transition:transform .25s,opacity .25s}
+.page.hide{transform:translateX(100%)}
+.bar{background:#fff;padding:12px 16px;border-bottom:1px solid var(--line);font-weight:700;display:flex;align-items:center;gap:10px}
+.bar button{border:0;background:none;font-size:20px;color:var(--acc);cursor:pointer}
+.task{background:var(--card);margin:10px 12px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);cursor:pointer}
+.task b{display:block}.task span{color:var(--mut);font-size:13px}
+.tag{float:right;font-size:11px;padding:2px 8px;border-radius:9px;background:#dbeafe;color:var(--acc)}
+.tag.new{background:#dcfce7;color:var(--ok)}
+.tabs{display:flex;border-top:1px solid var(--line);background:#fff}
+.tabs div{flex:1;text-align:center;padding:10px 0 14px;font-size:12px;color:var(--mut)}
+.tabs .on{color:var(--acc);font-weight:700}
+.splash{position:absolute;inset:0;background:var(--acc);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:5;transition:opacity .4s}
+.splash .logo{width:76px;height:76px;border-radius:20px;background:#fff3;display:grid;place-items:center;font-size:34px}
+.splash.gone{opacity:0;pointer-events:none}
+.err{position:absolute;inset:0;background:#fff;z-index:4;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;gap:10px}
+.err.on{display:flex}
+.btn{border:0;background:var(--acc);color:#fff;padding:11px 22px;border-radius:10px;font-weight:600;font-size:15px;cursor:pointer}
+.btn.ghost{background:#e8edf7;color:var(--acc)}
+.push{position:absolute;left:10px;right:10px;top:-120px;background:#fffffff2;backdrop-filter:blur(12px);border-radius:16px;padding:11px 14px;box-shadow:0 8px 30px #0003;z-index:9;transition:top .4s;cursor:pointer;border:1px solid var(--line)}
+.push.show{top:38px}
+.push small{color:var(--mut)}
+.modal{position:absolute;inset:0;background:#0006;z-index:8;display:none;align-items:center;justify-content:center;padding:30px}
+.modal.on{display:flex}
+.modal>div{background:#fff;border-radius:16px;padding:20px;text-align:center;width:100%}
+.modal p{margin:8px 0 16px;color:var(--mut)}
+.modal .row{display:flex;gap:8px;justify-content:center}
+.photo{margin:10px 12px;padding:14px;background:#fff;border:1px dashed var(--mut);border-radius:12px;text-align:center;color:var(--mut);cursor:pointer}
+.photo img{max-width:100%;border-radius:8px;display:block;margin:0 auto 8px}
+.side{max-width:340px}
+.side h1{font-size:22px;margin-bottom:6px}
+.side p{color:var(--mut);margin-bottom:14px}
+.side button{display:block;width:100%;margin-bottom:8px;text-align:left}
+.side small{color:var(--mut);display:block;margin-top:10px}
+@media(max-width:420px){body{padding:0;display:block}.side{display:none}.phone{width:100%;height:100vh;border-radius:0;padding:0}.screen{border-radius:0}}
+</style>
+</head>
+<body>
+<div class="side">
+  <h1>Как приложение поведёт себя у сотрудника</h1>
+  <p>Телефон справа работает: нажимайте на экран. Кнопки ниже запускают ситуации, которые обычно ломают приложение-оболочку.</p>
+  <button class="btn ghost" onclick="goOffline()">Пропала связь</button>
+  <button class="btn ghost" onclick="sendPush()">Пришло уведомление о новом задании</button>
+  <button class="btn ghost" onclick="openTask(1)">Открыть задание и приложить фото</button>
+  <button class="btn ghost" onclick="restart()">Запустить заново</button>
+  <small>Приложение открывает ваш сайт внутри себя: без адресной строки, с сохранённым входом. Правки сайта видны сразу, без повторной публикации.</small>
+</div>
+
+<div class="phone"><div class="screen" id="screen">
+  <div class="status"><span id="clock">9:41</span><span>5G ▮▮▮</span></div>
+  <div class="view" id="view">
+    <div class="splash" id="splash"><div class="logo">▣</div><b>Корпоративный портал</b><small>Загрузка…</small></div>
+
+    <div class="page" id="home">
+      <div class="bar">Мои задания</div>
+      <div id="list"></div>
+    </div>
+
+    <div class="page hide" id="detail">
+      <div class="bar"><button onclick="back()">‹</button><span id="dtitle"></span></div>
+      <div class="task" style="cursor:default"><span id="dtext"></span></div>
+      <div class="photo" onclick="pick()" id="photoBox">📷 Сделать фото или выбрать из галереи</div>
+      <input type="file" id="file" accept="image/*" hidden>
+      <div style="padding:6px 12px"><button class="btn" style="width:100%" onclick="done()">Отправить отчёт</button></div>
+    </div>
+
+    <div class="err" id="err">
+      <div style="font-size:42px">📡</div><b>Нет соединения</b>
+      <span style="color:var(--mut)">Проверьте интернет и попробуйте снова</span>
+      <button class="btn" onclick="retry()">Повторить</button>
+    </div>
+    <div class="push" id="push" onclick="pushTap()"><b>Новое задание</b><br><small>Проверить выкладку на стеллаже 4. Нажмите, чтобы открыть</small></div>
+    <div class="modal" id="perm"><div><b>Разрешить уведомления?</b><p>Мы будем присылать новые задания и важные события</p><div class="row"><button class="btn ghost" onclick="perm(false)">Не сейчас</button><button class="btn" onclick="perm(true)">Разрешить</button></div></div></div>
+  </div>
+  <div class="tabs"><div class="on">Задания</div><div>Обучение</div><div>Документы</div><div>Профиль</div></div>
+</div></div>
+
+<script>
+const T=[
+ {t:"Выкладка у стеллажа 4",s:"Сегодня, до 14:00",x:"Проверить выкладку по планограмме и приложить фото.",n:true},
+ {t:"Пересчёт кофе и чая",s:"Завтра, до 18:00",x:"Пересчитать остатки в зоне напитков, внести в отчёт."},
+ {t:"Тест по новому ассортименту",s:"До пятницы",x:"Пройти обучающий тест, 10 вопросов."}
+];
+let online=true,ready=false,cur=null,asked=false;
+const $=i=>document.getElementById(i);
+function render(){ $("list").innerHTML=T.map((k,i)=>`<div class="task" onclick="openTask(${i})"><span class="tag ${k.n?'new':''}">${k.n?'новое':'в работе'}</span><b>${k.t}</b><span>${k.s}</span></div>`).join(""); }
+function openTask(i){ if(!online){goOffline();return}
+  cur=i;$("dtitle").textContent=T[i].t;$("dtext").textContent=T[i].x;
+  $("photoBox").innerHTML="📷 Сделать фото или выбрать из галереи";
+  $("detail").classList.remove("hide");pushState();}
+function pushState(){history.pushState({d:1},"")}
+function back(){$("detail").classList.add("hide");}
+window.addEventListener("popstate",()=>{ if(!$("detail").classList.contains("hide")) back(); });
+function pick(){$("file").click()}
+$("file").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$("photoBox").innerHTML=`<img src="${r.result}">Фото прикреплено`};r.readAsDataURL(f)}
+function done(){ if(!online){goOffline();return} T[cur].n=false;render();back();toast() }
+function toast(){const d=document.createElement("div");d.textContent="Отчёт отправлен ✓";d.style.cssText="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:#16a34a;color:#fff;padding:9px 18px;border-radius:20px;z-index:9";$("view").appendChild(d);setTimeout(()=>d.remove(),1800)}
+function goOffline(){online=false;$("err").classList.add("on")}
+function retry(){ const b=document.querySelector("#err .btn");b.textContent="Загрузка…";setTimeout(()=>{online=true;$("err").classList.remove("on");b.textContent="Повторить"},900)}
+function sendPush(){ if(!asked){ $("perm").classList.add("on");return } showPush() }
+function perm(ok){asked=true;$("perm").classList.remove("on");if(ok)setTimeout(showPush,500)}
+function showPush(){ $("push").classList.add("show");setTimeout(()=>$("push").classList.remove("show"),6000)}
+function pushTap(){ $("push").classList.remove("show"); online=true;$("err").classList.remove("on"); openTask(0) }
+function restart(){ $("splash").classList.remove("gone"); $("detail").classList.add("hide"); setTimeout(()=>$("splash").classList.add("gone"),1200) }
+render(); setTimeout(()=>$("splash").classList.add("gone"),1200);
+(function(){const d=new Date();$("clock").textContent=d.getHours()+":"+String(d.getMinutes()).padStart(2,"0")})();
+</script>
+</body>
+</html>
