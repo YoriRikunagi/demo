@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пульт газодинамического стенда</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--panel2:#1c232d;--line:#2a3441;--text:#e6edf3;--mute:#8b98a8;--accent:#3fb6ff;--ok:#3fd17f;--warn:#ffb020;--bad:#ff5a5f;--c1:#3fb6ff;--c2:#b58cff;--c3:#3fd17f;--c4:#ffb020}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:#05080c;color:var(--text);font:15px/1.35 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;align-items:center;justify-content:center;padding:12px}
+.hmi{width:min(1100px,100%);min-height:min(660px,calc(100vh - 24px));background:var(--bg);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;overflow:hidden}
+header{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.brand{font-weight:700;letter-spacing:.3px}
+.brand small{display:block;font-weight:400;color:var(--mute);font-size:12px}
+nav{display:flex;gap:6px;margin-left:auto}
+nav button{min-height:48px;padding:0 18px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-size:15px;cursor:pointer}
+nav button.on{background:var(--accent);color:#04121c;border-color:var(--accent);font-weight:600}
+.link{display:flex;align-items:center;gap:8px;color:var(--mute);font-size:13px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--bad)}
+.dot.ok{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+main{flex:1;padding:12px;display:flex;flex-direction:column;min-height:0}
+.screen{display:none;flex:1;min-height:0}
+.screen.on{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.8px;color:var(--mute);font-weight:600;margin-bottom:10px}
+button.btn{min-height:52px;padding:0 20px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-size:16px;cursor:pointer}
+button.btn.primary{background:var(--accent);color:#04121c;border-color:var(--accent);font-weight:600}
+button.btn:disabled{opacity:.4;cursor:not-allowed}
+button.btn:active{transform:scale(.98)}
+
+/* самотест */
+.tests{display:grid;gap:8px}
+.test{display:grid;grid-template-columns:28px 1fr auto auto;gap:12px;align-items:center;padding:10px 12px;background:var(--panel2);border-radius:10px;border:1px solid var(--line)}
+.ico{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:14px}
+.ico.run{border-color:var(--accent);border-top-color:transparent;animation:spin .8s linear infinite}
+.ico.ok{border-color:var(--ok);color:var(--ok)}
+.ico.bad{border-color:var(--bad);color:var(--bad)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.test .val{color:var(--mute);font-variant-numeric:tabular-nums;font-size:13px}
+.bar{height:8px;background:var(--panel2);border-radius:4px;overflow:hidden;margin:6px 0 14px}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+
+/* рабочий */
+.work{display:grid;grid-template-columns:1fr 280px;gap:12px;flex:1;min-height:0}
+.charts{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;min-height:380px}
+.ch{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;min-height:170px}
+.ch canvas{position:absolute;inset:0;width:100%;height:100%}
+.ch .t{position:absolute;left:10px;top:8px;font-size:12px;color:var(--mute);z-index:1}
+.ch .v{position:absolute;right:10px;top:4px;font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;z-index:1}
+.side{display:flex;flex-direction:column;gap:10px}
+.ind{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ind div{background:var(--panel2);border-radius:10px;padding:8px 10px}
+.ind span{display:block;font-size:11px;color:var(--mute)}
+.ind b{font-size:22px;font-variant-numeric:tabular-nums}
+.ind em{font-style:normal;font-size:12px;color:var(--mute);margin-left:3px}
+.sp{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.sp label{flex:1;font-size:13px;color:var(--mute)}
+.sp button{width:48px;height:48px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-size:22px;cursor:pointer}
+.sp output{min-width:64px;text-align:center;font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}
+.modes button{min-height:48px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;font-size:14px}
+.modes button.on{background:var(--accent);color:#04121c;font-weight:600;border-color:var(--accent)}
+.modes button.stop.on{background:var(--bad);border-color:var(--bad);color:#fff}
+.alarm{display:none;padding:8px 10px;border-radius:10px;background:rgba(255,90,95,.15);border:1px solid var(--bad);color:var(--bad);font-size:13px}
+.alarm.on{display:block}
+
+/* сервис */
+.svc{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form{display:grid;grid-template-columns:130px 1fr;gap:8px;align-items:center}
+.form label{color:var(--mute);font-size:13px}
+.form select,.form input{min-height:44px;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:0 10px;font-size:15px}
+table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+td,th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--mute);font-weight:500}
+.log{background:#05080c;border:1px solid var(--line);border-radius:8px;height:200px;overflow:auto;padding:8px;font:12px/1.5 ui-monospace,Menlo,Consolas,monospace;color:#a7f3d0}
+.log .tx{color:#7cc7ff}.log .er{color:var(--bad)}
+.diag{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.diag div{background:var(--panel2);border-radius:10px;padding:8px 10px}
+.diag span{display:block;font-size:11px;color:var(--mute)}
+.diag b{font-size:18px;font-variant-numeric:tabular-nums}
+.note{font-size:12px;color:var(--mute);margin-top:8px}
+
+@media(max-width:860px){.work{grid-template-columns:1fr}.svc{grid-template-columns:1fr}.charts{grid-template-columns:1fr;grid-template-rows:repeat(4,190px)}.diag{grid-template-columns:1fr 1fr}.test{grid-template-columns:28px 1fr auto}.test .val{display:none}nav{margin-left:0;width:100%}nav button{flex:1;padding:0 6px}}
+</style>
+</head>
+<body>
+<div class="hmi">
+  <header>
+    <div class="brand">Пульт стенда ГДС-1<small>панель оператора · 1024×600 · сенсор</small></div>
+    <div class="link"><span class="dot" id="linkDot"></span><span id="linkTxt">нет связи</span></div>
+    <nav>
+      <button data-s="test" class="on">Самотест</button>
+      <button data-s="work">Рабочий</button>
+      <button data-s="svc">Сервис</button>
+    </nav>
+  </header>
+  <main>
+
+  <section class="screen on" id="s-test">
+    <div class="card">
+      <h2>Самотестирование при запуске</h2>
+      <div class="bar"><i id="testBar"></i></div>
+      <div class="tests" id="tests"></div>
+    </div>
+    <div class="card">
+      <h2>Калибровка датчиков</h2>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <button class="btn" id="btnCal" disabled>Калибровка нуля</button>
+        <button class="btn primary" id="btnGo" disabled>Перейти к работе</button>
+        <span class="val" id="calInfo" style="color:var(--mute);font-size:13px">Калибровка доступна после самотеста. Перед нулением сбросьте давление в магистрали.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="s-work">
+    <div class="work">
+      <div class="charts">
+        <div class="ch"><span class="t">Давление P1, бар</span><span class="v" id="v0" style="color:var(--c1)">—</span><canvas></canvas></div>
+        <div class="ch"><span class="t">Давление P2, бар</span><span class="v" id="v1" style="color:var(--c2)">—</span><canvas></canvas></div>
+        <div class="ch"><span class="t">Расход Q, л/мин</span><span class="v" id="v2" style="color:var(--c3)">—</span><canvas></canvas></div>
+        <div class="ch"><span class="t">Температура T, °C</span><span class="v" id="v3" style="color:var(--c4)">—</span><canvas></canvas></div>
+      </div>
+      <div class="side">
+        <div class="card">
+          <h2>Показания</h2>
+          <div class="ind">
+            <div><span>P1</span><b id="i0">—</b><em>бар</em></div>
+            <div><span>P2</span><b id="i1">—</b><em>бар</em></div>
+            <div><span>Q</span><b id="i2">—</b><em>л/мин</em></div>
+            <div><span>T</span><b id="i3">—</b><em>°C</em></div>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Уставки и режим</h2>
+          <div class="sp"><label>Давление P1</label><button data-k="p" data-d="-0.5">−</button><output id="spP">4.0</output><button data-k="p" data-d="0.5">+</button></div>
+          <div class="sp"><label>Дроссель, %</label><button data-k="t" data-d="-5">−</button><output id="spT">50</output><button data-k="t" data-d="5">+</button></div>
+          <div class="modes">
+            <button class="stop on" data-m="0">Стоп</button>
+            <button data-m="1">Ручной</button>
+            <button data-m="2">Авто</button>
+          </div>
+          <button class="btn primary" id="btnApply" style="width:100%">Записать в контроллер</button>
+        </div>
+        <div class="alarm" id="alarm">Давление P1 выше аварийного порога 9.0 бар</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="s-svc">
+    <div class="svc">
+      <div class="card">
+        <h2>Канал связи</h2>
+        <div class="form">
+          <label>Транспорт</label>
+          <select id="tr"><option>Modbus RTU / RS-232</option><option>Свой протокол, полный дуплекс (план)</option><option>Modbus TCP / Ethernet (план)</option></select>
+          <label>Порт</label><input value="/dev/ttyS0">
+          <label>Скорость</label><select><option>9600</option><option>19200</option><option selected>115200</option></select>
+          <label>Формат</label><select><option>8N1</option><option>8E1</option><option>8N2</option></select>
+          <label>Адрес slave</label><input value="1" id="sid">
+          <label>Опрос, мс</label><input value="20" id="pollMs">
+        </div>
+        <p class="note">Транспорт спрятан за интерфейсом ITransport: смена протокола не затрагивает экраны и модель данных.</p>
+        <h2 style="margin-top:14px">Диагностика</h2>
+        <div class="diag">
+          <div><span>Кадры/с</span><b id="dFps">0</b></div>
+          <div><span>Отклик, мс</span><b id="dLat">0</b></div>
+          <div><span>Ошибки CRC</span><b id="dErr">0</b></div>
+          <div><span>FPS экрана</span><b id="dDraw">0</b></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn" id="btnErr">Вставить сбой CRC</button>
+          <button class="btn" id="btnClr">Сбросить счётчики</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Карта регистров</h2>
+        <table>
+          <tr><th>Адрес</th><th>Имя</th><th>Тип</th><th>Значение</th></tr>
+          <tr><td>0x0000</td><td>P1 ×100</td><td>HR, чтение</td><td id="r0">—</td></tr>
+          <tr><td>0x0001</td><td>P2 ×100</td><td>HR, чтение</td><td id="r1">—</td></tr>
+          <tr><td>0x0002</td><td>Q ×10</td><td>HR, чтение</td><td id="r2">—</td></tr>
+          <tr><td>0x0003</td><td>T ×10</td><td>HR, чтение</td><td id="r3">—</td></tr>
+          <tr><td>0x0010</td><td>Уставка P1 ×100</td><td>HR, запись</td><td id="r4">—</td></tr>
+          <tr><td>0x0011</td><td>Дроссель, %</td><td>HR, запись</td><td id="r5">—</td></tr>
+          <tr><td>0x0012</td><td>Режим</td><td>HR, запись</td><td id="r6">—</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card" style="flex:1">
+      <h2>Журнал обмена (Modbus RTU, hex)</h2>
+      <div class="log" id="log"></div>
+    </div>
+  </section>
+
+  </main>
+</div>
+
+<script>
+(()=>{
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+
+/* ---------- Modbus RTU: CRC16 и кадры ---------- */
+function crc16(b){let c=0xFFFF;for(const x of b){c^=x;for(let i=0;i<8;i++)c=c&1?(c>>1)^0xA001:c>>1}return c}
+function frame(bytes){const c=crc16(bytes);return [...bytes,c&255,c>>8]}
+const hex=a=>a.map(x=>x.toString(16).padStart(2,'0')).join(' ').toUpperCase();
+const w16=v=>[(v>>8)&255,v&255];
+
+/* ---------- Эмулятор стенда (аналог Modbus Slave на Python) ---------- */
+const plant={p1:0,p2:0,q:0,t:21,reg:{sp:400,thr:50,mode:0},cal:{off:[0.07,0.03,0.4,0]},zeroed:false};
+let tsim=0;
+function step(dt){
+  tsim+=dt;
+  const r=plant.reg, run=r.mode>0;
+  const target=run?r.sp/100:0;
+  plant.p1+=(target-plant.p1)*Math.min(1,dt*2.2);
+  const noise=(Math.sin(tsim*7)+Math.sin(tsim*13.7)*.5)*0.025;
+  const ripple=run?Math.sin(tsim*1.3)*0.12*(r.mode===1?1.6:.5):0;
+  const p1=Math.max(0,plant.p1+noise+ripple);
+  const k=.25+(r.thr/100)*.55;
+  const p2=p1*k+Math.sin(tsim*2.1)*.03*(run?1:0);
+  const q=run?14*Math.sqrt(Math.max(p1-p2,0))*(r.thr/60)+Math.sin(tsim*3.3)*.4:0;
+  plant.t+=((21+q*.9)-plant.t)*dt*.08;
+  const off=plant.zeroed?[0,0,0,0]:plant.cal.off;
+  plant.v=[p1+off[0],p2+off[1],Math.max(0,q+off[2]),plant.t];
+}
+
+/* ---------- Кольцевые буферы и отрисовка ---------- */
+const N=600, buf=[0,1,2,3].map(()=>new Float32Array(N)); let head=0, filled=0;
+const cfg=[{c:'#3fb6ff',min:0,max:10,fmt:2},{c:'#b58cff',min:0,max:6,fmt:2},{c:'#3fd17f',min:0,max:40,fmt:1},{c:'#ffb020',min:15,max:60,fmt:1}];
+const cvs=$$('.ch canvas'); const ctxs=cvs.map(c=>c.getContext('2d'));
+function resize(){cvs.forEach(c=>{const r=c.getBoundingClientRect(),d=devicePixelRatio||1;c.width=Math.max(1,r.width*d);c.height=Math.max(1,r.height*d)})}
+addEventListener('resize',resize);
+function draw(){
+  cvs.forEach((cv,i)=>{
+    const g=ctxs[i],W=cv.width,H=cv.height,d=devicePixelRatio||1,{c,min,max}=cfg[i];
+    g.clearRect(0,0,W,H);
+    g.strokeStyle='#2a3441';g.lineWidth=1;g.beginPath();
+    for(let k=1;k<5;k++){const y=H*k/5;g.moveTo(0,y);g.lineTo(W,y)}
+    for(let k=1;k<6;k++){const x=W*k/6;g.moveTo(x,0);g.lineTo(x,H)}
+    g.stroke();
+    if(i===0){const y=H-(plant.reg.sp/100-min)/(max-min)*H;g.setLineDash([6*d,6*d]);g.strokeStyle='#8b98a8';g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke();g.setLineDash([])}
+    g.strokeStyle=c;g.lineWidth=2*d;g.lineJoin='round';g.beginPath();
+    const n=Math.min(filled,N);
+    for(let k=0;k<n;k++){
+      const idx=(head-n+k+N*2)%N, x=W*k/(N-1)+(N-n)/(N-1)*W, y=H-(buf[i][idx]-min)/(max-min)*H;
+      k?g.lineTo(x,Math.min(H,Math.max(0,y))):g.moveTo(x,y)
+    }
+    g.stroke();
+  });
+}
+
+/* ---------- Цикл опроса (в Qt это отдельный QThread, здесь — таймер) ---------- */
+const logEl=$('#log'); let stats={frames:0,err:0,lat:0,fps:0,draw:0}; let injectErr=false, linkUp=false;
+function log(cls,txt){const d=document.createElement('div');d.className=cls;d.textContent=txt;logEl.appendChild(d);while(logEl.children.length>120)logEl.firstChild.remove();logEl.scrollTop=logEl.scrollHeight}
+let lastLog=0,lastT=performance.now(),pollAcc=0;
+function pollTick(now){
+  const dt=Math.min(.1,(now-lastT)/1000); lastT=now;
+  pollAcc+=dt*1000;
+  const period=Math.max(5,+$('#pollMs').value||20);
+  while(pollAcc>=period){
+    pollAcc-=period; step(period/1000);
+    const sid=+$('#sid').value||1;
+    const req=frame([sid,3,0,0,0,4]);
+    const regs=[plant.v[0]*100,plant.v[1]*100,plant.v[2]*10,plant.v[3]*10].map(x=>Math.round(x)&0xFFFF);
+    const resp=frame([sid,3,8,...regs.flatMap(w16)]);
+    const lat=3+Math.random()*2.5; stats.lat=stats.lat*.9+lat*.1; stats.frames++; stats.fpsAcc=(stats.fpsAcc||0)+1;
+    let bad=false;
+    if(injectErr){injectErr=false;bad=true;resp[resp.length-1]^=0xFF;stats.err++}
+    if(!bad){
+      plant.v.forEach((v,i)=>{buf[i][head]=v});head=(head+1)%N;filled++;
+      regs.forEach((r,i)=>$('#r'+i).textContent=r);
+    }
+    if(now-lastLog>700||bad){lastLog=now;log('tx','→ '+hex(req));log(bad?'er':'',(bad?'✗ ':'← ')+hex(resp)+(bad?'   ошибка CRC, кадр отброшен':''))}
+  }
+  const v=plant.v||[0,0,0,0];
+  [0,1,2,3].forEach(i=>{const t=v[i].toFixed(cfg[i].fmt);$('#v'+i).textContent=t;$('#i'+i).textContent=t});
+  $('#alarm').classList.toggle('on',v[0]>9);
+}
+function loop(now){pollTick(now);draw();stats.drawAcc=(stats.drawAcc||0)+1;requestAnimationFrame(loop)}
+setInterval(()=>{
+  $('#dFps').textContent=stats.fpsAcc||0;stats.fpsAcc=0;
+  $('#dDraw').textContent=stats.drawAcc||0;stats.drawAcc=0;
+  $('#dLat').textContent=stats.lat.toFixed(1);$('#dErr').textContent=stats.err;
+},1000);
+$('#btnErr').onclick=()=>injectErr=true;
+$('#btnClr').onclick=()=>{stats.err=0;logEl.innerHTML=''};
+
+/* ---------- Навигация ---------- */
+function show(s){$$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.s===s));$$('.screen').forEach(e=>e.classList.toggle('on',e.id==='s-'+s));requestAnimationFrame(resize)}
+$$('nav button').forEach(b=>b.onclick=()=>show(b.dataset.s));
+
+/* ---------- Самотест ---------- */
+const checks=[
+  ['Связь с контроллером STM32',()=>'ответ 4 мс, slave 1'],
+  ['Датчик давления P1',()=>'нуль '+plant.cal.off[0].toFixed(2)+' бар'],
+  ['Датчик давления P2',()=>'нуль '+plant.cal.off[1].toFixed(2)+' бар'],
+  ['Датчик расхода Q',()=>'нуль '+plant.cal.off[2].toFixed(1)+' л/мин'],
+  ['Датчик температуры T',()=>plant.t.toFixed(1)+' °C'],
+  ['Клапаны и дроссель',()=>'концевики в норме']
+];
+const box=$('#tests');
+checks.forEach(([n])=>{const d=document.createElement('div');d.className='test';d.innerHTML='<span class="ico"></span><span>'+n+'</span><span class="val"></span><span></span>';box.appendChild(d)});
+async function selftest(){
+  $('#btnCal').disabled=$('#btnGo').disabled=true;$('#testBar').style.width='0';
+  const rows=$$('.test');
+  for(let i=0;i<checks.length;i++){
+    const ic=rows[i].querySelector('.ico');ic.className='ico run';ic.textContent='';
+    await new Promise(r=>setTimeout(r,650));
+    ic.className='ico ok';ic.textContent='✓';rows[i].querySelector('.val').textContent=checks[i][1]();
+    $('#testBar').style.width=((i+1)/checks.length*100)+'%';
+    if(i===0){linkUp=true;$('#linkDot').classList.add('ok');$('#linkTxt').textContent='связь: Modbus RTU, 115200 8N1'}
+  }
+  $('#btnCal').disabled=false;$('#btnGo').disabled=false;
+}
+$('#btnCal').onclick=()=>{plant.zeroed=true;$('#calInfo').textContent='Нуль записан во все каналы. Смещения обнулены.';$$('.test .val').forEach((e,i)=>{if(i>=1&&i<=3)e.textContent='нуль 0.00 · откалиброван'});log('','калибровка: записаны смещения 0 во все каналы')};
+$('#btnGo').onclick=()=>show('work');
+
+/* ---------- Уставки ---------- */
+const draft={p:400,t:50,m:0};
+function paintSp(){$('#spP').textContent=(draft.p/100).toFixed(1);$('#spT').textContent=draft.t}
+$$('.sp button').forEach(b=>b.onclick=()=>{
+  if(b.dataset.k==='p')draft.p=Math.min(900,Math.max(0,draft.p+b.dataset.d*100));
+  else draft.t=Math.min(100,Math.max(0,draft.t+ +b.dataset.d));
+  paintSp();
+});
+$$('.modes button').forEach(b=>b.onclick=()=>{draft.m=+b.dataset.m;$$('.modes button').forEach(x=>x.classList.toggle('on',x===b))});
+$('#btnApply').onclick=()=>{
+  const sid=+$('#sid').value||1;
+  plant.reg.sp=draft.p;plant.reg.thr=draft.t;plant.reg.mode=draft.m;
+  [['4',draft.p,0x10],['5',draft.t,0x11],['6',draft.m,0x12]].forEach(([r,v,a])=>{
+    $('#r'+r).textContent=v;const f=frame([sid,6,...w16(a),...w16(v)]);
+    log('tx','→ '+hex(f)+'   запись 0x'+a.toString(16).padStart(4,'0'));log('','← '+hex(f))
+  });
+};
+paintSp();['4','5','6'].forEach((r,i)=>$('#r'+r).textContent=[400,50,0][i]);
+
+resize();selftest();lastT=performance.now();requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
