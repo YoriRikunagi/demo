@@ -90,7 +90,7 @@
     hs.forEach(h => {
       g += '<text x="' + (dx - 3) + '" y="' + (Z(h) - 2) + '" font-size="8" text-anchor="end">' + h + '</text>';
     });
-    g += '<text x="' + (X(B.dx) + 6) + '" y="' + (Z(B.dz / 2)) + '" font-size="8" transform="rotate(90 ' + (X(B.dx) + 6) + ' ' + Z(B.dz / 2) + ')" text-anchor="middle">' + B.dz + '</text>' +
+    g += '<text x="' + (X(B.dx) + 14) + '" y="' + (Z(B.dz / 2)) + '" font-size="8" transform="rotate(90 ' + (X(B.dx) + 14) + ' ' + Z(B.dz / 2) + ')" text-anchor="middle">' + B.dz + '</text>' +
       '<line x1="' + (X(B.dx) + 10) + '" y1="' + Z(0) + '" x2="' + (X(B.dx) + 10) + '" y2="' + Z(B.dz) + '" stroke="#111" stroke-width=".5"/>' +
       '<line x1="' + X(0) + '" y1="' + (Z(0) + 10) + '" x2="' + X(B.dx) + '" y2="' + (Z(0) + 10) + '" stroke="#111" stroke-width=".5"/>' +
       '<text x="' + (X(B.dx / 2)) + '" y="' + (Z(0) + 20) + '" font-size="8" text-anchor="middle">' + B.dx + '</text>';
@@ -178,13 +178,28 @@
   }
   function edgeText(p) {
     const e = p.edge || {}, s = [];
-    if ((e.l || [])[0]) s.push('низ'); if ((e.w || [])[1]) s.push('прав.'); if ((e.l || [])[1]) s.push('верх'); if ((e.w || [])[0]) s.push('лев.');
+    if ((e.l || [])[0]) s.push('низ'); if ((e.w || [])[1]) s.push('прав'); if ((e.l || [])[1]) s.push('верх'); if ((e.w || [])[0]) s.push('лев');
     return s.length ? 'Кромка: ' + (p.edgeMat || '') + ' — ' + s.join(', ') + '.' : 'Без кромки.';
   }
 
   /* ---------- листы ---------- */
+  // блоки с layout:"illustrative" не имеют координат в модели — ставим их в ряд
+  function row(items) {
+    if (!items.some(i => i.layout === 'illustrative')) return false;
+    let x = 0; items.forEach(i => { i.box.x = x; i.box.y = 0; i.box.z = 0; x += i.box.dx + 120; });
+    return true;
+  }
+  // числа из JSON приводим к Number: они идут в разметку без экранирования
+  function normalize(model) {
+    const N = o => o && Object.keys(o).forEach(k => { if (typeof o[k] !== 'object') o[k] = +o[k] || 0; });
+    walk(model.blocks, b => {
+      N(b.size); N(b.box);
+      (b.panels || []).forEach(p => { ['l', 'w', 't', 'qty'].forEach(k => p[k] = +p[k] || 0); (p.boxes || []).forEach(N); (p.drill || []).forEach(N); });
+    });
+  }
   function buildSheets(model, opt) {
     opt = opt || {};
+    normalize(model);
     const sheets = [];
     const flat = []; walk(model.blocks, (b, par) => flat.push({ b, par }));
     const idIdx = {}; flat.forEach(f => idIdx[f.b.id] = f.b);
@@ -194,11 +209,10 @@
     // 1. общий вид
     const top = model.blocks[0];
     const items = [];
-    walk(model.blocks, b => { if (b.box) items.push({ box: b.box, label: b.id }); });
+    walk(model.blocks, b => { if (b.box) items.push({ box: Object.assign({}, b.box), label: b.id, layout: b.layout }); });
     // условная расстановка в ряд, если блоки заданы без абсолютных координат
-    let cx = 0;
-    items.forEach(it => { it.box = Object.assign({}, it.box, { x: cx }); cx += it.box.dx + 120; });
-    sheets.push({ id: 'general', kind: 'general', title: 'Общий вид', sub: '', fig: items.length ? isoBoxes(items, 480, 300) : '', figNote: items.some(i => true) ? 'Расстановка блоков условная: в выгрузке нет координат блоков в модели.' : '',
+    const rowGen = row(items);
+    sheets.push({ id: 'general', kind: 'general', title: 'Общий вид', sub: '', fig: items.length ? isoBoxes(items, 480, 300) : '', figNote: rowGen ? 'Расстановка блоков условная: в выгрузке нет координат блоков в модели.' : '',
       tables: blocksTable(model) + hwTable(model.hardware, 'Фурнитура — вся модель') });
 
     // 2. листы блоков
@@ -208,8 +222,8 @@
       const s = b.size || {};
       let fig = '', front = '', tables = '';
       if (hasC) {
-        const its = []; b.children.forEach(c => c.box && its.push({ box: Object.assign({}, c.box), label: c.id }));
-        let x = 0; its.forEach(i => { i.box.x = x; x += i.box.dx + 120; });
+        const its = []; b.children.forEach(c => c.box && its.push({ box: Object.assign({}, c.box), label: c.id, layout: c.layout }));
+        row(its);
         fig = its.length ? isoBoxes(its, 480, 250) : '';
         tables = childTable(b);
       } else {
@@ -237,7 +251,7 @@
 
   function sheetHtml(s, n, N, model) {
     const stamp = s.kind === 'detail'
-      ? '<div class="stamp2">' + s.stamp.map(r => '<div><span>' + r[0] + '</span><b>' + esc(r[1]) + '</b></div>').join('') + '</div>'
+      ? '<div class="stamp2">' + s.stamp.concat([['Лист', n + ' / ' + N]]).map(r => '<div><span>' + r[0] + '</span><b>' + esc(r[1]) + '</b></div>').join('') + '</div>'
       : '<div class="stamp"><div class="st1"><b>' + esc(s.title) + '</b></div><div><span>Заказ:</span>' + esc(model.order) + '</div><div><span>Дата:</span>' + esc(model.date) + '</div><div><span>Лист:</span>' + n + ' / ' + N + '</div></div>';
     const figs = s.kind === 'block' && s.front
       ? '<div class="figs"><div style="flex:300">' + s.fig + '</div><div style="flex:220">' + s.front + '</div></div>'
@@ -269,7 +283,7 @@ table.spec th{background:#f2f2f2;font-weight:700}tr.grp td{background:#f3ead8;fo
 .stamp{position:absolute;left:8mm;right:8mm;bottom:6mm;display:flex;border:.35mm solid #111}
 .stamp>div{border-right:.25mm solid #111;padding:2mm 3mm;flex:1;font-size:12px}.stamp>div:last-child{border:0}
 .stamp .st1{flex:1.8;font-size:15px;display:flex;align-items:center}.stamp span{display:block;color:#777;font-size:8px;margin-bottom:1mm}
-.stamp2{position:absolute;left:8mm;right:8mm;bottom:6mm;display:grid;grid-template-columns:1fr 1fr 1fr;border:.35mm solid #111}
+.stamp2{position:absolute;left:8mm;right:8mm;bottom:6mm;display:grid;grid-template-columns:repeat(4,1fr);border:.35mm solid #111}
 .stamp2>div{border-right:.25mm solid #111;border-top:.25mm solid #111;padding:1.4mm 2.4mm;font-size:10px}.stamp2 span{display:block;color:#777;font-size:8px}
 .notes{position:absolute;inset:0;pointer-events:none}
 .note{position:absolute;pointer-events:auto;color:#c0392b;font:600 12px Arial;background:#fff8;border:1px dashed #c0392b;padding:1px 4px;min-width:30px;cursor:move;white-space:pre-wrap}

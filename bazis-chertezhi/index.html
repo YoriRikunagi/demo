@@ -124,6 +124,8 @@ $('out').addEventListener('focusout',e=>{
   if(document.body.classList.contains('editing'))document.querySelectorAll('td.ce').forEach(t=>t.contentEditable='true');
 });
 
+$('out').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.closest('td.ce')){e.preventDefault();e.target.closest('td.ce').blur()}});
+
 /* данные */
 function load(m,name){model=m;srcName=name;try{notes=JSON.parse(localStorage.getItem(KEY())||'{}')}catch(e){notes={}};draw()}
 $('cDetail').onchange=()=>{draw();if(document.body.classList.contains('editing'))document.querySelectorAll('td.ce').forEach(t=>t.contentEditable='true')};
