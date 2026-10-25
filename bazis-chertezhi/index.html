@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Сборочные чертежи из модели</title>
+<style>
+:root{--bg:#f3f4f6;--ink:#111;--mut:#666;--line:#222;--acc:#1f6feb;--card:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#15171a;--ink:#e8e8e8;--mut:#9aa;--line:#ddd;--acc:#5aa2ff;--card:#1e2126}}
+*{box-sizing:border-box}body{margin:0;font:14px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+header{padding:14px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;border-bottom:1px solid #8883}
+h1{font-size:17px;margin:0}
+.bar{display:flex;gap:8px;flex-wrap:wrap}
+button{font:inherit;padding:8px 12px;border:1px solid #8885;border-radius:8px;background:var(--card);color:var(--ink);cursor:pointer}
+button.p{background:var(--acc);color:#fff;border-color:var(--acc)}
+main{display:grid;grid-template-columns:260px 1fr;gap:14px;padding:14px;max-width:1200px;margin:auto}
+@media(max-width:760px){main{grid-template-columns:1fr}}
+aside{background:var(--card);border-radius:10px;padding:12px;align-self:start}
+aside h3{margin:0 0 8px;font-size:13px;color:var(--mut);text-transform:uppercase}
+label{display:flex;gap:8px;align-items:center;padding:3px 0}
+.sheet{background:#fff;color:#111;border:1px solid #888;border-radius:4px;padding:16px;margin-bottom:16px;position:relative}
+.sheet h2{margin:0 0 4px;font-size:20px}
+.sub{color:#555;font-size:12px;margin-bottom:8px}
+.row{display:flex;gap:16px;flex-wrap:wrap}
+svg{max-width:100%;height:auto}
+table{border-collapse:collapse;width:100%;font-size:12px;margin-top:8px}
+th,td{border:1px solid #222;padding:3px 6px;text-align:left}
+th{background:#eee}tr.g td{background:#f4f4f4;font-weight:600;text-align:center}
+.stamp{display:flex;border:2px solid #111;margin-top:12px;font-size:12px}
+.stamp div{padding:6px 10px;border-right:1px solid #111}.stamp div:last-child{border:0}.stamp b{font-size:16px}
+.note{font-size:11px;color:#555;margin-top:6px}
+.edit{outline:1px dashed #1f6feb;cursor:text}
+@media print{header,aside,.note.ui{display:none}main{display:block;padding:0}.sheet{page-break-after:always;border:0;margin:0}body{background:#fff}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Стол-горка · сборочные чертежи из модели</h1>
+  <div class="bar">
+    <button id="edit">Режим пометок</button>
+    <button class="p" id="pdf">Сохранить в PDF</button>
+  </div>
+</header>
+<main>
+<aside>
+  <h3>Состав комплекта</h3>
+  <label><input type="checkbox" data-s="s-general" checked> Общий вид и фурнитура</label>
+  <label><input type="checkbox" data-s="s-block" checked> Лист блока: 3D + панели</label>
+  <label><input type="checkbox" data-s="s-front" checked> Вид спереди, высоты полок</label>
+  <label><input type="checkbox" data-s="s-detail" checked> Деталь: присадка и размеры</label>
+  <h3 style="margin-top:14px">Блоки модели</h3>
+  <label><input type="radio" name="b" value="1" checked> Б1.1 №1 Шкаф</label>
+  <label><input type="radio" name="b" value="2"> Б1.2 Тумба с ящиками</label>
+  <label><input type="radio" name="b" value="3"> Б1.3 Пенал</label>
+  <p class="note ui">Распознаются вложенные и сращённые элементы, параметрическая фурнитура попадает в спецификацию блока.</p>
+</aside>
+<section id="out"></section>
+</main>
+<script>
+const B={
+ 1:{n:"Б1.1. №1 Шкаф",d:[562,554,1619],shelves:[320,640,960,1280],hw:["Петля накладная AQ VJ Clip с эксцентриком ×2","Опора лофт ×4"],
+    panels:[["Евродвор 2800×2070×18","",[["№1.Бок",2,1619,570],["№1.Полка",4,526,570],["№1.Дно",1,526,570],["№1.Крыша",1,526,570]]],["Евродвор 2800×2070×18 розовый","",[["№1.Фасад",2,277,1615]]],["ЛХДФ 2800×2070×3","",[["№1.Задняя стенка",1,559,1616]]]]},
+ 2:{n:"Б1.2. №2 Тумба с ящиками",d:[700,554,820],shelves:[200,400,600],hw:["Направляющие скрытые ×6","Ручка-профиль ×3"],
+    panels:[["Евродвор 2800×2070×18","",[["№2.Бок",2,820,550],["№2.Дно",1,664,550],["№2.Фасад ящика",3,664,260]]],["ЛХДФ 2800×2070×3","",[["№2.Дно ящика",3,640,520]]]]},
+ 3:{n:"Б1.3. №3 Пенал",d:[420,400,2100],shelves:[350,700,1050,1400,1750],hw:["Петля накладная ×4","Штанга"],
+    panels:[["Евродвор 2800×2070×18","",[["№3.Бок",2,2100,400],["№3.Полка",5,384,380],["№3.Фасад",2,1040,418]]],["ЛХДФ 2800×2070×3","",[["№3.Задняя стенка",1,416,2096]]]]}
+};
+let edit=false;
+function block3d(w,h){ // псевдо-изометрия блока с номерами деталей
+ const s=170/Math.max(w,h*0.0+h), x0=40,y0=210, W=w*s*1.0,H=h*s,d=40;
+ return `<svg viewBox="0 0 260 250" width="260"><g fill="none" stroke="#111" stroke-width="1.2">
+ <path d="M${x0},${y0}v${-H}h${W}v${H}z"/><path d="M${x0},${y0-H}l${d},-14h${W}l${-d},14"/><path d="M${x0+W},${y0}l${d},-14v${-H}"/>
+ ${[1,2,3,4].map(i=>`<path d="M${x0},${y0-H*i/5}h${W}"/>`).join('')}</g>
+ <g font-size="10" fill="#111"><circle cx="${x0+W/2}" cy="${y0-H-8}" r="8" fill="#fff" stroke="#111"/><text x="${x0+W/2-3}" y="${y0-H-5}">21</text>
+ <circle cx="${x0+W+d+14}" cy="${y0-H/2}" r="8" fill="#fff" stroke="#111"/><text x="${x0+W+d+11}" y="${y0-H/2+3}">7</text>
+ <circle cx="${x0+W/2}" cy="${y0-H*0.3}" r="8" fill="#fff" stroke="#111"/><text x="${x0+W/2-4}" y="${y0-H*0.3+3}">19</text></g></svg>`;
+}
+function front(b){const H=b.d[2],W=b.d[0],k=200/H,ww=W*k;
+ let g=`<rect x="50" y="20" width="${ww}" height="${H*k}" fill="none" stroke="#111" stroke-width="1.4"/>`;
+ let prev=H;b.shelves.slice().reverse().forEach(s=>{const y=20+(H-s)*k;g+=`<line x1="50" x2="${50+ww}" y1="${y}" y2="${y}" stroke="#111"/><text x="${55+ww}" y="${y+4}" font-size="10">${s}</text>`});
+ return `<svg viewBox="0 0 ${ww+110} 240" width="${Math.min(ww+110,300)}">${g}</svg>`}
+function detail(){return `<svg viewBox="0 0 330 150" width="420"><rect x="10" y="30" width="300" height="70" fill="none" stroke="#111" stroke-width="1.4"/>
+ ${[40,100,160,220,280].map(x=>`<circle cx="${x}" cy="45" r="4" fill="none" stroke="#111"/><circle cx="${x}" cy="85" r="4" fill="none" stroke="#111"/>`).join('')}
+ <path d="M10,30h-0v70" stroke="#111" stroke-width="3"/><text x="150" y="20" font-size="11" text-anchor="middle">1266</text><text x="318" y="70" font-size="11">290</text>
+ <text x="10" y="125" font-size="10">Кромка 0,8 мм: сторона 1; присадка Ø8×13, Ø5×11 — ${'отверстия по привязке к краю'}</text></svg>`}
+function tbl(b){return b.panels.map(([m,_,rows])=>`<tr class="g"><td colspan="5">${m} — ${rows.reduce((a,r)=>a+r[1],0)} шт</td></tr>`+rows.map((r,i)=>`<tr><td>${i+1}</td><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')).join('')}
+function stamp(t,n,tot){return `<div class="stamp"><div style="flex:2"><b>${t}</b></div><div>Заказ<br>Стол горка</div><div>Дата<br>25.10.2026</div><div>Лист<br>${n} / ${tot}</div></div>`}
+function render(){
+ const bid=document.querySelector('input[name=b]:checked').value,b=B[bid],on=id=>document.querySelector(`[data-s=${id}]`).checked;
+ let h='',n=0;const tot=[...document.querySelectorAll('[data-s]')].filter(x=>x.checked).length;
+ if(on('s-general')){n++;h+=`<div class="sheet" id="s-general"><h2>Общий вид</h2><div class="sub">Габариты 3440×2525×1765 · блоков: 3</div><div class="row">${block3d(280,300)}${block3d(150,280)}</div>
+ <table><tr><th>№</th><th>Блок</th><th>Габариты ШхГхВ</th><th>Дет.</th></tr><tr><td>Б1.1</td><td>Шкаф</td><td>562×554×1619</td><td>132</td></tr><tr><td>Б1.2</td><td>Тумба</td><td>700×554×820</td><td>54</td></tr><tr><td>Б1.3</td><td>Пенал</td><td>420×400×2100</td><td>38</td></tr></table>
+ <table><tr><th>№</th><th>Фурнитура — вся модель</th><th>Кол.</th></tr><tr><td>1</td><td>Петля накладная AQ VJ Clip с эксцентриком</td><td>6</td></tr><tr><td>2</td><td>Профиль алюминиевый LIRA-1707 с экраном</td><td>6</td></tr><tr><td>3</td><td>Опора лофт</td><td>4</td></tr><tr><td>4</td><td>Направляющие скрытые</td><td>6</td></tr></table>${stamp('Общий вид',n,tot)}</div>`}
+ if(on('s-block')){n++;h+=`<div class="sheet" id="s-block"><h2>${b.n}</h2><div class="sub">Ш ${b.d[0]} × Г ${b.d[1]} × В ${b.d[2]} мм</div><div class="row">${block3d(b.d[0]*0.5,b.d[2]*0.2)}${front(b)}</div>
+ <table><tr><th>Поз.</th><th>Наименование</th><th>Кол.</th><th>Длина</th><th>Ширина</th></tr>${tbl(b)}</table>
+ <table><tr><th>Фурнитура блока</th></tr>${b.hw.map(x=>`<tr><td>${x}</td></tr>`).join('')}</table>${stamp(b.n,n,tot)}</div>`}
+ if(on('s-front')){n++;h+=`<div class="sheet" id="s-front"><h2>Вид спереди · ${b.n}</h2><div class="sub">Высоты полок и ящиков от низа — размечать рулеткой от края</div>${front(b)}<div class="note">Полки на высотах: ${b.shelves.join(' · ')} мм</div>${stamp('Вид спереди',n,tot)}</div>`}
+ if(on('s-detail')){n++;h+=`<div class="sheet" id="s-detail"><h2>Деталь ${b.panels[0][2][0][0]}</h2><div class="sub">Кромка и пазы в спецификации · присадка с размерами</div>${detail()}${stamp('Деталь',n,tot)}</div>`}
+ document.getElementById('out').innerHTML=h;
+ document.querySelectorAll('.sheet').forEach(s=>s.addEventListener('click',e=>{if(!edit)return;const r=s.getBoundingClientRect();const t=document.createElement('div');t.className='edit';t.contentEditable=true;t.textContent='Пометка';t.style.cssText=`position:absolute;left:${e.clientX-r.left}px;top:${e.clientY-r.top}px;background:#ffef9a;padding:2px 6px;font-size:12px;border-radius:3px`;s.appendChild(t);t.focus();e.stopPropagation()}));
+}
+document.querySelectorAll('input').forEach(i=>i.addEventListener('change',render));
+document.getElementById('pdf').onclick=()=>window.print();
+document.getElementById('edit').onclick=function(){edit=!edit;this.className=edit?'p':'';this.textContent=edit?'Пометки: кликните по листу':'Режим пометок'};
+render();
+</script>
+</body>
+</html>
