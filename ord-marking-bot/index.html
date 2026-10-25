@@ -144,7 +144,7 @@ async function register(){
     await bot('ОРД не ответил вовремя. Повторяю запрос с тем же ключом…',null,900);
     await bot('Креатив в ОРД уже есть, дубль не создан. Беру его ERID.',null,900)}
   const e=erid();
-  await bot('Готово. ERID: <span class="erid">'+e+'</span>\n\n<b>Публикация:</b>\n'+esc(st.text)+'\n\n<b>Реклама.</b> '+esc(st.adv)+', '+esc(st.c.split(' от ')[0].toLowerCase())+'\nerid: '+e,[['Копировать',()=>bot('Скопировано.')],['Новая публикация',()=>{st.text=null;bot('Отправьте текст публикации.')}]]);
+  await bot('Готово. ERID: <span class="erid">'+e+'</span>\n\n<b>Публикация:</b>\n'+esc(st.text)+'\n\n<b>Реклама.</b> '+esc(st.adv)+', '+esc(st.c.split(' от ')[0].replace('Договор','договор'))+'\nerid: '+e,[['Копировать',()=>bot('Скопировано.')],['Новая публикация',()=>{st.text=null;bot('Отправьте текст публикации.')}]]);
   const tr=document.createElement('tr');tr.innerHTML='<td>'+(1043+$('#log').children.length-1)+'</td><td>'+esc(st.adv)+'</td><td class="erid">'+e+'</td><td><span class="tag t-ok">зарегистрирован</span></td>';
   $('#log').prepend(tr)}
 $('#simErr').onclick=()=>{mode='err';bot('Следующая регистрация вернёт ошибку ОРД — отправьте текст.',null,50)};
