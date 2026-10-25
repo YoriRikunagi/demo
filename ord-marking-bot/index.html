@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Маркировка рекламы · бот для сотрудников</title>
+<style>
+:root{--bg:#0f1722;--panel:#17212f;--line:#25324a;--tx:#e8eef7;--mut:#8fa2bd;--ac:#2aabee;--ok:#3ecf8e;--warn:#f5b84b;--err:#ef6a6a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 -apple-system,Segoe UI,Roboto,sans-serif}
+header{padding:18px 20px 0;max-width:1080px;margin:0 auto}
+h1{font-size:20px;margin:0 0 4px}
+header p{margin:0;color:var(--mut)}
+.tabs{display:flex;gap:8px;margin:16px 0 0}
+.tabs button{background:var(--panel);color:var(--mut);border:1px solid var(--line);padding:9px 16px;border-radius:10px 10px 0 0;cursor:pointer;font:inherit}
+.tabs button.on{color:var(--tx);border-bottom-color:var(--bg);background:var(--bg)}
+main{max-width:1080px;margin:0 auto;padding:0 20px 40px;display:grid;grid-template-columns:380px 1fr;gap:24px;align-items:start}
+.phone{background:#0b121c;border:1px solid var(--line);border-radius:22px;overflow:hidden;display:flex;flex-direction:column;height:640px}
+.bar{background:var(--panel);padding:12px 14px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center}
+.av{width:34px;height:34px;border-radius:50%;background:var(--ac);display:grid;place-items:center;font-weight:700}
+.bar b{display:block;font-size:14px}.bar small{color:var(--mut)}
+.chat{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:8px}
+.m{max-width:86%;padding:9px 12px;border-radius:14px;white-space:pre-wrap;word-wrap:break-word;font-size:14px}
+.bot{background:var(--panel);border:1px solid var(--line);align-self:flex-start;border-top-left-radius:4px}
+.me{background:#2b5278;align-self:flex-end;border-top-right-radius:4px}
+.kb{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.kb button{background:#1e2c42;color:var(--ac);border:1px solid var(--line);border-radius:8px;padding:7px 10px;cursor:pointer;font:inherit;font-size:13px}
+.kb button:hover{background:#243652}
+.erid{font-family:ui-monospace,Menlo,monospace;color:var(--ok)}
+.err{border-color:#5a2b33;background:#2a1a20}
+.in{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);background:var(--panel)}
+.in input{flex:1;background:#0b121c;border:1px solid var(--line);color:var(--tx);border-radius:10px;padding:9px 12px;font:inherit}
+.in button{background:var(--ac);border:0;border-radius:10px;color:#04121c;font-weight:700;padding:0 14px;cursor:pointer}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+.card h3{margin:0 0 10px;font-size:15px}
+.card ul{margin:0;padding-left:18px;color:var(--mut)}.card li{margin:4px 0}
+.card li b{color:var(--tx)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left}th{color:var(--mut);font-weight:500}
+.tag{display:inline-block;padding:1px 8px;border-radius:99px;font-size:12px}
+.t-ok{background:#12372a;color:var(--ok)}.t-w{background:#3b2f12;color:var(--warn)}
+.hide{display:none}
+canvas{width:100%;border-radius:10px;border:1px solid var(--line);background:#000}
+.pos{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}
+.pos button{background:#1e2c42;color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:8px;cursor:pointer;font:inherit;font-size:13px}
+.pos button.on{background:var(--ac);color:#04121c;border-color:var(--ac)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.row button,.dl{background:var(--ac);color:#04121c;border:0;border-radius:8px;padding:9px 14px;font-weight:700;cursor:pointer;font:inherit;text-decoration:none}
+.row button.g{background:#1e2c42;color:var(--tx);font-weight:400;border:1px solid var(--line)}
+@media(max-width:860px){main{grid-template-columns:1fr}.phone{height:560px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Бот маркировки рекламы</h1>
+  <p>Креатив → регистрация в ОРД → ERID → готовая публикация. Внутренний бот для сотрудников.</p>
+  <div class="tabs">
+    <button class="on" data-t="s1">Этап 1 · регистрация и ERID</button>
+    <button data-t="s2">Этап 2 · маркировка на медиа</button>
+  </div>
+</header>
+
+<main id="s1v">
+  <div class="phone">
+    <div class="bar"><div class="av">М</div><div><b>Маркировка · бот</b><small>бот</small></div></div>
+    <div class="chat" id="chat"></div>
+    <form class="in" id="f"><input id="inp" placeholder="Текст публикации…" autocomplete="off"><button>→</button></form>
+  </div>
+  <div>
+    <div class="card"><h3>Что происходит под капотом</h3>
+      <ul>
+        <li><b>Справочник:</b> контрагенты, договоры, площадки в PostgreSQL, выбираются кнопками</li>
+        <li><b>Один запрос = один креатив:</b> ключ идемпотентности, повтор после таймаута не создаёт дубль</li>
+        <li><b>Ошибки ОРД</b> переводятся на человеческий язык (не заполнен ИНН, договор не найден и т.д.)</li>
+        <li><b>Только официальный API ОРД,</b> без браузерной автоматизации</li>
+        <li><b>Слой провайдера:</b> смена ОРД или подключение CRM не трогает логику бота</li>
+      </ul>
+    </div>
+    <div class="card"><h3>Журнал регистраций</h3>
+      <table><thead><tr><th>№</th><th>Рекламодатель</th><th>ERID</th><th>Статус</th></tr></thead><tbody id="log">
+        <tr><td>1042</td><td>ООО «Ромашка»</td><td class="erid">2VtzqwP7xKd</td><td><span class="tag t-ok">зарегистрирован</span></td></tr>
+      </tbody></table>
+    </div>
+    <div class="card"><h3>Попробуйте</h3>
+      <div class="row"><button class="g" id="simErr">Имитировать ошибку ОРД</button><button class="g" id="simTo">Имитировать таймаут</button><button class="g" id="rst">Сначала</button></div>
+    </div>
+  </div>
+</main>
+
+<main id="s2v" class="hide">
+  <div class="card">
+    <h3>Изображение</h3>
+    <canvas id="cv" width="640" height="420"></canvas>
+    <div class="row"><a class="dl" id="dl" download="reklama.png">Скачать готовый файл</a></div>
+  </div>
+  <div>
+    <div class="card"><h3>Где разместить маркировку</h3>
+      <div class="pos" id="pos"></div>
+      <div class="row"><button class="g" id="tx1">Только на изображении</button><button class="g" id="tx2">Только в тексте</button><button class="g" id="tx3">И там и там</button></div>
+    </div>
+    <div class="card"><h3>Что получит сотрудник в чате</h3>
+      <div class="m bot" id="out" style="max-width:100%"></div>
+    </div>
+    <div class="card"><h3>Для видео</h3>
+      <ul><li>Та же логика: позиция плашки, начало и длительность показа</li><li>Наложение через ffmpeg на сервере, готовый файл возвращается в чат</li></ul>
+    </div>
+  </div>
+</main>
+
+<script>
+const $=s=>document.querySelector(s);
+const chat=$('#chat');
+let st={};
+let mode=null; // 'err'|'to'
+const advs=['ООО «Ромашка»','ИП Соколов А.В.','АО «Вектор»'];
+const ctr={'ООО «Ромашка»':['Договор № Р-14 от 02.03.2026','Договор № Р-21 от 11.07.2026'],'ИП Соколов А.В.':['Договор № С-3 от 15.01.2026'],'АО «Вектор»':['Договор № В-88 от 20.05.2026']};
+const plats=['Telegram-канал «Вектор»','Сайт vector.example','VK-паблик'];
+
+function msg(t,cls,kb){
+  const d=document.createElement('div');d.className='m '+cls;
+  d.innerHTML=t;
+  if(kb){const k=document.createElement('div');k.className='kb';
+    kb.forEach(([l,fn])=>{const b=document.createElement('button');b.textContent=l;b.onclick=()=>{k.remove();msg(l,'me');fn()};k.appendChild(b)});d.appendChild(k)}
+  chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d}
+function bot(t,kb,delay=350){return new Promise(r=>setTimeout(()=>{msg(t,'bot',kb);r()},delay))}
+function esc(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+
+function start(){chat.innerHTML='';st={};
+  bot('Выберите рекламодателя:',advs.map(a=>[a,()=>pickAdv(a)]),100)}
+function pickAdv(a){st.adv=a;bot('Договор:',ctr[a].map(c=>[c,()=>pickC(c)]))}
+function pickC(c){st.c=c;bot('Площадка:',plats.map(p=>[p,()=>pickP(p)]))}
+function pickP(p){st.p=p;bot('Отправьте текст публикации. Можно с картинкой или видео.')}
+
+$('#f').onsubmit=e=>{e.preventDefault();const v=$('#inp').value.trim();if(!v)return;$('#inp').value='';
+  if(!st.p){msg(esc(v),'me');bot('Сначала выберите рекламодателя, договор и площадку.');return}
+  msg(esc(v),'me');st.text=v;register()};
+
+function erid(){const a='0123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz';let s='2Vt';for(let i=0;i<8;i++)s+=a[Math.random()*a.length|0];return s}
+async function register(){
+  await bot('Регистрирую креатив в ОРД…');
+  if(mode==='err'){mode=null;
+    msg('Не удалось зарегистрировать: у договора не заполнена сумма.\nУкажите её в справочнике и отправьте текст ещё раз. Ничего не потеряно.','bot err');return}
+  if(mode==='to'){mode=null;
+    await bot('ОРД не ответил вовремя. Повторяю запрос с тем же ключом…',null,900);
+    await bot('Креатив в ОРД уже есть, дубль не создан. Беру его ERID.',null,900)}
+  const e=erid();
+  await bot('Готово. ERID: <span class="erid">'+e+'</span>\n\n<b>Публикация:</b>\n'+esc(st.text)+'\n\n<b>Реклама.</b> '+esc(st.adv)+', '+esc(st.c.split(' от ')[0].toLowerCase())+'\nerid: '+e,[['Копировать',()=>bot('Скопировано.')],['Новая публикация',()=>{st.text=null;bot('Отправьте текст публикации.')}]]);
+  const tr=document.createElement('tr');tr.innerHTML='<td>'+(1043+$('#log').children.length-1)+'</td><td>'+esc(st.adv)+'</td><td class="erid">'+e+'</td><td><span class="tag t-ok">зарегистрирован</span></td>';
+  $('#log').prepend(tr)}
+$('#simErr').onclick=()=>{mode='err';bot('Следующая регистрация вернёт ошибку ОРД — отправьте текст.',null,50)};
+$('#simTo').onclick=()=>{mode='to';bot('Следующий запрос «зависнет» — отправьте текст.',null,50)};
+$('#rst').onclick=start;
+start();
+
+// tabs
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  $('#s1v').classList.toggle('hide',b.dataset.t!=='s1');$('#s2v').classList.toggle('hide',b.dataset.t!=='s2')});
+
+// stage 2
+const cv=$('#cv'),cx=cv.getContext('2d');
+const P=[['tl','Сверху слева'],['tc','Сверху'],['tr','Сверху справа'],['ml','Слева'],['mc','По центру'],['mr','Справа'],['bl','Снизу слева'],['bc','Снизу'],['br','Снизу справа']];
+let pos='bl',where=1;
+const img=new Image();
+function bg(){const g=cx.createLinearGradient(0,0,640,420);g.addColorStop(0,'#1d3b5c');g.addColorStop(1,'#3a1f4d');cx.fillStyle=g;cx.fillRect(0,0,640,420);
+  cx.fillStyle='rgba(255,255,255,.12)';cx.beginPath();cx.arc(470,170,120,0,7);cx.fill();
+  cx.fillStyle='#fff';cx.font='700 40px sans-serif';cx.fillText('Осенняя коллекция',40,150);
+  cx.font='24px sans-serif';cx.fillText('Скидки до 30% до конца месяца',40,195)}
+function draw(){bg();
+  if(where===2)return;
+  const t1='Реклама · ООО «Ромашка»',t2='erid: 2VtzqwP7xKd';
+  cx.font='600 15px sans-serif';
+  const w=Math.max(cx.measureText(t1).width,cx.measureText(t2).width)+24,h=48,m=18;
+  const x={l:m,c:(640-w)/2,r:640-w-m}[pos[1]],y={t:m,m:(420-h)/2,b:420-h-m}[pos[0]];
+  cx.fillStyle='rgba(0,0,0,.62)';cx.beginPath();cx.roundRect(x,y,w,h,8);cx.fill();
+  cx.fillStyle='#fff';cx.fillText(t1,x+12,y+20);cx.fillStyle='#bcd0ea';cx.fillText(t2,x+12,y+39);
+  $('#dl').href=cv.toDataURL('image/png')}
+function out(){const lab='Реклама. ООО «Ромашка», erid: 2VtzqwP7xKd';
+  $('#out').innerHTML='Осенняя коллекция, скидки до 30%.'+(where!==0?'\n\n<b>'+lab+'</b>':'')+'\n\n'+(where!==2?'Картинка с плашкой «Реклама» · положение: <b>'+P.find(p=>p[0]===pos)[1].toLowerCase()+'</b>':'Картинка без плашки: маркировка в тексте')}
+P.forEach(([k,l])=>{const b=document.createElement('button');b.textContent=l;if(k===pos)b.className='on';b.onclick=()=>{pos=k;document.querySelectorAll('#pos button').forEach(x=>x.classList.toggle('on',x===b));draw();out()};$('#pos').appendChild(b)});
+[['tx1',0],['tx2',2],['tx3',1]].forEach(([id,v])=>$('#'+id).onclick=()=>{where=v;draw();out()});
+where=1;draw();out();
+</script>
+</body>
+</html>
