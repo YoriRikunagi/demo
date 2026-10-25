@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Конвейер — агенты обработки данных</title>
+<meta name="description" content="Письмо, счёт или сообщение из мессенджера превращаются в проверенный JSON: у каждого поля цитата из исходника, валидация, реквизиты по API и запись в базу.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f5f7;--paper:#fff;--soft:#eef0f3;--line:#e1e4e9;
+  --ink:#14161a;--ink2:#454b55;--muted:#868d98;
+  --accent:#3b5bfd;--accent-soft:#e7ecff;--accent-ink:#fff;
+  --ok:#14915a;--ok-soft:#e1f5eb;--warn:#b7791f;--warn-soft:#fdf1dc;--bad:#d1393a;--bad-soft:#fde6e6;
+  --shadow:0 1px 2px rgba(20,22,26,.06),0 4px 14px rgba(20,22,26,.05);
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f1115;--paper:#171a20;--soft:#20242c;--line:#2a2f38;
+  --ink:#eef0f4;--ink2:#b7bdc8;--muted:#7d8592;
+  --accent:#7d93ff;--accent-soft:#232b4d;--accent-ink:#0f1115;
+  --ok:#3ccf8e;--ok-soft:#173326;--warn:#e7b25a;--warn-soft:#3a2d16;--bad:#ff7a7a;--bad-soft:#3d1c1e;
+  --shadow:0 1px 2px rgba(0,0,0,.3);
+}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 Onest,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+button,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+header.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;gap:14px;height:60px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px}
+.logo i{width:28px;height:28px;border-radius:8px;background:var(--accent);display:grid;place-items:center}
+.logo i svg{width:16px;height:16px}
+.logo small{font-weight:500;color:var(--muted);font-size:13px}
+.top .sp{flex:1}
+.sel{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.sel select{border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:5px 8px;font-size:13px}
+h1{font-size:30px;line-height:1.2;margin:28px 0 6px;letter-spacing:-.01em}
+.lead{color:var(--ink2);margin:0 0 22px;max-width:760px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.card>.hd{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.card>.hd h2{font-size:15px;margin:0;font-weight:600}
+.card>.hd .sp{flex:1}
+.card>.bd{padding:16px}
+.grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chip{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;color:var(--ink2);display:flex;align-items:center;gap:6px}
+.chip.on{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.chip:hover{border-color:var(--accent)}
+textarea.src{width:100%;min-height:300px;resize:vertical;border:1px solid var(--line);border-radius:10px;background:var(--bg);padding:12px 14px;font:13.5px/1.6 var(--mono);outline:none;white-space:pre;overflow:auto}
+textarea.src:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.btn{border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:9px 16px;cursor:pointer;font-weight:500}
+.btn:hover{border-color:var(--accent)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.pri:hover{filter:brightness(1.07)}
+.btn:disabled{opacity:.5;cursor:default}
+.note{font-size:12.5px;color:var(--muted)}
+/* конвейер */
+.pipe{list-style:none;margin:0;padding:0}
+.pipe li{display:grid;grid-template-columns:26px 1fr auto;gap:4px 10px;padding:10px 4px;border-bottom:1px dashed var(--line)}
+.pipe li:last-child{border-bottom:0}
+.pipe .ic{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--muted);margin-top:1px}
+.pipe .t{font-weight:500}
+.pipe .ag{font:11.5px var(--mono);color:var(--muted)}
+.pipe .ms{font:12px var(--mono);color:var(--muted);align-self:center}
+.pipe .d{grid-column:2/4;font-size:13px;color:var(--ink2);min-height:0}
+.pipe li.run .ic{border-color:var(--accent);border-top-color:transparent;animation:spin .7s linear infinite;color:transparent}
+.pipe li.ok .ic{border-color:var(--ok);background:var(--ok);color:#fff}
+.pipe li.warn .ic{border-color:var(--warn);background:var(--warn);color:#fff}
+.pipe li.bad .ic{border-color:var(--bad);background:var(--bad);color:#fff}
+@keyframes spin{to{transform:rotate(360deg)}}
+.verdict{margin-top:12px;border-radius:10px;padding:12px 14px;font-size:14px;display:none}
+.verdict.ok{display:block;background:var(--ok-soft);color:var(--ok)}
+.verdict.review{display:block;background:var(--warn-soft);color:var(--warn)}
+.verdict b{display:block;margin-bottom:2px}
+.verdict ul{margin:4px 0 0;padding-left:18px;color:var(--ink2)}
+/* результат */
+.tabs{display:flex;gap:2px;background:var(--soft);border-radius:10px;padding:3px;overflow-x:auto;scrollbar-width:none}
+.tabs button{border:0;background:none;padding:6px 12px;border-radius:8px;cursor:pointer;color:var(--ink2);font-weight:500;font-size:13.5px;white-space:nowrap}
+.tabs button.on{background:var(--paper);color:var(--ink);box-shadow:var(--shadow)}
+.tab{display:none}.tab.on{display:block}
+pre.json{margin:0;font:12.8px/1.6 var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px;overflow:auto;max-height:520px}
+.k{color:#7c4dcc}.s{color:#0f7a4b}.n{color:#b45309}.z{color:var(--muted)}
+@media (prefers-color-scheme:dark){.k{color:#c4a3ff}.s{color:#6fdca8}.n{color:#f2b35f}}
+.ev{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.srcv{white-space:pre-wrap;font:13px/1.75 var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;max-height:520px;overflow:auto}
+.srcv mark{background:var(--ok-soft);color:inherit;box-shadow:inset 0 -2px 0 var(--ok);border-radius:3px;cursor:pointer;transition:outline .2s}
+.srcv mark.rej{background:var(--bad-soft);box-shadow:inset 0 -2px 0 var(--bad)}
+.srcv mark.flash{outline:2px solid var(--accent);outline-offset:1px}
+.fl{list-style:none;margin:0;padding:0;font-size:13.5px}
+.fl li{display:grid;grid-template-columns:120px 1fr;gap:2px 10px;padding:8px 10px;border-radius:8px;cursor:pointer}
+.fl li:hover{background:var(--soft)}
+.fl .fk{color:var(--muted);font-size:12.5px}
+.fl .fv{font-weight:500;word-break:break-word}
+.fl .fq{grid-column:2;font:11.5px var(--mono);color:var(--muted)}
+.fl li.rej .fv{color:var(--bad);text-decoration:line-through}
+.fl li.rej .fq{color:var(--bad)}
+.fl li.nul .fv{color:var(--muted);font-weight:400}
+table.t{width:100%;border-collapse:collapse;font-size:13.5px}
+table.t th{text-align:left;font-weight:500;color:var(--muted);font-size:12px;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.t td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+table.t td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tscroll{overflow-x:auto}
+.badge{display:inline-block;font-size:12px;font-weight:500;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.review{background:var(--warn-soft);color:var(--warn)}
+.empty{color:var(--muted);text-align:center;padding:30px 10px;font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}
+.stat{padding:14px 16px}
+.stat .v{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
+.stat .l{font-size:12.5px;color:var(--muted)}
+.how{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:14px 0 10px}
+.how .card{padding:16px}
+.how h3{margin:0 0 6px;font-size:15px}
+.how p{margin:0;font-size:13.5px;color:var(--ink2)}
+.how .n{font:12px var(--mono);color:var(--accent);margin-bottom:6px;display:block}
+.stack{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 40px}
+.stack span{font:12.5px var(--mono);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:5px 10px;color:var(--ink2)}
+h2.sec{font-size:20px;margin:34px 0 4px}
+footer{border-top:1px solid var(--line);padding:18px 0 30px;color:var(--muted);font-size:13px}
+@media (max-width:980px){
+  .grid,.ev{grid-template-columns:1fr}
+  .how{grid-template-columns:1fr 1fr}
+  .stats{grid-template-columns:1fr 1fr}
+}
+@media (max-width:560px){
+  .wrap{padding:0 16px}
+  h1{font-size:24px}
+  .how{grid-template-columns:1fr}
+  .top .sel span{display:none}
+  .logo small{display:none}
+  .fl li{grid-template-columns:1fr}
+  .fl .fq{grid-column:1}
+  textarea.src{min-height:240px}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="logo"><i><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M2 4h5M2 8h9M2 12h12"/><circle cx="11" cy="4" r="1.6" fill="#fff" stroke="none"/></svg></i>Конвейер <small>агенты обработки входящих данных</small></div>
+  <div class="sp"></div>
+  <label class="sel"><span>Модель</span>
+    <select id="model">
+      <option value="claude-sonnet">Claude Sonnet</option>
+      <option value="gpt">OpenAI GPT</option>
+      <option value="gemini">Gemini</option>
+      <option value="qwen-local">Qwen (локально, Ollama)</option>
+    </select></label>
+  <label class="sel"><span>Запись в</span>
+    <select id="dest">
+      <option value="pg">PostgreSQL</option>
+      <option value="sheet">Google Таблицу</option>
+      <option value="hook">вебхук</option>
+    </select></label>
+</div></header>
+
+<main class="wrap">
+  <h1>Сырой текст → проверенный JSON → база</h1>
+  <p class="lead">Вставьте письмо, счёт или переписку. Агенты разберут текст по схеме, сверят каждое поле с исходником, проверят ИНН и суммы, подтянут реквизиты по API и запишут результат. Чего нет в тексте, система не придумывает: поле остаётся пустым и уходит на проверку.</p>
+
+  <div class="grid">
+    <section class="card">
+      <div class="hd"><h2>Входящий документ</h2><div class="sp"></div><span class="note" id="srcLen"></span></div>
+      <div class="bd">
+        <div class="chips" id="chips"></div>
+        <textarea class="src" id="src" spellcheck="false"></textarea>
+        <div class="row">
+          <button class="btn pri" id="run">Обработать</button>
+          <button class="btn" id="runAll">Прогнать поток из трёх</button>
+          <span class="note">Текст можно править: поменяйте сумму или ИНН и запустите снова</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="hd"><h2>Цепочка агентов</h2><div class="sp"></div><span class="note" id="total"></span></div>
+      <div class="bd">
+        <ul class="pipe" id="pipe"></ul>
+        <div class="verdict" id="verdict"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="stats">
+    <div class="card stat"><div class="v" id="sDone">0</div><div class="l">документов обработано</div></div>
+    <div class="card stat"><div class="v" id="sOk">0</div><div class="l">записано автоматически</div></div>
+    <div class="card stat"><div class="v" id="sRev">0</div><div class="l">отправлено на проверку</div></div>
+    <div class="card stat"><div class="v" id="sRej">0</div><div class="l">выдумок модели отсечено</div></div>
+  </div>
+
+  <section class="card">
+    <div class="hd">
+      <div class="tabs" id="tabs">
+        <button data-t="ev" class="on">Поля и цитаты</button>
+        <button data-t="json">JSON</button>
+        <button data-t="table">Таблица</button>
+        <button data-t="schema">Схема</button>
+      </div>
+      <div class="sp"></div>
+      <button class="btn" id="csv" style="padding:6px 12px;font-size:13px">Скачать CSV</button>
+    </div>
+    <div class="bd">
+      <div class="tab on" id="t-ev"><div class="empty">Запустите обработку: здесь будет каждое поле рядом с цитатой, из которой оно взято</div></div>
+      <div class="tab" id="t-json"><div class="empty">Здесь появится итоговый JSON</div></div>
+      <div class="tab" id="t-table"><div class="empty">Обработанные документы складываются сюда построчно</div></div>
+      <div class="tab" id="t-schema"><pre class="json" id="schemaPre"></pre></div>
+    </div>
+  </section>
+
+  <h2 class="sec">Как устроена цепочка</h2>
+  <p class="lead" style="margin-bottom:0">Каждый агент делает одну проверяемую вещь. Ответ модели не попадает в базу напрямую: сначала его проверяет код.</p>
+  <div class="how">
+    <div class="card"><span class="n">01 · схема</span><h3>Ответ строго по JSON-схеме</h3><p>Модель получает схему и обязана вернуть объект по ней (structured output). Лишние поля и неверные типы отсекаются ещё до проверки смысла.</p></div>
+    <div class="card"><span class="n">02 · цитаты</span><h3>У каждого поля есть цитата</h3><p>Рядом со значением модель возвращает дословный кусок исходника. Код ищет его в тексте; нет цитаты или значение из неё не следует, значит поле обнуляется.</p></div>
+    <div class="card"><span class="n">03 · валидация</span><h3>Код проверяет факты</h3><p>Контрольная сумма ИНН, формат телефона, количество × цена, итог по строкам. Ошибка не правится молча: документ уходит человеку с причиной.</p></div>
+    <div class="card"><span class="n">04 · связки</span><h3>Сторонние API и запись</h3><p>Реквизиты по ИНН, справочники, CRM. Результат пишется в БД, таблицу или вебхук с повтором при сбое и журналом по каждому документу.</p></div>
+  </div>
+  <div class="stack">
+    <span>Python · FastAPI</span><span>Pydantic</span><span>Claude / OpenAI / Gemini API</span><span>Ollama для локальных моделей</span><span>PostgreSQL</span><span>n8n или Make для триггеров</span><span>очередь + повторы</span>
+  </div>
+</main>
+
+<footer><div class="wrap">Конвейер · обработка входящих документов агентами</div></footer>
+
+<script>
+const EXAMPLES=[
+{id:'mail',label:'Письмо-заявка',text:`Тема: Заявка на поставку мебели в новый офис
+
+Добрый день!
+Меня зовут Ирина Соколова, я закупщик ООО «Северный ветер», ИНН 7712345671.
+Хотим заказать для нового офиса:
+1. Кресло офисное Chairman 698 — 40 шт × 8 900 ₽
+2. Стол письменный 140×70 — 12 шт × 11 450 ₽
+3. Тумба мобильная 3 ящика — 12 шт × 5 200 ₽
+Доставка нужна до 14.11.2026 по адресу: г. Москва, ул. Тверская, д. 18, офис 402.
+Оплата по безналу, счёт пришлите на почту.
+
+Телефон: +7 916 482-31-07
+i.sokolova@severveter.ru`},
+{id:'invoice',label:'Счёт поставщика',text:`СЧЁТ № 2187 от 22.10.2026
+Поставщик: ООО «ТрейдКомплект», ИНН 5038123459
+Покупатель: ИП Гусев А. В.
+
+№  Наименование                    Кол-во   Цена       Сумма
+1  Бумага А4 SvetoCopy, 500 л      50 упак  450,00     22 500,00
+2  Картридж HP 59A                 6 шт     9 800,00   58 800,00
+3  Папка-регистратор 75 мм         40 шт    185,00     7 400,00
+
+Итого к оплате: 88 970,00
+Оплатить до 29.10.2026. Срок поставки 3 рабочих дня после оплаты.
+Тел. 8 (495) 220-41-18, buh@tradekomplekt.ru`},
+{id:'chat',label:'Сообщения в Telegram',text:`[21:14] Олег: здрасте, это опять Олег из кофейни на Ленина
+[21:14] Олег: скиньте 3 коробки бумаги снегурочка а4 по 2 450
+[21:15] Олег: и стаканы бумажные 250мл 20 упак по 690 р
+[21:15] Олег: привезите завтра к открытию, адрес тот же
+[21:16] Олег: мой номер 8 (921) 330-14-56`}
+];
+
+// Тестовый справочник вместо запроса к API реквизитов
+const REGISTRY={
+  '7712345671':{name:'ООО «Северный ветер»',kpp:'771201001',address:'г. Москва, ул. Тверская, д. 18',status:'действующая'},
+  '5038123459':{name:'ООО «ТрейдКомплект»',kpp:'503801001',address:'Московская обл., г. Пушкино, ул. Озёрная, д. 4',status:'действующая'}
+};
+
+const SCHEMA={
+  $schema:'https://json-schema.org/draft/2020-12/schema',title:'IncomingDocument',type:'object',
+  required:['doc_type','counterparty','items'],additionalProperties:false,
+  properties:{
+    doc_type:{enum:['email_order','supplier_invoice','chat_order','message']},
+    counterparty:{type:'object',properties:{
+      role:{enum:['клиент','поставщик']},person:{type:['string','null']},company:{type:['string','null']},
+      inn:{type:['string','null'],pattern:'^(\\d{10}|\\d{12})$'},phone:{type:['string','null'],pattern:'^\\+7\\d{10}$'},email:{type:['string','null'],format:'email'}}},
+    items:{type:'array',minItems:1,items:{type:'object',required:['name','qty','price'],properties:{
+      name:{type:'string'},qty:{type:'number',exclusiveMinimum:0},unit:{type:'string'},price:{type:'number'},sum:{type:'number'}}}},
+    total:{type:['number','null']},doc_date:{type:['string','null'],pattern:'^\\d{2}\\.\\d{2}\\.\\d{4}$'},
+    deadline:{type:['object','null'],properties:{date:{type:'string'},kind:{enum:['поставка','оплата']}}},
+    address:{type:['string','null']},
+    evidence:{type:'object',description:'для каждого поля: дословная цитата из исходника',additionalProperties:{type:'string'}}
+  }
+};
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const money=n=>n==null?'—':n.toLocaleString('ru-RU',{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2})+' ₽';
+const num=s=>parseFloat(String(s).replace(/\s/g,'').replace(',','.'));
+const norm=s=>String(s).toLowerCase().replace(/ё/g,'е').replace(/[«»"“”]/g,'"').replace(/\s+/g,' ').trim();
+const digits=s=>String(s).replace(/\D/g,'');
+const pad=n=>String(n).padStart(2,'0');
+
+const UNIT='(шт|упак[а-яё]*|коробк[а-яё]*|кор\\.|кг|пач[а-яё]*|рулон[а-яё]*)';
+const NUM='(\\d{1,3}(?: \\d{3})*(?:[.,]\\d{1,2})?)';
+const unitNorm=u=>{u=u.toLowerCase();return u.startsWith('упак')?'упак':u.startsWith('кор')?'кор':u.startsWith('пач')?'пач':u.startsWith('рулон')?'рул':u};
+const cleanName=s=>s.replace(/^\s*\d+[.)]\s*/,'').replace(/^(?:\s*(?:скиньте|пришлите|нужно|нужны|хотим|закажу|и|ещё|еще)\s+)+/i,'').replace(/[\s—–\-:,]+$/,'').replace(/^[\s—–\-:,]+/,'').trim();
+
+/* ---------- агент-экстрактор: имитирует ответ модели {значение, цитата} ---------- */
+function extract(src){
+  const f={},put=(k,value,quote,type='text')=>{f[k]={value,quote,type}};
+  let m;
+  const docType=/сч[её]т\s*№|накладн|УПД/i.test(src)?'supplier_invoice':/^\s*\[\d{1,2}:\d{2}\]/m.test(src)?'chat_order':/^\s*тема:|добрый день|с уважением/im.test(src)?'email_order':'message';
+  if(m=src.match(/(ООО|АО|ПАО|ЗАО|ИП)\s*«([^»\n]+)»/)) put('company',`${m[1]} «${m[2]}»`,m[0]);
+  if(m=src.match(/ИНН\s*:?\s*(\d{12}|\d{10})(?!\d)/)) put('inn',m[1],m[0],'digits');
+  if(m=src.match(/меня зовут\s+([А-ЯЁ][а-яё]+(?:\s+[А-ЯЁ][а-яё]+)?)/i)) put('person',m[1],m[0]);
+  else if(m=src.match(/^\s*\[\d{1,2}:\d{2}\]\s*([А-ЯЁ][а-яё]+):/m)) put('person',m[1],m[0].trim());
+  else if(m=src.match(/с уважением,?\s*\n\s*([А-ЯЁ][а-яё]+\s+[А-ЯЁ][а-яё]+)/i)) put('person',m[1],m[1]);
+  if(m=src.match(/(?:\+7|(?<!\d)8)[\s(-]*\d{3}[\s)-]*\d{3}[\s-]*\d{2}[\s-]*\d{2}/)) put('phone','+7'+digits(m[0]).slice(-10),m[0],'digits');
+  if(m=src.match(/[\w.+-]+@[\w-]+\.[\w.]+/)) put('email',m[0],m[0]);
+  if(m=src.match(/(?:^|\s)от\s+(\d{2}\.\d{2}\.\d{4})/)) put('doc_date',m[1],m[0].trim(),'date');
+  if(m=src.match(/[^\n.]*?(?:до|не позднее)\s+(\d{1,2}\.\d{1,2}\.\d{4})/i)){
+    put('deadline',m[1],m[0].trim(),'date');f.deadline.kind=/оплат/i.test(m[0])?'оплата':'поставка';
+  }else if(m=src.match(/(?:^|[^а-яё])(завтра|послезавтра|сегодня)(?![а-яё])/i)){
+    const d=new Date();d.setDate(d.getDate()+({сегодня:0,завтра:1,послезавтра:2}[m[1].toLowerCase()]));
+    put('deadline',`${pad(d.getDate())}.${pad(d.getMonth()+1)}.${d.getFullYear()}`,m[1],'date');f.deadline.kind='поставка';
+  }
+  if(m=src.match(/(?:по адресу|адрес)\s*:?\s*([^\n]+?)\.?\s*$/im)){
+    const a=m[1].trim();
+    if(/^(тот же|прежний|как обычно|как в прошлый раз)/i.test(a)){
+      const street=src.match(/на\s+([А-ЯЁ][а-яё]+)/);
+      if(street) put('address','ул. '+street[1],m[0].trim());
+      else put('address',null,m[0].trim());
+      f.address.backref=true;
+    }else put('address',a,m[0].trim());
+  }
+  if(m=src.match(/(?:итого(?: к оплате)?|всего к оплате|к оплате)\s*:?\s*(\d{1,3}(?: \d{3})*(?:[.,]\d{2})?)/i)) put('total',num(m[1]),m[0],'number');
+
+  const items=[];
+  for(const raw of src.split('\n')){
+    const line=raw.replace(/^\s*\[\d{1,2}:\d{2}\]\s*[^:]{1,30}:\s*/,'');
+    let t=line.match(new RegExp('^\\s*\\d+\\s+(.+?)\\s{2,}(\\d+)\\s*'+UNIT+'\\s{2,}'+NUM+'\\s{2,}'+NUM+'\\s*$','i'));
+    if(t){items.push({name:t[1].trim(),qty:+t[2],unit:unitNorm(t[3]),price:num(t[4]),sum:num(t[5]),quote:raw.trim(),sumFromDoc:true});continue}
+    const q=line.match(new RegExp('(?:^|[^\\d.,×x])(\\d+)\\s*'+UNIT+'(?![а-яёa-z])','i'));
+    if(!q) continue;
+    const start=q.index+q[0].indexOf(q[1]);
+    const after=line.slice(q.index+q[0].length);
+    const p=after.match(new RegExp('^(.*?)(?:\\s*[×*]\\s*|(?:^|\\s)по\\s+)'+NUM,'i'));
+    if(!p) continue;
+    const name=cleanName(line.slice(0,start))||cleanName(p[1]);
+    if(!name) continue;
+    const qty=+q[1],price=num(p[2]);
+    items.push({name,qty,unit:unitNorm(q[2]),price,sum:Math.round(qty*price*100)/100,quote:raw.trim()});
+  }
+  return {docType,f,items};
+}
+
+/* ---------- агент-контролёр: значение обязано следовать из цитаты, цитата обязана быть в тексте ---------- */
+function derivable(v,quote,type){
+  if(v==null) return false;
+  if(type==='digits') return digits(quote).includes(digits(v).slice(-10));
+  if(type==='date') return quote.includes(v);
+  if(type==='number') return (quote.match(/\d{1,3}(?: \d{3})*(?:[.,]\d{1,2})?/g)||[]).some(x=>num(x)===v);
+  return norm(quote).includes(norm(v));
+}
+function ground(src,ex){
+  const kept={},rejected=[],srcN=norm(src);
+  for(const [k,x] of Object.entries(ex.f)){
+    const inSrc=x.quote&&srcN.includes(norm(x.quote));
+    if(x.value!=null&&inSrc&&derivable(x.value,x.quote,x.type)) kept[k]=x;
+    else if(x.value!=null) rejected.push({k,...x,why:!inSrc?'цитаты нет в исходнике':x.type==='date'?'даты в тексте нет, модель её вычислила':'значение не следует из цитаты'});
+    else rejected.push({k,...x,why:'в тексте ссылка на прошлое, значения нет',soft:true});
+  }
+  const items=ex.items.filter(it=>srcN.includes(norm(it.quote))&&norm(it.quote).includes(norm(it.name)));
+  return {kept,rejected,items};
+}
+
+function innValid(inn){
+  const d=inn.split('').map(Number),c=(w)=>w.reduce((a,k,i)=>a+k*d[i],0)%11%10;
+  if(d.length===10) return c([2,4,10,3,5,9,4,6,8])===d[9];
+  if(d.length===12) return c([7,2,4,10,3,5,9,4,6,8])===d[10]&&c([3,7,2,4,10,3,5,9,4,6,8])===d[11];
+  return false;
+}
+function validate(g,docType){
+  const issues=[],checks=[];
+  const f=g.kept;
+  if(f.inn){checks.push('ИНН');if(!innValid(f.inn.value)) issues.push(`ИНН ${f.inn.value}: не сходится контрольная сумма`)}
+  if(f.phone){checks.push('телефон');if(!/^\+7\d{10}$/.test(f.phone.value)) issues.push('телефон не в формате +7XXXXXXXXXX')}
+  if(f.email){checks.push('почта');if(!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(f.email.value)) issues.push('почта в неверном формате')}
+  g.items.forEach((it,i)=>{checks.push('строка '+(i+1));
+    if(it.sumFromDoc&&Math.abs(it.qty*it.price-it.sum)>0.01) issues.push(`строка ${i+1}: ${it.qty} × ${money(it.price)} ≠ ${money(it.sum)}`)});
+  const itemsSum=Math.round(g.items.reduce((a,it)=>a+it.sum,0)*100)/100;
+  if(f.total){checks.push('итог');if(Math.abs(itemsSum-f.total.value)>0.01) issues.push(`итог в документе ${money(f.total.value)}, а сумма строк ${money(itemsSum)}: разница ${money(Math.round((f.total.value-itemsSum)*100)/100)}`)}
+  if(!g.items.length) issues.push('не найдено ни одной товарной позиции');
+  if(!f.phone&&!f.email&&!f.inn) issues.push('нет контакта: ни телефона, ни почты, ни ИНН');
+  if(docType==='supplier_invoice'&&!f.inn) issues.push('в счёте поставщика нет ИНН');
+  return {issues,checks,itemsSum};
+}
+
+/* ---------- запуск цепочки ---------- */
+const STEPS=[
+  {id:'cls',t:'Приём и классификация',ag:'classifier · rules + LLM'},
+  {id:'ext',t:'Извлечение по JSON-схеме',ag:'extractor · structured output'},
+  {id:'grd',t:'Сверка с исходником',ag:'grounding · код, без LLM'},
+  {id:'val',t:'Валидация фактов',ag:'validator · Pydantic'},
+  {id:'api',t:'Реквизиты по ИНН',ag:'enricher · внешний API'},
+  {id:'wr',t:'Запись результата',ag:'writer · повтор при сбое'}
+];
+const TYPE_LABEL={email_order:'заявка по почте',supplier_invoice:'счёт поставщика',chat_order:'заказ из мессенджера',message:'обращение'};
+const FIELD_LABEL={company:'Компания',inn:'ИНН',person:'Контакт',phone:'Телефон',email:'Почта',doc_date:'Дата документа',deadline:'Срок',address:'Адрес',total:'Итого в документе'};
+const MODEL_LABEL={'claude-sonnet':'claude-sonnet','gpt':'gpt','gemini':'gemini','qwen-local':'qwen2.5:14b@ollama'};
+
+let busy=false,current=EXAMPLES[0].id;
+const rows=[],stats={done:0,ok:0,rev:0,rej:0};
+
+function drawPipe(){
+  $('#pipe').innerHTML=STEPS.map(s=>`<li id="p-${s.id}"><span class="ic"></span><div><div class="t">${s.t}</div><div class="ag">${s.ag}</div></div><span class="ms"></span><div class="d"></div></li>`).join('');
+}
+function setStep(id,state,detail,ms){
+  const li=$('#p-'+id);li.className=state;
+  li.querySelector('.ic').textContent=state==='ok'?'✓':state==='warn'?'!':state==='bad'?'×':'';
+  if(detail!=null) li.querySelector('.d').innerHTML=detail;
+  if(ms!=null) li.querySelector('.ms').textContent=ms+' мс';
+}
+const jit=(a,b)=>Math.round(a+Math.random()*(b-a));
+
+async function process(src,label){
+  drawPipe();$('#verdict').className='verdict';$('#total').textContent='';
+  const t0=performance.now(),model=$('#model').value,dest=$('#dest').value;
+  const tokIn=Math.round(src.length/2.6)+640;
+  let ms;
+  setStep('cls','run');await sleep(ms=jit(180,320));
+  const ex=extract(src);
+  setStep('cls','ok',`Тип: <b>${TYPE_LABEL[ex.docType]}</b> · схема IncomingDocument`,ms);
+
+  setStep('ext','run');await sleep(ms=jit(700,1200));
+  const nf=Object.keys(ex.f).length;
+  setStep('ext','ok',`${MODEL_LABEL[model]}: ${nf} полей, ${ex.items.length} позиций, у каждого цитата · ${tokIn} → ${Math.round(nf*38+ex.items.length*60+120)} токенов`,ms);
+
+  setStep('grd','run');await sleep(ms=jit(40,90));
+  const g=ground(src,ex);
+  const hard=g.rejected.filter(r=>!r.soft);
+  setStep('grd',hard.length?'warn':'ok',hard.length
+    ?`Подтверждено ${Object.keys(g.kept).length}, отсечено ${hard.length}: `+hard.map(r=>`${FIELD_LABEL[r.k].toLowerCase()} «${esc(r.value)}» (${r.why})`).join('; ')
+    :`Все ${Object.keys(g.kept).length+g.items.length} значений найдены в тексте дословно`,ms);
+
+  setStep('val','run');await sleep(ms=jit(30,70));
+  const v=validate(g,ex.docType);
+  setStep('val',v.issues.length?'warn':'ok',v.issues.length?esc(v.issues.join('; ')):`${v.checks.length} проверок пройдено: ${v.checks.join(', ')}`,ms);
+
+  setStep('api','run');
+  let reg=null;
+  if(g.kept.inn&&innValid(g.kept.inn.value)){
+    await sleep(ms=jit(260,480));
+    reg=REGISTRY[g.kept.inn.value]||null;
+    if(reg){
+      const same=!g.kept.company||norm(g.kept.company.value)===norm(reg.name);
+      if(!same) v.issues.push(`по ИНН компания «${reg.name}», а в тексте «${g.kept.company.value}»`);
+      setStep('api',same?'ok':'warn',`${esc(reg.name)}, КПП ${reg.kpp}, ${reg.status} · название совпадает с текстом`,ms);
+    }else setStep('api','warn','ИНН корректный, но в тестовом справочнике его нет; на рабочей системе здесь запрос к сервису реквизитов',ms);
+  }else{await sleep(ms=jit(20,40));setStep('api','ok','Пропущено: в тексте нет ИНН, запрос не нужен',ms)}
+
+  const softNotes=g.rejected.filter(r=>r.soft||r.k==='address'&&r.backref);
+  const review=[...v.issues,...hard.map(r=>`${FIELD_LABEL[r.k]}: уточнить, модель предложила «${r.value}» без опоры в тексте`),...softNotes.filter(r=>r.soft).map(r=>`${FIELD_LABEL[r.k]}: в тексте «${r.quote}», подтянуть из прошлого заказа по телефону`)];
+  const status=review.length?'review':'ok';
+
+  setStep('wr','run');await sleep(ms=jit(90,180));
+  const destTxt={pg:`PostgreSQL: documents +1, document_items +${g.items.length}`,sheet:`Google Таблица: строка ${rows.length+2}, позиции на листе «Позиции»`,hook:'POST на вебхук: 200 OK'}[dest];
+  setStep('wr',status==='ok'?'ok':'warn',status==='ok'?destTxt:`${destTxt} · статус «на проверке», задача оператору с причинами`,ms);
+
+  const out=buildJson(ex,g,reg,v,status,review);
+  const total=Math.round(performance.now()-t0);
+  $('#total').textContent=`${total} мс`;
+  const vd=$('#verdict');
+  vd.className='verdict '+status;
+  vd.innerHTML=status==='ok'?`<b>Записано автоматически</b>Все поля подтверждены цитатами, проверки пройдены.`
+    :`<b>Записано со статусом «на проверке»</b>Человеку уходит документ и список причин:<ul>${review.map(r=>`<li>${esc(r)}</li>`).join('')}</ul>`;
+
+  stats.done++;stats[status==='ok'?'ok':'rev']++;stats.rej+=hard.length;
+  for(const k of ['done','ok','rev','rej']) $('#s'+k[0].toUpperCase()+k.slice(1)).textContent=stats[k];
+  rows.unshift({time:new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),label,type:TYPE_LABEL[ex.docType],
+    who:out.counterparty.company||out.counterparty.person||'—',inn:out.counterparty.inn||'—',n:out.items.length,sum:out.total,status});
+  renderEvidence(src,g);renderJson(out);renderTable();
+}
+
+function buildJson(ex,g,reg,v,status,review){
+  const k=g.kept,val=x=>x?x.value:null,ev={};
+  for(const [key,x] of Object.entries(k)) ev[key]=x.quote;
+  g.items.forEach((it,i)=>ev[`items[${i}]`]=it.quote);
+  return {
+    doc_type:ex.docType,
+    counterparty:{role:ex.docType==='supplier_invoice'?'поставщик':'клиент',person:val(k.person),company:val(k.company),inn:val(k.inn),phone:val(k.phone),email:val(k.email)},
+    registry:reg?{name:reg.name,kpp:reg.kpp,address:reg.address,status:reg.status}:null,
+    items:g.items.map(it=>({name:it.name,qty:it.qty,unit:it.unit,price:it.price,sum:it.sum})),
+    total:k.total?k.total.value:v.itemsSum,
+    total_source:k.total?'документ':'сумма строк',
+    doc_date:val(k.doc_date),
+    deadline:k.deadline?{date:k.deadline.value,kind:k.deadline.kind}:null,
+    address:val(k.address),
+    status,review,
+    evidence:ev
+  };
+}
+
+function hl(json){
+  return esc(JSON.stringify(json,null,2)).replace(/(&quot;(?:[^&]|&(?!quot;))*?&quot;)(\s*:)?|\b(-?\d+(?:\.\d+)?)\b|\b(null|true|false)\b/g,(m,s,colon,n,z)=>{
+    if(s) return colon?`<span class="k">${s}</span>${colon}`:`<span class="s">${s}</span>`;
+    if(n) return `<span class="n">${n}</span>`;
+    return `<span class="z">${z}</span>`;
+  });
+}
+function renderJson(out){$('#t-json').innerHTML=`<pre class="json">${hl(out)}</pre>`}
+
+function renderEvidence(src,g){
+  const marks=[],list=[];
+  const add=(quote,cls,id)=>{const i=src.indexOf(quote);if(i>=0) marks.push({i,j:i+quote.length,cls,id})};
+  let n=0;
+  for(const [k,x] of Object.entries(g.kept)){
+    const id='e'+(n++);add(x.quote,'',id);
+    const shown=k==='total'?money(x.value):k==='deadline'?`${x.value} (${x.kind})`:x.value;
+    list.push(`<li data-m="${id}"><span class="fk">${FIELD_LABEL[k]}</span><span class="fv">${esc(shown)}</span><span class="fq">«${esc(x.quote)}»</span></li>`);
+  }
+  for(const r of g.rejected){
+    const id='e'+(n++);add(r.quote,'rej',id);
+    list.push(`<li data-m="${id}" class="${r.soft?'nul':'rej'}"><span class="fk">${FIELD_LABEL[r.k]}</span><span class="fv">${r.value==null?'пусто':esc(r.value)}</span><span class="fq">«${esc(r.quote)}» · ${r.why}${r.soft?'':' → поле обнулено'}</span></li>`);
+  }
+  g.items.forEach((it,i)=>{
+    const id='e'+(n++);add(it.quote,'',id);
+    list.push(`<li data-m="${id}"><span class="fk">Позиция ${i+1}</span><span class="fv">${esc(it.name)} · ${it.qty} ${it.unit} × ${money(it.price)} = ${money(it.sum)}</span><span class="fq">«${esc(it.quote)}»</span></li>`);
+  });
+  marks.sort((a,b)=>a.i-b.i||b.j-a.j);
+  let html='',pos=0;
+  for(const m of marks){if(m.i<pos) continue;html+=esc(src.slice(pos,m.i))+`<mark id="${m.id}" class="${m.cls}">${esc(src.slice(m.i,m.j))}</mark>`;pos=m.j}
+  html+=esc(src.slice(pos));
+  $('#t-ev').innerHTML=`<div class="ev"><div class="srcv">${html}</div><ul class="fl">${list.join('')}</ul></div>`;
+  $('#t-ev').querySelectorAll('.fl li').forEach(li=>li.onclick=()=>{
+    const mk=document.getElementById(li.dataset.m);if(!mk) return;
+    mk.scrollIntoView({block:'nearest',behavior:'smooth'});mk.classList.add('flash');setTimeout(()=>mk.classList.remove('flash'),1200);
+  });
+}
+
+function renderTable(){
+  if(!rows.length) return;
+  $('#t-table').innerHTML=`<div class="tscroll"><table class="t"><thead><tr><th>Время</th><th>Источник</th><th>Тип</th><th>Контрагент</th><th>ИНН</th><th style="text-align:right">Позиций</th><th style="text-align:right">Сумма</th><th>Статус</th></tr></thead><tbody>${
+    rows.map(r=>`<tr><td>${r.time}</td><td>${esc(r.label)}</td><td>${r.type}</td><td>${esc(r.who)}</td><td>${r.inn}</td><td class="num">${r.n}</td><td class="num">${money(r.sum)}</td><td><span class="badge ${r.status}">${r.status==='ok'?'записано':'на проверке'}</span></td></tr>`).join('')
+  }</tbody></table></div>`;
+}
+
+function csv(){
+  if(!rows.length) return;
+  const head=['время','источник','тип','контрагент','инн','позиций','сумма','статус'];
+  const lines=[head,...rows.map(r=>[r.time,r.label,r.type,r.who,r.inn,r.n,r.sum,r.status==='ok'?'записано':'на проверке'])]
+    .map(l=>l.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(';'));
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['﻿'+lines.join('\n')],{type:'text/csv'}));
+  a.download='konveyer.csv';a.click();
+}
+
+function pick(id){
+  current=id;const ex=EXAMPLES.find(e=>e.id===id);
+  $('#src').value=ex.text;updLen();
+  document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.id===id));
+}
+function updLen(){$('#srcLen').textContent=$('#src').value.length+' знаков'}
+async function guarded(fn){if(busy) return;busy=true;$('#run').disabled=$('#runAll').disabled=true;try{await fn()}finally{busy=false;$('#run').disabled=$('#runAll').disabled=false}}
+
+$('#chips').innerHTML=EXAMPLES.map(e=>`<button class="chip" data-id="${e.id}">${e.label}</button>`).join('');
+$('#chips').onclick=e=>{const b=e.target.closest('.chip');if(b&&!busy) pick(b.dataset.id)};
+$('#src').oninput=()=>{updLen();document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'))};
+$('#run').onclick=()=>guarded(()=>{const ex=EXAMPLES.find(e=>e.id===current);const label=ex&&ex.text===$('#src').value?ex.label:'Свой текст';return process($('#src').value,label)});
+$('#runAll').onclick=()=>guarded(async()=>{for(const ex of EXAMPLES){pick(ex.id);await process(ex.text,ex.label);await sleep(700)}});
+$('#tabs').onclick=e=>{const b=e.target.closest('button');if(!b) return;
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.id==='t-'+b.dataset.t))};
+$('#csv').onclick=csv;
+$('#schemaPre').innerHTML=hl(SCHEMA);
+drawPipe();pick(current);
+</script>
+</body>
+</html>
