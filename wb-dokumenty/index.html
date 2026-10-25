@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Документы в карточки WB</title>
+<style>
+:root{--bg:#f6f4fa;--card:#fff;--ink:#1d1a24;--mut:#6b6677;--acc:#7a2fd0;--ok:#16874a;--warn:#b86e00;--bad:#c4302b;--line:#e4dfee}
+@media(prefers-color-scheme:dark){:root{--bg:#15121b;--card:#1f1b29;--ink:#efecf5;--mut:#9d97ab;--acc:#b682ff;--ok:#4cc88a;--warn:#f0a43a;--bad:#ff7a73;--line:#322c42}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:1000px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:22px;margin:0 0 4px}p.lead{color:var(--mut);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:720px){.row{grid-template-columns:1fr}}
+label{font-weight:600;font-size:13px;display:block;margin-bottom:6px}
+textarea{width:100%;height:170px;font:12.5px/1.4 ui-monospace,Menlo,monospace;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px}
+button{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:10px 18px;font-weight:600;cursor:pointer;font-size:14px}
+button.sec{background:transparent;color:var(--acc);border:1px solid var(--acc)}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 12px}
+.st{flex:1;min-width:130px;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.st b{display:block;font-size:22px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mut);font-weight:600}
+.tag{display:inline-block;padding:1px 8px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid}
+.ok{color:var(--ok)}.warn{color:var(--warn)}.bad{color:var(--bad)}
+.keep{color:var(--mut);font-size:12px}
+pre{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;overflow:auto;font-size:12px;margin:8px 0 0}
+.note{color:var(--mut);font-size:13px}
+</style>
+</head>
+<body>
+<main>
+<h1>Документы в карточки Wildberries по артикулу</h1>
+<p class="lead">Сверка таблицы документов с карточками магазина. Меняются только поля с декларацией и сроком, остальное в карточке остаётся как есть. Ниже учебные данные: можно заменить своими.</p>
+
+<div class="row">
+  <div class="card">
+    <label>Карточки магазина (артикул продавца ; название ; прочие данные)</label>
+    <textarea id="cards"></textarea>
+    <p class="note">На боевом запуске карточки забираются из API Wildberries автоматически.</p>
+  </div>
+  <div class="card">
+    <label>Таблица документов (артикул ; номер декларации ; действует до)</label>
+    <textarea id="docs"></textarea>
+    <p class="note">Артикулы сопоставляются без учёта регистра и лишних пробелов.</p>
+  </div>
+</div>
+<p><button id="run">Сопоставить</button> <button class="sec" id="reset">Вернуть учебные данные</button></p>
+
+<div id="out" hidden>
+  <div class="stats" id="stats"></div>
+  <div class="card"><table id="tbl"><thead><tr><th>Артикул</th><th>Карточка</th><th>Документ</th><th>Срок</th><th>Что произойдёт</th></tr></thead><tbody></tbody></table></div>
+  <div class="card"><label>Что уйдёт в Wildberries для первой подходящей карточки</label>
+  <p class="note">Карточка забирается целиком, правятся два поля, остальное возвращается без изменений: название, описание, фото и характеристики не затрагиваются.</p>
+  <pre id="payload"></pre></div>
+</div>
+</main>
+<script>
+const CARDS=`NK-1001;Кроссовки беговые мужские;фото 7 шт
+NK-1002;Кроссовки беговые женские;фото 6 шт
+TS-2001;Футболка хлопок базовая;фото 5 шт
+TS-2002;Футболка оверсайз;фото 5 шт
+SK-3001;Носки спортивные, набор 5 пар;фото 4 шт
+BG-4001;Рюкзак городской 20 л;фото 8 шт
+BG-4002;Сумка поясная;фото 3 шт
+HT-5001;Шапка вязаная;фото 4 шт`;
+const DOCS=`nk-1001;ЕАЭС N RU Д-CN.РА01.В.12345/26;2029-03-14
+NK-1002;ЕАЭС N RU Д-CN.РА01.В.12345/26;2029-03-14
+TS-2001;ЕАЭС N RU Д-TR.РА03.В.55120/25;2026-11-20
+TS-2002;ЕАЭС N RU Д-TR.РА03.В.55120/25;2026-11-20
+SK-3001;ЕАЭС N RU Д-RU.РА05.В.78002/24;2026-02-01
+BG-4001;ЕАЭС N RU Д-CN.РА09.В.30411/26;2031-06-30
+HT-5099;ЕАЭС N RU Д-RU.РА02.В.10010/26;2030-01-01`;
+const $=id=>document.getElementById(id);
+function load(){$('cards').value=CARDS;$('docs').value=DOCS}
+const norm=s=>s.trim().toUpperCase().replace(/\s+/g,'');
+const lines=t=>t.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>l.split(';').map(x=>x.trim()));
+function run(){
+  const today=new Date('2026-10-25');
+  const cards=lines($('cards').value),docs=lines($('docs').value);
+  const dmap=new Map();docs.forEach(d=>dmap.set(norm(d[0]),d));
+  const used=new Set();let ok=0,exp=0,nodoc=0,first=null;
+  const tb=document.querySelector('#tbl tbody');tb.innerHTML='';
+  cards.forEach(c=>{
+    const k=norm(c[0]),d=dmap.get(k);let doc='—',dt='—',res,cls;
+    if(!d){res='Документа нет в таблице, карточку не трогаем';cls='warn';nodoc++}
+    else{used.add(k);doc=d[1];dt=d[2];
+      if(new Date(d[2])<today){res='Срок истёк, в карточку не вносим, в отчёт';cls='bad';exp++}
+      else{res='Внести номер и срок. Остальное не меняется';cls='ok';ok++;if(!first)first={c,d}}}
+    tb.insertAdjacentHTML('beforeend',`<tr><td>${c[0]}</td><td>${c[1]}<div class="keep">${c.slice(2).join(' · ')}</div></td><td>${doc}</td><td>${dt}</td><td class="${cls}">${res}</td></tr>`)});
+  const orphan=docs.filter(d=>!cards.some(c=>norm(c[0])===norm(d[0])));
+  orphan.forEach(d=>tb.insertAdjacentHTML('beforeend',`<tr><td>${d[0]}</td><td class="keep">карточки с таким артикулом нет</td><td>${d[1]}</td><td>${d[2]}</td><td class="warn">В отчёт: документ без карточки</td></tr>`));
+  $('stats').innerHTML=`<div class="st"><b class="ok">${ok}</b>готово к загрузке</div><div class="st"><b class="bad">${exp}</b>срок истёк</div><div class="st"><b class="warn">${nodoc}</b>без документа</div><div class="st"><b class="warn">${orphan.length}</b>документ без карточки</div>`;
+  $('payload').textContent=first?JSON.stringify([{vendorCode:first.c[0],title:first.c[1],description:'(без изменений)',photos:'(без изменений)',characteristics:[
+    '... остальные характеристики без изменений ...',
+    {name:'Номер декларации соответствия',value:[first.d[1]]},
+    {name:'Дата окончания действия документа',value:[first.d[2]]}]}],null,2):'Нет подходящих карточек';
+  $('out').hidden=false;
+}
+$('run').onclick=run;$('reset').onclick=()=>{load();run()};load();run();
+</script>
+</body>
+</html>
