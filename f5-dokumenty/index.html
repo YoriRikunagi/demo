@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Шаблон документа amoCRM · F5 Документы</title>
+<style>
+:root{--bg:#eef1f5;--card:#fff;--ink:#1d2433;--mute:#6b7487;--line:#dfe3ea;--blue:#2f6fed;--blue2:#e8f0ff;--green:#1aa260;--red:#d64545;--redbg:#fdecec;--yel:#fff6d6}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 -apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:#1f2a44;color:#fff;padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+header b{font-size:16px}
+header .sub{opacity:.7;font-size:13px}
+.seg{margin-left:auto;display:flex;background:#2c3a5c;border-radius:8px;padding:3px}
+.seg button{border:0;background:none;color:#cfd8ee;padding:7px 12px;border-radius:6px;cursor:pointer;font:inherit}
+.seg button.on{background:#fff;color:#1f2a44;font-weight:600}
+main{display:grid;grid-template-columns:360px 1fr;gap:16px;padding:16px;max-width:1280px;margin:0 auto}
+@media(max-width:900px){main{grid-template-columns:1fr}}
+.card{background:var(--card);border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.side h3{margin:0;padding:14px 16px;border-bottom:1px solid var(--line);font-size:14px;display:flex;justify-content:space-between}
+.side h3 span{color:var(--mute);font-weight:400}
+.fld{padding:8px 16px}
+.fld label{display:block;color:var(--mute);font-size:12px;margin-bottom:3px}
+.fld input,.fld select{width:100%;border:1px solid var(--line);border-radius:6px;padding:7px 9px;font:inherit;color:var(--ink)}
+.prod{padding:8px 16px}
+.prod table{width:100%;border-collapse:collapse;font-size:13px}
+.prod td{padding:3px 2px}
+.prod input{width:100%;border:1px solid var(--line);border-radius:5px;padding:5px 6px;font:inherit}
+.prod .x{border:0;background:none;color:var(--mute);cursor:pointer;font-size:16px}
+.btn{border:1px solid var(--blue);background:var(--blue);color:#fff;border-radius:6px;padding:8px 12px;font:inherit;cursor:pointer}
+.btn.ghost{background:#fff;color:var(--blue)}
+.row{display:flex;gap:8px;padding:8px 16px 16px;flex-wrap:wrap}
+.fix{margin-top:16px;padding:14px 16px}
+.fix h4{margin:0 0 8px;font-size:13px}
+.fix li{margin:4px 0;color:var(--mute)}
+.fix li.ok{color:var(--green)}
+.fix li.bad{color:var(--red)}
+.docwrap{padding:24px;overflow:auto}
+.doc{background:#fff;max-width:760px;margin:0 auto;padding:44px 52px;box-shadow:0 2px 14px rgba(0,0,0,.12);font-family:"Times New Roman",Times,serif;font-size:14.5px;color:#111;position:relative}
+.doc h1{text-align:center;font-size:18px;margin:0 0 4px}
+.doc .c{text-align:center;margin:0 0 18px}
+.doc table.items{width:100%;border-collapse:collapse;margin:12px 0}
+.doc table.items th,.doc table.items td{border:1px solid #333;padding:4px 6px;font-size:13.5px}
+.doc table.items th{background:#f2f2f2}
+.doc td.n{text-align:right;white-space:nowrap}
+.v{background:var(--blue2);border-radius:3px;padding:0 2px;transition:background .3s}
+.v.flash{background:var(--yel)}
+.err{background:var(--redbg);color:var(--red);border-radius:3px;padding:0 3px;font-family:Menlo,monospace;font-size:12.5px}
+.sign{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:30px;position:relative}
+.stamp{position:absolute;left:58px;top:-12px;width:118px;height:118px;border:3px solid rgba(47,80,190,.65);border-radius:50%;color:rgba(47,80,190,.75);display:flex;align-items:center;justify-content:center;text-align:center;font:700 10px/1.2 Arial;transform:rotate(-12deg)}
+.stamp::before{content:"";position:absolute;inset:7px;border:1.5px solid rgba(47,80,190,.55);border-radius:50%}
+.sig{font:italic 26px "Brush Script MT",cursive;color:#2b46a0;position:absolute;left:150px;top:6px}
+.legend{max-width:760px;margin:0 auto 10px;display:flex;gap:16px;color:var(--mute);font-size:12.5px;flex-wrap:wrap}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#1f2a44;color:#fff;padding:9px 16px;border-radius:8px;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<header>
+  <b>amoCRM · F5 Документы</b><span class="sub">Шаблон «Счёт-договор»: правки существующего шаблона</span>
+  <div class="seg"><button id="bBefore">До правок</button><button id="bAfter" class="on">После правок</button></div>
+</header>
+<main>
+  <div>
+    <div class="card side">
+      <h3>Сделка #24817 <span>amoCRM</span></h3>
+      <div class="fld"><label>Компания (контрагент)</label><input id="company" value="ООО «Северный Ветер»"></div>
+      <div class="fld"><label>ИНН / КПП</label><input id="inn" value="7801234567 / 780101001"></div>
+      <div class="fld"><label>Контакт, должность</label><input id="person" value="Генеральный директор Иванов Пётр Сергеевич"></div>
+      <div class="fld"><label>Адрес</label><input id="addr" value="191025, г. Санкт-Петербург, Невский пр., д. 100, оф. 12"></div>
+      <div class="fld"><label>НДС</label><select id="vat"><option value="20">НДС 20%, в т.ч.</option><option value="5">НДС 5%, в т.ч.</option><option value="0">Без НДС (УСН)</option></select></div>
+      <div class="fld"><label>Срок оплаты, банковских дней</label><input id="days" type="number" value="5" min="1"></div>
+      <div class="prod">
+        <label style="color:var(--mute);font-size:12px">Товары сделки</label>
+        <table id="ptab"></table>
+      </div>
+      <div class="row"><button class="btn ghost" id="add">+ Товар</button><button class="btn" id="gen">Сформировать документ</button></div>
+    </div>
+    <div class="card fix">
+      <h4 id="fixT">Что поправлено в шаблоне</h4>
+      <ul id="fixL" style="margin:0;padding-left:18px"></ul>
+    </div>
+  </div>
+  <div class="card docwrap">
+    <div class="legend"><span><i style="background:var(--blue2)"></i>данные подставлены из сделки</span><span><i style="background:var(--redbg)"></i>метка не сработала</span></div>
+    <div class="doc" id="doc"></div>
+  </div>
+</main>
+<div class="toast" id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+let mode='after';
+let prods=[{n:'Монтаж системы вентиляции, этап 1',q:1,u:'усл.',p:185000},{n:'Вентиляционная установка ВУ-1200',q:2,u:'шт.',p:64300},{n:'Воздуховод оцинкованный Ø250, 1 м',q:36,u:'м',p:890}];
+const fmt=n=>n.toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
+function words(n){
+  const u=['','один','два','три','четыре','пять','шесть','семь','восемь','девять'],uf=['','одна','две'],t=['десять','одиннадцать','двенадцать','тринадцать','четырнадцать','пятнадцать','шестнадцать','семнадцать','восемнадцать','девятнадцать'],d=['','','двадцать','тридцать','сорок','пятьдесят','шестьдесят','семьдесят','восемьдесят','девяносто'],h=['','сто','двести','триста','четыреста','пятьсот','шестьсот','семьсот','восемьсот','девятьсот'];
+  const plural=(x,a,b,c)=>{x%=100;if(x>10&&x<20)return c;x%=10;return x==1?a:(x>=2&&x<=4?b:c)};
+  const tri=(x,fem)=>{let r=[h[Math.floor(x/100)]],y=x%100;if(y>=10&&y<20)r.push(t[y-10]);else{r.push(d[Math.floor(y/10)]);const z=y%10;r.push(fem&&z<3?uf[z]:u[z])}return r.filter(Boolean).join(' ')};
+  const rub=Math.floor(n),kop=Math.round((n-rub)*100);let out=[];
+  const m=Math.floor(rub/1e6)%1000,th=Math.floor(rub/1000)%1000,r=rub%1000;
+  if(m)out.push(tri(m)+' '+plural(m,'миллион','миллиона','миллионов'));
+  if(th)out.push(tri(th,true)+' '+plural(th,'тысяча','тысячи','тысяч'));
+  if(r)out.push(tri(r));
+  let s=(out.join(' ')||'ноль')+' '+plural(rub,'рубль','рубля','рублей')+' '+String(kop).padStart(2,'0')+' '+plural(kop,'копейка','копейки','копеек');
+  return s[0].toUpperCase()+s.slice(1);
+}
+function shortName(full){const p=full.split(' ').slice(-3);if(p.length<3)return full;return p[1][0]+'.'+p[2][0]+'. '+p[0]}
+function renderProds(){
+  $('ptab').innerHTML=prods.map((x,i)=>`<tr><td style="width:52%"><input data-i="${i}" data-k="n" value="${x.n.replace(/"/g,'&quot;')}"></td><td style="width:14%"><input data-i="${i}" data-k="q" type="number" value="${x.q}"></td><td style="width:28%"><input data-i="${i}" data-k="p" type="number" value="${x.p}"></td><td><button class="x" data-del="${i}">×</button></td></tr>`).join('');
+}
+const V=s=>`<span class="v">${s}</span>`,E=s=>`<span class="err">${s}</span>`;
+function render(flash){
+  const a=mode==='after',vat=+$('vat').value,days=+$('days').value||5;
+  const total=prods.reduce((s,x)=>s+x.q*x.p,0),vatSum=vat?total*vat/(100+vat):0;
+  const today=new Date(),dd=today.toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
+  const rows=a?prods.map((x,i)=>`<tr><td class="n">${i+1}</td><td>${V(x.n)}</td><td class="n">${V(x.q)}</td><td>${x.u}</td><td class="n">${V(fmt(x.p))}</td><td class="n">${V(fmt(x.q*x.p))}</td></tr>`).join('')
+    :`<tr><td class="n">1</td><td>${E('{{product.name}}')}</td><td class="n">${E('{{product.qty}}')}</td><td></td><td class="n">${E('{{product.price}}')}</td><td class="n">${E('{{product.sum}}')}</td></tr>`;
+  const person=$('person').value;
+  $('doc').innerHTML=`
+  <h1>Счёт-договор № ${a?V('24817/'+String(today.getMonth()+1).padStart(2,'0')):E('{{lead.id}}')}</h1>
+  <p class="c">г. Санкт-Петербург, ${a?V(dd):E('{{date}}')}</p>
+  <p><b>Исполнитель:</b> ООО «Климат Про», ИНН 7810654321, КПП 781001001, р/с 40702810900000012345 в ПАО «Банк», БИК 044525000.</p>
+  <p><b>Заказчик:</b> ${a?V($('company').value):E('{{company.name}}')}, ИНН/КПП ${a?V($('inn').value):E('{{cf.ИНН}}')}, адрес: ${a?V($('addr').value):'—'}, в лице ${a?V(person.replace(/^Генеральный директор/,'генерального директора')):E('{{contact.position}} {{contact.name}}')}.</p>
+  <table class="items"><tr><th>№</th><th>Наименование</th><th>Кол-во</th><th>Ед.</th><th>Цена, ₽</th><th>Сумма, ₽</th></tr>${rows}
+  <tr><td colspan="5" class="n"><b>Итого:</b></td><td class="n"><b>${a?V(fmt(total)):E('{{lead.price}}')}</b></td></tr>
+  <tr><td colspan="5" class="n">${vat?'В т.ч. НДС '+vat+'%':'Без НДС'}:</td><td class="n">${a?(vat?V(fmt(vatSum)):'—'):E('{{nds}}')}</td></tr></table>
+  <p>Всего наименований ${a?V(prods.length):E('{{count}}')}, на сумму ${a?V(fmt(total)+' ₽'):E('{{lead.price}}')}.<br><b>${a?V(words(total)):E('{{lead.price_words}}')}</b>${a&&vat?', в т.ч. НДС '+vat+'%':(a?', НДС не облагается (УСН)':'')}.</p>
+  <p>1. Оплата настоящего счёта означает согласие Заказчика с условиями поставки и выполнения работ.<br>
+  2. Счёт действителен к оплате в течение ${a?V(days+' банковских дней'):E('{{cf.срок}}')}.<br>
+  3. Работы выполняются в течение 20 рабочих дней с момента поступления оплаты.</p>
+  <div class="sign">
+    <div><b>Исполнитель</b><br><br>Генеральный директор ______ / С.А. Орлов<br><small>М.П.</small>
+      ${a?'<div class="stamp">ООО «КЛИМАТ ПРО»<br>ОГРН<br>1157800000000</div><div class="sig">Орлов</div>':'<div style="margin-top:6px">'+E('[печать не найдена]')+'</div>'}</div>
+    <div><b>Заказчик</b><br><br>______ / ${a?V(shortName(person)):E('{{contact.short}}')}<br><small>М.П.</small></div>
+  </div>`;
+  const fixes=a?[['ok','Таблица товаров: все позиции сделки, а не одна строка'],['ok','Сумма прописью с копейками'],['ok','НДС из поля сделки: 20%, 5% или без НДС'],['ok','Номер и дата счёта подставляются сами'],['ok','Подписант в родительном падеже, Заказчик — инициалы'],['ok','Печать и подпись встают на место М.П.']]
+    :[['bad','Метки товаров не в строке таблицы → пусто'],['bad','Нет суммы прописью'],['bad','НДС не считается'],['bad','Номер и дата не заполняются'],['bad','Должность «Генеральный директор» в именительном'],['bad','Печать и подпись не подключены']];
+  $('fixT').textContent=a?'Что поправлено в шаблоне':'Что ломается в исходном шаблоне';
+  $('fixL').innerHTML=fixes.map(f=>`<li class="${f[0]}">${f[0]=='ok'?'✓':'✗'} ${f[1]}</li>`).join('');
+  if(flash)document.querySelectorAll('.v').forEach(e=>{e.classList.add('flash');setTimeout(()=>e.classList.remove('flash'),500)});
+}
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1800)}
+document.addEventListener('input',e=>{const i=e.target.dataset.i;if(i!==undefined){const k=e.target.dataset.k;prods[i][k]=k=='n'?e.target.value:+e.target.value||0}render()});
+$('vat').onchange=()=>render(true);
+$('ptab').onclick=e=>{const d=e.target.dataset.del;if(d!==undefined){prods.splice(d,1);renderProds();render(true)}};
+$('add').onclick=()=>{prods.push({n:'Пусконаладочные работы',q:1,u:'усл.',p:15000});renderProds();render(true)};
+$('gen').onclick=()=>{render(true);toast(mode=='after'?'Документ сформирован и прикреплён к сделке':'Сформировано с ошибками — смотрите красные метки')};
+$('bBefore').onclick=()=>{mode='before';$('bBefore').classList.add('on');$('bAfter').classList.remove('on');render()};
+$('bAfter').onclick=()=>{mode='after';$('bAfter').classList.add('on');$('bBefore').classList.remove('on');render(true)};
+renderProds();render();
+</script>
+</body>
+</html>
